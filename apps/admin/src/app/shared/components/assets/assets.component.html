@@ -1,0 +1,70 @@
+<div *ngIf="!compact; else compactView" class="standard-view-container">
+  <div class="featured-asset">
+    <img *ngIf="featuredAsset" [src]="featuredAsset | assetPreview : 'small'" />
+    <div class="placeholder" *ngIf="!featuredAsset">
+      <div>catalog.no-featured-asset</div>
+    </div>
+  </div>
+
+  <div class="all-assets-container">
+    <ng-container *ngTemplateOutlet="assetList"></ng-container>
+    <div>
+      <button
+        type="button"
+        class="rounded-md font-semibold text-sm text-gray-700 bg-gray-100 px-4 py-2 drop-shadow shadow-sm hover:bg-gray-200 inline-flex items-center gap-x-1"
+        (click)="selectAssets()"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+          />
+        </svg>
+
+        Add asset
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #compactView>
+  <div class="featured-asset compact">
+    <img *ngIf="featuredAsset" [src]="featuredAsset | assetPreview : 'thumb'" />
+
+    <div class="placeholder" *ngIf="!featuredAsset"></div>
+  </div>
+  <ng-container *ngTemplateOutlet="assetList"></ng-container>
+  <button class="compact-select btn btn-icon btn-sm btn-block">
+    Add asset
+  </button>
+</ng-template>
+
+<ng-template #assetList>
+  <div [class.compact]="compact" cdkDropListGroup class="flex gap-1">
+    <div
+      *ngFor="let asset of assets; let index = index"
+      cdkDropList
+      cdkDropListOrientation="horizontal"
+      [cdkDropListData]="index"
+      (cdkDropListDropped)="dropListDropped($event)"
+    >
+      <div
+        cdkDrag
+        class="asset-thumb"
+        vdrDropdownTrigger
+        [class.featured]="isFeatured(asset)"
+        tabindex="0"
+      >
+        <img [src]="asset | assetPreview : 'tiny'" />
+      </div>
+    </div>
+  </div>
+</ng-template>

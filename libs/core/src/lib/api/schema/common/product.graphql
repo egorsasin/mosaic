@@ -1,0 +1,19 @@
+type Product implements Node {
+  id: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  slug: String!
+  description: String!
+  price: Float!
+  enabled: Boolean!
+  assets: [Asset!]!
+  featuredAsset: Asset
+}
+
+type ProductList implements PaginatedList {
+  items: [Product!]!
+  totalItems: Int!
+}
+
+input ProductListOptions

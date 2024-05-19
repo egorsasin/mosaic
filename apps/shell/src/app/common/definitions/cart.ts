@@ -1,0 +1,22 @@
+import { gql } from 'apollo-angular';
+
+export const CART_FRAGMENT = gql`
+  fragment Cart on Order {
+    id
+    lines {
+      id
+      quantity
+      product {
+        id
+        name
+        price
+        featuredAsset {
+          source
+          preview
+        }
+      }
+    }
+    totalQuantity
+    total
+  }
+`;

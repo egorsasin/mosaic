@@ -1,0 +1,19 @@
+type Query {
+  me: CurrentUser
+}
+
+type Mutation {
+  "Authenticates the user using a named authentication strategy"
+  authenticate(
+    input: AuthenticationInput!
+    rememberMe: Boolean
+  ): AuthenticationResult!
+  "Authenticates the user using the native authentication strategy. This mutation is an alias for `authenticate({ native: { ... }})`"
+  login(username: String!, password: String!): NativeAuthenticationResult!
+  register(emailAddress: String!, password: String!): RegistrationResult!
+  "Requests a password reset email to be sent"
+  requestPasswordReset(emailAddress: String!): RequestPasswordResetResult
+}
+
+# Populated at run-time
+input AuthenticationInput

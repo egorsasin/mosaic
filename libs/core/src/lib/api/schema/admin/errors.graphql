@@ -1,0 +1,5 @@
+"Returned when slug for product already exists."
+type SlugDuplicationError implements ErrorResult {
+  errorCode: ErrorCode!
+  message: String!
+}

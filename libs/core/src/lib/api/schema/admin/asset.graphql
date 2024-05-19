@@ -1,0 +1,15 @@
+type Query {
+  "Get a list of Assets"
+  assets(options: AssetListOptions): AssetList!
+}
+
+type Mutation {
+  "Create a new Asset"
+  createAssets(input: [CreateAssetInput!]!): Asset!
+}
+
+input CreateAssetInput {
+  file: Upload!
+}
+
+input AssetListOptions

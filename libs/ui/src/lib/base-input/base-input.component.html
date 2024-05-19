@@ -1,0 +1,4 @@
+<input #input
+  class="inline-block border-none outline-none w-full text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+  [ngModel]="value" (ngModelChange)="onModelChange($event)" [readOnly]="readonly" [disabled]="disabled"
+  [placeholder]="placeholder" />

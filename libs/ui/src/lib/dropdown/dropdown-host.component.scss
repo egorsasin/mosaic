@@ -1,0 +1,7 @@
+:host {
+  position: fixed;
+  display: block;
+  height: auto;
+  overflow: hidden;
+  @apply py-1 ring-1 ring-inset ring-black/5 rounded-md shadow-lg;
+}

@@ -1,0 +1,36 @@
+type Query {
+  "List of products"
+  products(options: ProductListOptions): ProductList!
+  "Get a Product either by id or slug. If neither id nor slug is specified, an error will result."
+  product(id: Int, slug: String): Product
+  checkProductSlug(input: CheckSlugInput!): CheckSlugResult!
+}
+
+type Mutation {
+  "Create new product"
+  createProduct(input: UpdateProductInput!): Product!
+  "Update an existing product"
+  updateProduct(id: Int!, input: UpdateProductInput!): Product!
+}
+
+input CheckSlugInput {
+  id: Int
+  slug: String!
+}
+
+input UpdateProductInput {
+  name: String
+  slug: String
+  price: Money
+  enabled: Boolean
+  description: String
+  featuredAssetId: Int
+  assetIds: [Int!]
+}
+
+type SlugDuplicationError implements ErrorResult {
+  errorCode: ErrorCode!
+  message: String!
+}
+
+union CheckSlugResult = Success | SlugDuplicationError

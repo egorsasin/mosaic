@@ -1,0 +1,13 @@
+type Query {
+  "Returns a list of payment methods and their eligibility based on the current active Order"
+  eligiblePaymentMethods: [PaymentMethodQuote!]!
+}
+
+type PaymentMethodQuote {
+  id: ID!
+  code: String!
+  name: String!
+  description: String!
+  isEligible: Boolean!
+  eligibilityMessage: String
+}

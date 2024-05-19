@@ -1,0 +1,31 @@
+type PaymentMethod implements Node {
+  id: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  code: String!
+  description: String!
+  enabled: Boolean!
+  handler: ConfigurableOperation!
+}
+
+type ConfigurableOperation {
+  code: String!
+  args: [ConfigArg!]!
+}
+
+type ConfigArg {
+  name: String!
+  value: String!
+}
+
+input ConfigArgInput {
+  name: String!
+  "A JSON stringified representation of the actual value"
+  value: String!
+}
+
+input ConfigurableOperationInput {
+  code: String!
+  arguments: [ConfigArgInput!]!
+}

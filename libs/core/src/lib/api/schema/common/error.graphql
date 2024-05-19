@@ -1,0 +1,37 @@
+enum ErrorCode {
+  UNKNOWN_ERROR
+  NATIVE_AUTH_STRATEGY_ERROR
+  EMAIL_ADDRESS_CONFLICT_ERROR
+  PASSWORD_VALIDATION_ERROR
+}
+
+interface ErrorResult {
+  errorCode: ErrorCode!
+  message: String!
+}
+
+"Returned if the user authentication credentials are not valid"
+type InvalidCredentialsError implements ErrorResult {
+  errorCode: ErrorCode!
+  message: String!
+  authenticationError: String!
+}
+
+"Returned when attempting an operation that relies on the NativeAuthStrategy, if that strategy is not configured."
+type NativeAuthStrategyError implements ErrorResult {
+  errorCode: ErrorCode!
+  message: String!
+}
+
+"Returned when attempting to create a User with an email address already registered to an existing User."
+type EmailAddressConflictError implements ErrorResult {
+  errorCode: ErrorCode!
+  message: String!
+}
+
+"Returned when attempting to register or verify a customer account where the given password fails password validation."
+type PasswordValidationError implements ErrorResult {
+  errorCode: ErrorCode!
+  message: String!
+  validationErrorMessage: String!
+}

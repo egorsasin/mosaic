@@ -1,0 +1,9 @@
+<div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+  <h3
+    class="text-base font-semibold leading-6 text-gray-900"
+    [textContent]="context.label"
+  ></h3>
+  <ng-container
+    *mosComponentOutlet="context.content; context: context"
+  ></ng-container>
+</div>

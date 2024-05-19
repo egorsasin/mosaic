@@ -1,0 +1,20 @@
+# Third-party custom scalars
+scalar DateTime
+scalar Upload
+scalar JSON
+
+# Our custom scalars
+scalar Money
+
+interface Node {
+  id: Int!
+}
+
+interface PaginatedList {
+  items: [Node!]!
+  totalItems: Int!
+}
+
+type Success {
+  success: Boolean!
+}

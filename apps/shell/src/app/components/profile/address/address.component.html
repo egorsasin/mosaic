@@ -1,0 +1,21 @@
+<form [formGroup]="form" (submit)="onSubmit()">
+  <label for="price" class="block text-sm font-medium leading-6 text-gray-900 mb-1">Miasto</label>
+  <mos-input formControlName="city" name="price" placeholder="Miasto">
+    <mos-scroll mosDropdownList *ngIf="citySuggestions | async as cities">
+
+      <ul *ngIf=" cities.length else emptyList">
+        <li *ngFor="let cityItem of cities" role="menuitem" class="block">
+          <button class="text-gray-700 text-sm text-left w-full block px-4 py-2 outline-none focus:bg-gray-100"
+            tabindex="-1" [mosDropdownOption]="cityItem.city">{{ cityItem.city }}</button>
+        </li>
+      </ul>
+
+      <ng-template #emptyList>
+        <div>NIC NEMA</div>
+      </ng-template>
+
+    </mos-scroll>
+  </mos-input>
+
+  <button type="submit">Save</button>
+</form>

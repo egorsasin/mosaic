@@ -1,0 +1,32 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "esModuleInterop": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2017", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@mosaic/asset-server": ["libs/asset-server/src/index.ts"],
+      "@mosaic/cdk": ["libs/cdk/src/index.ts"],
+      "@mosaic/cdk/*": ["libs/cdk/src/lib/*"],
+      "@mosaic/common": ["libs/common/src/index.ts"],
+      "@mosaic/core": ["libs/core/src/index.ts"],
+      "@mosaic/core/*": ["libs/core/src/lib/*"],
+      "@mosaic/google-auth": ["libs/google-auth/src/index.ts"],
+      "@mosaic/mask": ["libs/mask/src/index.ts"],
+      "@mosaic/ui": ["libs/ui/src/index.ts"],
+      "@mosaic/ui/*": ["libs/ui/src/lib/*"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

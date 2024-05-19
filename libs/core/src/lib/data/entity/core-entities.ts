@@ -1,0 +1,33 @@
+import { Address } from './address';
+import { Asset } from './asset';
+import {
+  AuthenticationMethod,
+  ExternalAuthenticationMethod,
+  NativeAuthenticationMethod,
+} from './authentication';
+import { Customer } from './customer';
+import { Order, OrderLine } from './order';
+import { Payment } from './payment';
+import { PaymentMethod } from './payment-method';
+import { Product, ProductAsset } from './product';
+import { AnonymousSession, AuthenticatedSession, Session } from './session';
+import { User } from './user';
+
+export const coreEntitiesMap = {
+  Asset,
+  Address,
+  AuthenticationMethod,
+  Customer,
+  NativeAuthenticationMethod,
+  ExternalAuthenticationMethod,
+  User,
+  Order,
+  OrderLine,
+  Payment,
+  PaymentMethod,
+  Product,
+  ProductAsset,
+  Session,
+  AnonymousSession,
+  AuthenticatedSession,
+};

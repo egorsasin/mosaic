@@ -1,0 +1,21 @@
+:host {
+  display: block;
+  position: relative;
+  box-sizing: border-box;
+
+  &::after {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    pointer-events: none;
+    transition: border 0.1s ease-in-out;
+    border-radius: inherit;
+  }
+
+  &.mos-focused::after {
+    border: none;
+  }
+}

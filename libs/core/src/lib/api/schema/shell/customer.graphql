@@ -1,0 +1,49 @@
+type Address implements Node {
+  id: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  city: String
+  default: Boolean
+}
+
+input CreateAddressInput {
+  city: String
+  default: Boolean
+}
+
+type Customer implements Node {
+  id: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  firstName: String!
+  lastName: String!
+  addresses: [Address!]
+  user: User
+}
+
+type AuthenticationMethod implements Node {
+  id: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  strategy: String!
+}
+
+type User implements Node {
+  id: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  identifier: String!
+  verified: Boolean!
+  lastLogin: DateTime
+  authenticationMethods: [AuthenticationMethod!]!
+}
+
+type Query {
+  "The active Customer"
+  activeCustomer: Customer
+}
+
+type Mutation {
+  "Create a new Customer Address"
+  createCustomerAddress(input: CreateAddressInput!): Address!
+}

@@ -1,0 +1,143 @@
+<div class="mx-auto max-w-7xl px-4 sm:px-6">
+  <div class="md:grid md:grid-cols-2 md:gap-6">
+    <div>
+      <div class="grid grid-cols-6 gap-6">
+        <div class="col-span-6">
+          <p class="block mb-2 text-sm font-medium">Зарегистрироваться</p>
+
+          <div class="flex mb-2 col-span-6">
+            <div class="flex items-center mr-4">
+              <input
+                id="push-everything"
+                name="push-notifications"
+                type="radio"
+                class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+              />
+              <label for="push-everything" class="ml-3 block text-sm">Да</label>
+            </div>
+            <div class="flex items-center">
+              <input
+                id="push-email"
+                name="push-notifications"
+                type="radio"
+                class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+              />
+              <label for="push-email" class="ml-3 block text-sm">Нет</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-span-6 sm:col-span-3">
+          <label
+            for="first-name"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >First name</label
+          >
+          <input
+            type="text"
+            id="first-name"
+            class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500/50 focus:border-blue-500 block w-full p-2.5"
+            placeholder="name@mail.com"
+            required
+          />
+        </div>
+
+        <div class="col-span-6 sm:col-span-3">
+          <label
+            for="last-name"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Last name</label
+          >
+          <input
+            type="text"
+            id="last-name"
+            class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            placeholder="name@mail.com"
+            required
+          />
+        </div>
+
+        <div class="col-span-6 sm:col-span-3">
+          <label
+            for="email"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Your email</label
+          >
+          <input
+            type="email"
+            id="email"
+            class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            placeholder="name@mail.com"
+            required
+          />
+        </div>
+
+        <div class="col-span-6 sm:col-span-3">
+          <label
+            for="phone"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Your phone</label
+          >
+          <input
+            type="text"
+            id="phone"
+            [mosMask]="maskConfig"
+            class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            placeholder="+48 000-000-000"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="sm:col-span-3 col-span-full">
+          <label
+            for="password"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Password</label
+          >
+          <input
+            type="password"
+            id="password"
+            autocomplete="off"
+            class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          />
+        </div>
+      </div>
+
+      <div class="py-5">
+        <span class="font-semibold">Metody płatności</span>
+        <div class="grid gap-3 py-3">
+          @for (item of (paymentMethods$ | async); track item.id ) {
+          <div
+            class="py-4 px-5 flex gap-3 bg-white border border-gray-300 shadow-sm rounded-lg text-sm cursor-pointer"
+            [class.payment-metods--active]="item.code === paymentMethod.value"
+            (click)="paymentMethod.setValue(item.code)"
+          >
+            <input
+              name="payment-method"
+              type="radio"
+              [formControl]="paymentMethod"
+              [value]="item.code"
+              class="mt-0.5 text-gray-500 focus:ring-gray-400/50 cursor-pointer"
+            />
+            <div>
+              <div class="font-semibold">{{ item.name }}</div>
+              <div
+                *ngIf="item.description"
+                class="mt-2 text-gray-500"
+                [innerHtml]="item.description"
+              ></div>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button
+    (click)="addPaymentMethod()"
+    class="mt-5 flex items-center justify-center border rounded-md bg-gray-600 hover:bg-gray-600 text-white py-2 px-5 focus:outline-none font-semibold shadow-sm"
+  >
+    Zamawiam i płacę
+  </button>
+</div>

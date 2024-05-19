@@ -1,0 +1,14 @@
+<div [mosDropdown]="dropdownTemplate" [show]="isVisible" #parent="mosActiveZone" [class.open]="isVisible"
+  (mosActiveZoneChange)="onActiveZone($event)">
+  <ng-content></ng-content>
+</div>
+
+<ng-template #dropdownTemplate>
+  <div class="dropdown-list">
+    <ng-container *ngTemplateOutlet="
+        $any(content);
+        injector: injector;
+        context: { $implicit: parent }
+      "></ng-container>
+  </div>
+</ng-template>

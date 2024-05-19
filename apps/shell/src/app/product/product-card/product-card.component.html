@@ -1,0 +1,103 @@
+<div
+  *ngIf="product"
+  class="hover:drop-shadow-xl duration-300 hover:bg-white transition-all p-7 bg-gray-50"
+>
+  <div
+    class="text-center text-lg font-semibold font-['Oswald'] text-gray-700 mb-5"
+  >
+    {{ product.name | uppercase }}
+  </div>
+
+  <div class="relative">
+    <div class="w-40 h-40 mx-auto">
+      <img
+        *ngIf="product.featuredAsset"
+        [src]="product.featuredAsset | assetPreview : 'thumb'"
+      />
+    </div>
+  </div>
+
+  <div class="my-6">
+    <p class="text-sm">
+      Сладкий кофе с нотами арахиса, пудры какао и цедры лимона
+    </p>
+
+    <div class="flex gap-10 mt-6">
+      <div class="flex-1 text-xs text-gray-700 text-center">
+        <div class="w-full bg-gray-300 rounded-full h-1 dark:bg-gray-700 mb-1">
+          <div class="bg-gray-800 h-full rounded-full" style="width: 45%"></div>
+        </div>
+        Kwaśność
+      </div>
+
+      <div class="flex-1 text-xs text-gray-700 text-center">
+        <div class="w-full bg-gray-300 rounded-full h-1 dark:bg-gray-700 mb-1">
+          <div class="bg-gray-800 h-full rounded-full" style="width: 70%"></div>
+        </div>
+        Nasycenie
+      </div>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-end gap-5">
+    <div class="flex items-center">
+      <span>
+        <svg
+          width="10"
+          height="2"
+          viewBox="0 0 10 2"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <line
+            x1="10"
+            y1="1"
+            x2="-8.74228e-08"
+            y2="0.999999"
+            stroke="black"
+            stroke-width="2"
+          />
+        </svg>
+      </span>
+      <span>
+        <input
+          class="w-9 border-none outline-none p-0 m-0 text-center bg-transparent font-semibold focus:outline-none focus:ring-transparent"
+          placeholder="1"
+          type="number"
+          [(ngModel)]="quantity" /></span
+      ><span
+        ><svg
+          width="10"
+          height="10"
+          viewBox="0 0 10 10"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <line
+            x1="5"
+            y1="4.37114e-08"
+            x2="5"
+            y2="10"
+            stroke="black"
+            stroke-width="2"
+          />
+          <line
+            x1="10"
+            y1="5"
+            x2="-8.74228e-08"
+            y2="5"
+            stroke="black"
+            stroke-width="2"
+          />
+        </svg>
+      </span>
+    </div>
+
+    <button
+      class="rounded-md font-semibold text-sm text-white bg-gray-800 px-5 py-2 hover:bg-gray-500 inline-flex items-center gap-x-1"
+      (click)="addToCart()"
+    >
+      Dodaj do koszyka
+    </button>
+  </div>
+</div>

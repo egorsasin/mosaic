@@ -1,0 +1,41 @@
+type Query {
+  paymentMethods(options: PaymentMethodListOptions): PaymentMethodList!
+  paymentMethodHandlers: [ConfigurableOperationDefinition!]!
+}
+
+type Mutation {
+  "Create existing PaymentMethod"
+  createPaymentMethod(input: CreatePaymentMethodInput!): PaymentMethod!
+}
+
+input PaymentMethodListOptions
+
+type PaymentMethodList implements PaginatedList {
+  items: [PaymentMethod!]!
+  totalItems: Int!
+}
+
+type ConfigurableOperationDefinition {
+  code: String!
+  args: [ConfigArgDefinition!]!
+  description: String!
+}
+
+type ConfigArgDefinition {
+  name: String!
+  type: String!
+  list: Boolean!
+  required: Boolean!
+  defaultValue: JSON
+  label: String
+  description: String
+  ui: JSON
+}
+
+input CreatePaymentMethodInput {
+  code: String!
+  name: String!
+  description: String
+  enabled: Boolean!
+  handler: ConfigurableOperationInput
+}

@@ -1,0 +1,11 @@
+<div class="grid grid-cols-3 gap-12 mx-auto max-w-7xl p-6">
+  <mos-product-card
+    [product]="product"
+    *ngFor="let product of items$ | async"
+  ></mos-product-card>
+</div>
+<mos-pagination
+  [pageIndex]="currentPage$ | async"
+  [length]="totalItems$ | async"
+  (onPageChange)="onPageChange($event)"
+></mos-pagination>

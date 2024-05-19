@@ -1,0 +1,21 @@
+type CurrentUser {
+  id: Int!
+  identifier: String!
+  verified: Boolean
+  firstName: String!
+  lastName: String!
+}
+
+union NativeAuthenticationResult =
+    CurrentUser
+  | InvalidCredentialsError
+  | NativeAuthStrategyError
+
+union AuthenticationResult = CurrentUser | InvalidCredentialsError
+
+union RegistrationResult =
+    CurrentUser
+  | EmailAddressConflictError
+  | PasswordValidationError
+
+union RequestPasswordResetResult = Success | NativeAuthStrategyError

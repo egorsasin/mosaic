@@ -1,0 +1,31 @@
+{
+  "name": "google-auth",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/google-auth/src",
+  "projectType": "library",
+  "tags": ["api auth plugin"],
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/google-auth",
+        "tsConfig": "libs/google-auth/tsconfig.lib.json",
+        "packageJson": "libs/google-auth/package.json",
+        "main": "libs/google-auth/src/index.ts",
+        "assets": ["libs/google-auth/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/google-auth/jest.config.ts"
+      }
+    }
+  }
+}

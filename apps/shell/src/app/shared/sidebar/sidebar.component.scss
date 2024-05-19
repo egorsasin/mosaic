@@ -1,0 +1,25 @@
+$duration: 200ms;
+
+:host {
+  @apply fixed top-0 right-0 w-full h-full flex justify-end;
+
+  &:before {
+    @apply bg-gray-900 bg-opacity-20 absolute w-full h-full content-[''] opacity-0;
+    animation: fadeIn $duration;
+    transition: opacity $duration;
+  }
+
+  &.mos-visible:before {
+    @apply opacity-100;
+  }
+
+  @keyframes fadeIn {
+    from {
+      @apply opacity-0;
+    }
+
+    to {
+      @apply opacity-100;
+    }
+  }
+}

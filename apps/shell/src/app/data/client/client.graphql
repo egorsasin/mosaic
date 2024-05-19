@@ -1,0 +1,23 @@
+type UserStatus {
+  username: String!
+  isLoggedIn: Boolean!
+  loginTime: String
+  firstName: String
+  lastName: String
+}
+
+input UserStatusInput {
+  username: String!
+  loginTime: String!
+  firstName: String!
+  lastName: String!
+}
+
+type Query {
+  userStatus: UserStatus!
+}
+
+type Mutation {
+  setAsLoggedIn(input: UserStatusInput!): UserStatus!
+  setAsLoggedOut: UserStatus!
+}

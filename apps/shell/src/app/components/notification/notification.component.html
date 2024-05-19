@@ -1,0 +1,14 @@
+<div
+  class="notification-wrapper"
+  #wrapper
+  [style.top.px]="offsetTop"
+  [ngClass]="{
+    visible: isVisible,
+    info: type === 'info',
+    success: type === 'success',
+    error: type === 'error',
+    warning: type === 'warning'
+  }"
+>
+  {{ message }}
+</div>

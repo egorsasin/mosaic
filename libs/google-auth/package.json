@@ -1,0 +1,9 @@
+{
+  "name": "@mosaic/google-auth",
+  "version": "0.0.1",
+  "type": "commonjs",
+  "dependencies": {
+    "google-auth-library": "^9.0.0",
+    "graphql-tag": "2.12.6"
+  }
+}

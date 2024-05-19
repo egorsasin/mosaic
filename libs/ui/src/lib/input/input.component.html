@@ -1,0 +1,20 @@
+<mos-base-input
+  class="block py-1.5 px-3 w-full"
+  [value]="value"
+  [placeholder]="placeholder"
+  (valueChange)="valueChanges($event)"
+  [readonly]="readonly"
+  #parent="mosActiveZone"
+  (mosActiveZoneChange)="onActiveZone($event)"
+  [mosDropdown]="dropdownTemplate"
+  [show]="!!dropdownList && open"
+  [mosHosted]="dropdownList"
+  [pseudoFocused]="!!dropdownList && open"
+>
+</mos-base-input>
+
+<ng-template #dropdownTemplate>
+  <div [mosActiveZoneParent]="parent" class="dropdown-list">
+    <ng-content></ng-content>
+  </div>
+</ng-template>

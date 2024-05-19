@@ -1,0 +1,23 @@
+:host {
+  display: block;
+  text-align: center;
+
+  .primary {
+    @apply bg-gray-700 text-white font-semibold;
+  }
+}
+
+.mos-dots {
+  // width: var(--tui-height-s);
+  // height: var(--tui-height-s);
+  // line-height: var(--tui-height-s);
+  // margin: 0 0.125rem;
+  // flex-shrink: 0;
+  // color: var(--tui-text-03);
+  // text-align: center;
+  // cursor: default;
+
+  &:before {
+    content: '\2026';
+  }
+}

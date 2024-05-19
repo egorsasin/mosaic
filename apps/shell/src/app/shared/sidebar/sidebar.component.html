@@ -1,0 +1,32 @@
+<div
+  class="h-full min-w-20 bg-white shadow-xl"
+  [@state]="visibility"
+  (@state.done)="animationDone($event)"
+  (mosActiveZoneChange)="onActiveZone($event)"
+>
+  <section class="sidebar-header">
+    <span *ngIf="titleTemplateRef$ | async as titleTemplateRef">
+      <ng-container *ngTemplateOutlet="titleTemplateRef"></ng-container>
+    </span>
+    <i
+      class="ts-icon ts-icon-actions-Close text-2xl ts-text-icon-neutral-color cursor-pointer"
+      (click)="close()"
+    ></i>
+  </section>
+
+  <mos-scroll>
+    <section class="sidebar-body" *ngIf="childComponentType">
+      <ts-sidebar-outlet
+        [component]="childComponentType"
+        (create)="onCreate($event)"
+      ></ts-sidebar-outlet>
+    </section>
+  </mos-scroll>
+
+  <section
+    class="sidebar-footer"
+    *ngIf="actionsTemplateRef$ | async as actionTemplateRef"
+  >
+    <ng-container *ngTemplateOutlet="actionTemplateRef"></ng-container>
+  </section>
+</div>

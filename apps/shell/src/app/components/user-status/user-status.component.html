@@ -1,0 +1,21 @@
+<a
+  *ngIf="userStatus | async as user"
+  [routerLink]="user.isLoggedIn ? '/profile' : '/login'"
+  class="hidden items-center justify-end md:flex md:flex-1 lg:w-0"
+>
+  <div
+    class="flex justify-center items-center h-9 w-9 rounded-full bg-gray-100 icon-user"
+  ></div>
+
+  <span class="ml-3 whitespace-nowrap text-sm text-gray-500 hover:text-gray-900"
+    >{{ user.isLoggedIn ? 'User' : 'Войти' }}
+  </span>
+</a>
+
+<button
+  *ngIf="(userStatus | async)?.isLoggedIn"
+  class="ml-3"
+  (click)="logOut()"
+>
+  Выход
+</button>
