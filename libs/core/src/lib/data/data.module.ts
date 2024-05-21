@@ -2,8 +2,7 @@ import { Module } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 
 import { ConfigModule, ConfigService } from '../config';
-
-export const DATA_SOURCE_PROVIDER = 'DATA_SOURCE';
+import { DATA_SOURCE_PROVIDER } from './constants';
 
 const dataSourceProvider = {
   provide: DATA_SOURCE_PROVIDER,

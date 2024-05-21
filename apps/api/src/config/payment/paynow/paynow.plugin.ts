@@ -1,4 +1,5 @@
 import { gql } from 'graphql-tag';
+import { HttpModule } from '@nestjs/axios';
 
 import { MosaicPlugin, PluginCommonModule, Type } from '@mosaic/core/plugin';
 import { RuntimeConfig } from '@mosaic/core/config';
@@ -9,13 +10,11 @@ import { PaynowCommonResolver } from './resolvers';
 import { PaynowService } from './paynow.service';
 
 @MosaicPlugin({
-  imports: [PluginCommonModule],
+  imports: [PluginCommonModule, HttpModule],
   controllers: [],
   providers: [PaynowService],
   configuration: (config: RuntimeConfig) => {
-    config.paymentOptions.paymentMethodHandlers.push(
-      paynowPaymentMethodHandler
-    );
+    config.paymentOptions.paymentMethodHandlers.push(paynowPaymentMethodHandler);
     return config;
   },
   shopApiExtensions: {

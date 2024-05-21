@@ -8,14 +8,8 @@ import {
   assertFound,
 } from '@mosaic/common';
 
-import { Order, PaymentMethod } from '../../data/entity';
-import { DATA_SOURCE_PROVIDER } from '../../data/data.module';
-import {
-  ConfigArgs,
-  ListQueryOptions,
-  PaginatedList,
-  UserInputError,
-} from '../../common';
+import { Order, PaymentMethod, DATA_SOURCE_PROVIDER } from '../../data';
+import { ConfigArgs, ListQueryOptions, PaginatedList, UserInputError } from '../../common';
 import { ConfigOptionsService } from '../helpers/config-options';
 import { PaymentMethodHandler } from '../../config';
 import { RequestContext } from '../../api/common';
@@ -33,14 +27,10 @@ export class PaymentMethodService {
   ) {}
 
   public findOne(id: number): Promise<PaymentMethod | undefined> {
-    return this.dataSource
-      .getRepository(PaymentMethod)
-      .findOne({ where: { id } });
+    return this.dataSource.getRepository(PaymentMethod).findOne({ where: { id } });
   }
 
-  public async findAll(
-    options?: ListQueryOptions
-  ): Promise<PaginatedList<PaymentMethod>> {
+  public async findAll(options?: ListQueryOptions): Promise<PaginatedList<PaymentMethod>> {
     return this.dataSource
       .getRepository(PaymentMethod)
       .findAndCount(options)
@@ -53,9 +43,7 @@ export class PaymentMethodService {
   public getPaymentMethodHandlers(): ConfigurableOperationDefinition[] {
     return this.configArgService
       .getDefinitions(PAYMENT_METHOD_HANDLER)
-      .map((definition: PaymentMethodHandler<ConfigArgs>) =>
-        definition.toGraphQlType()
-      );
+      .map((definition: PaymentMethodHandler<ConfigArgs>) => definition.toGraphQlType());
   }
 
   public async getMethodAndOperations(
@@ -66,46 +54,32 @@ export class PaymentMethodService {
     handler: PaymentMethodHandler;
   }> {
     // Получаем платежный метод по коду
-    const paymentMethod = await this.dataSource
-      .getRepository(PaymentMethod)
-      .findOne({
-        where: {
-          code: code,
-        },
-      });
+    const paymentMethod = await this.dataSource.getRepository(PaymentMethod).findOne({
+      where: {
+        code: code,
+      },
+    });
 
     if (!paymentMethod) {
       throw new UserInputError('ERROR.PAYMENT_METHOD_NOT_FOUND', { code });
     }
 
     // Получаем по коду обработчик платежей платежной системы
-    const handler = this.configOptionsService.getByCode(
-      PAYMENT_METHOD_HANDLER,
-      paymentMethod.handler.code
-    );
+    const handler = this.configOptionsService.getByCode(PAYMENT_METHOD_HANDLER, paymentMethod.handler.code);
 
     return { paymentMethod, handler };
   }
 
   public async create(input: CreatePaymentMethodInput): Promise<PaymentMethod> {
-    const handler: ConfigurableOperation = this.configArgService.parseInput(
-      PAYMENT_METHOD_HANDLER,
-      input.handler
-    );
+    const handler: ConfigurableOperation = this.configArgService.parseInput(PAYMENT_METHOD_HANDLER, input.handler);
     const paymentMethod = new PaymentMethod({ ...input, handler });
-    const savedPaymentMethod = await this.dataSource
-      .getRepository(PaymentMethod)
-      .save(paymentMethod);
+    const savedPaymentMethod = await this.dataSource.getRepository(PaymentMethod).save(paymentMethod);
 
     return assertFound(this.findOne(savedPaymentMethod.id));
   }
 
-  public async getEligiblePaymentMethods(
-    order: Order
-  ): Promise<PaymentMethodQuote[]> {
-    const paymentMethods = await this.dataSource
-      .getRepository(PaymentMethod)
-      .find({ where: { enabled: true } });
+  public async getEligiblePaymentMethods(order: Order): Promise<PaymentMethodQuote[]> {
+    const paymentMethods = await this.dataSource.getRepository(PaymentMethod).find({ where: { enabled: true } });
 
     return paymentMethods.map((method: PaymentMethod) => {
       const isEligible = true;

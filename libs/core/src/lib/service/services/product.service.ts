@@ -4,8 +4,7 @@ import { GraphQLError } from 'graphql';
 
 import { unique } from '@mosaic/common';
 
-import { DATA_SOURCE_PROVIDER } from '../../data/data.module';
-import { Product } from '../../data';
+import { Product, DATA_SOURCE_PROVIDER } from '../../data';
 import { ListQueryOptions, PaginatedList } from '../../common';
 import { CreateProductInput } from '../../types';
 import { UpdateProductInput } from '../../api/resolvers/admin/product.resolver';
@@ -20,9 +19,7 @@ export class ProductService {
     private assetService: AssetService
   ) {}
 
-  public async findAll(
-    options?: ListQueryOptions
-  ): Promise<PaginatedList<Product>> {
+  public async findAll(options?: ListQueryOptions): Promise<PaginatedList<Product>> {
     return this.dataSource
       .getRepository(Product)
       .findAndCount(options)
@@ -55,10 +52,7 @@ export class ProductService {
     });
   }
 
-  public async validateSlugs(input: {
-    slug: string;
-    id?: number;
-  }): Promise<string> {
+  public async validateSlugs(input: { slug: string; id?: number }): Promise<string> {
     const queryBuilder = this.dataSource
       .getRepository(Product)
       .createQueryBuilder('product')
@@ -84,9 +78,7 @@ export class ProductService {
   }
 
   async update(input: UpdateProductInput): Promise<Product> {
-    const product = await this.dataSource
-      .getRepository(Product)
-      .findOne({ where: { id: input.id } });
+    const product = await this.dataSource.getRepository(Product).findOne({ where: { id: input.id } });
 
     if (!product) {
       throw new EntityNotFoundError(Product, { id: input.id });

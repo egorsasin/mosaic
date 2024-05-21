@@ -1,23 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DataSource, EntityNotFoundError } from 'typeorm';
 
-import { Order, OrderLine, Product } from '../../data';
-import { DATA_SOURCE_PROVIDER } from '../../data/data.module';
+import { Order, OrderLine, Product, DATA_SOURCE_PROVIDER } from '../../data';
 
 @Injectable()
 export class OrderModifier {
-  constructor(
-    @Inject(DATA_SOURCE_PROVIDER) private readonly dataSource: DataSource
-  ) {}
+  constructor(@Inject(DATA_SOURCE_PROVIDER) private readonly dataSource: DataSource) {}
 
-  public async getOrCreateOrderLine(
-    order: Order,
-    productId: number,
-    quantity: number
-  ) {
-    let orderLine = order.lines.find(
-      (line: OrderLine) => line.product.id === productId
-    );
+  public async getOrCreateOrderLine(order: Order, productId: number, quantity: number) {
+    let orderLine = order.lines.find((line: OrderLine) => line.product.id === productId);
 
     if (orderLine) {
       orderLine.quantity += quantity;

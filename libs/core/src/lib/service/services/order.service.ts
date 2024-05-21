@@ -4,8 +4,7 @@ import { DataSource } from 'typeorm';
 import { PaymentInput, PaymentMethodQuote } from '@mosaic/common';
 
 import { RequestContext, generatePublicId } from '../../api/common';
-import { Order, OrderLine, Payment } from '../../data';
-import { DATA_SOURCE_PROVIDER } from '../../data/data.module';
+import { Order, OrderLine, Payment, DATA_SOURCE_PROVIDER } from '../../data';
 import {
   ErrorResultUnion,
   NegativeQuantityError,
@@ -13,11 +12,7 @@ import {
   OrderStateTransitionError,
   isGraphQlErrorResult,
 } from '../../common';
-import {
-  RemoveOrderItemsResult,
-  UpdateOrderItemsResult,
-  OrderState,
-} from '../../types';
+import { RemoveOrderItemsResult, UpdateOrderItemsResult, OrderState } from '../../types';
 import { OrderModifier } from '../helpers/order-modifier/order-modifier';
 import { OrderStateMachine } from '../helpers/order-state-machine/order-state-machine';
 
@@ -37,9 +32,7 @@ export class OrderService {
   ) {}
 
   public async findOne(id: number): Promise<Order | undefined> {
-    return this.dataSource
-      .getRepository(Order)
-      .findOne({ where: { id }, relations: ['lines', 'lines.product'] });
+    return this.dataSource.getRepository(Order).findOne({ where: { id }, relations: ['lines', 'lines.product'] });
   }
 
   async findOneByCode(orderCode: string): Promise<Order | undefined> {
@@ -60,9 +53,7 @@ export class OrderService {
     });
   }
 
-  public async getActiveOrderForUser(
-    userId: number
-  ): Promise<Order | undefined> {
+  public async getActiveOrderForUser(userId: number): Promise<Order | undefined> {
     return this.dataSource.getRepository(Order).findOne({
       where: {
         user: { id: userId },
@@ -78,10 +69,7 @@ export class OrderService {
    * @description
    * Returns an array of quotes stating which {@link PaymentMethod}s may be used on this Order.
    */
-  async getEligiblePaymentMethods(
-    ctx: RequestContext,
-    orderId: number
-  ): Promise<PaymentMethodQuote[]> {
+  async getEligiblePaymentMethods(ctx: RequestContext, orderId: number): Promise<PaymentMethodQuote[]> {
     const order = await this.getOrderOrThrow(orderId);
     return this.paymentMethodService.getEligiblePaymentMethods(order);
   }
@@ -132,13 +120,7 @@ export class OrderService {
 
     // order.payments = await this.getOrderPayments(ctx, order.id);
     // const amountToPay = order.totalWithTax - totalCoveredByPayments(order);
-    const payment = await this.paymentService.createPayment(
-      ctx,
-      order,
-      amountToPay,
-      method,
-      metadata
-    );
+    const payment = await this.paymentService.createPayment(ctx, order, amountToPay, method, metadata);
 
     if (isGraphQlErrorResult(payment)) {
       return payment;
@@ -173,12 +155,8 @@ export class OrderService {
       return true;
     }
 
-    const canTransitionToPaymentAuthorized =
-      this.orderStateMachine.canTransition(order.state, 'PaymentAuthorized');
-    const canTransitionToPaymentSettled = this.orderStateMachine.canTransition(
-      order.state,
-      'PaymentSettled'
-    );
+    const canTransitionToPaymentAuthorized = this.orderStateMachine.canTransition(order.state, 'PaymentAuthorized');
+    const canTransitionToPaymentSettled = this.orderStateMachine.canTransition(order.state, 'PaymentSettled');
 
     return canTransitionToPaymentAuthorized && canTransitionToPaymentSettled;
   }

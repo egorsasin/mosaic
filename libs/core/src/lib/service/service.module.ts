@@ -9,6 +9,7 @@ import { ActiveOrderService } from './helpers/active-order/active-order.service'
 import { OrderStateMachine } from './helpers/order-state-machine/order-state-machine';
 import { ConfigOptionsService } from './helpers/config-options/config-options.service';
 import { PaymentStateMachine } from './helpers/payment-state-machine/payment-state-machine';
+import { ConfigArgService } from './helpers/config-args';
 
 import { UserService } from './services/user.service';
 import { CustomerService } from './services/customer.service';
@@ -19,8 +20,7 @@ import { SessionService } from './services/session.service';
 import { PaymentMethodService } from './services/payment-method.service';
 import { OrderService } from './services/order.service';
 import { PaymentService } from './services/payment.service';
-import { AssetService } from './services';
-import { ConfigArgService } from './helpers/config-args';
+import { AssetService } from './services/asset.service';
 
 const helpers = [
   ConfigOptionsService,

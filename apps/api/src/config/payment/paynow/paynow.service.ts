@@ -1,53 +1,70 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
 import * as crypto from 'crypto';
+import { firstValueFrom } from 'rxjs';
+import { DataSource } from 'typeorm';
+
+import { DATA_SOURCE_PROVIDER, PaymentMethod } from '@mosaic/core';
+import { ConfigArg } from '@mosaic/common';
+
+import { paynowPaymentMethodHandler } from './paynow.handler';
+import { AxiosResponse } from 'axios';
 
 const computeHMACSignature = (payload: string, secret: string): string => {
-  return crypto
-    .createHmac('sha256', secret)
-    .update(payload, 'utf8')
-    .digest()
-    .toString('base64');
+  return crypto.createHmac('sha256', secret).update(payload, 'utf8').digest().toString('base64');
 };
 
 @Injectable()
 export class PaynowService {
-  async createPaymentIntent(): Promise<string> {
-    const payload = `{
-    "amount": "12345",
-    "externalId": "12345",
-    "description": "Payment description",
-    "buyer": {
-        "email": "jan.kowalski@melements.pl"
-    }
-}`;
+  constructor(
+    private httpService: HttpService,
+    @Inject(DATA_SOURCE_PROVIDER) private readonly dataSource: DataSource
+  ) {}
 
-    const payload3 = {
-      amount: '12345',
-      externalId: '12345',
-      description: 'Payment description',
+  public async createPaymentIntent(): Promise<string> {
+    const paynowPaymentMethod: PaymentMethod = await this.dataSource
+      .getRepository(PaymentMethod)
+      .findOne({ where: { enabled: true, code: paynowPaymentMethodHandler.code } });
+    const orderCode = 'XWRETBRGSPOP';
+
+    const data = {
+      amount: 10000,
+      externalId: orderCode,
+      description: 'Order 235',
       buyer: {
         email: 'jan.kowalski@melements.pl',
       },
     };
 
-    const ddd = JSON.stringify(payload3);
+    const apiKey = this.findOrThrowArgValue(paynowPaymentMethod.handler.args, 'apiKey');
+    const signatureKey = this.findOrThrowArgValue(paynowPaymentMethod.handler.args, 'signatureKey');
 
-    const secret = '5f6e5786-cb16-4c66-b411-27af32b15f0f';
+    const payload = JSON.stringify(data);
+    const signature = computeHMACSignature(payload, signatureKey);
+    const headers = {
+      'api-Key': apiKey,
+      signature,
+      'idempotency-key': `${orderCode}_${1000}`,
+      'content-type': 'application/json',
+    };
 
-    console.log('__DDDD', ddd);
+    let resp: AxiosResponse<any, any>;
+    try {
+      resp = await firstValueFrom(
+        this.httpService.post('https://api.sandbox.paynow.pl/v1/payments', payload, { headers })
+      );
+    } catch (error) {
+      // TODO Handle error
+    }
 
-    const comp = computeHMACSignature(
-      '{"amount":"12345","externalId":"12345","description":"Payment description","buyer":{"email":"jan.kowalski@melements.pl"}}',
-      secret
-    );
-    console.log('__RES', comp);
+    return `${resp.data?.redirectUrl}`;
+  }
 
-    const result = crypto
-      .createHmac('sha256', secret)
-      .update(ddd)
-      .digest()
-      .toString('base64');
-
-    return `https://google.com?key=${result}`;
+  private findOrThrowArgValue(args: ConfigArg[], name: string): string {
+    const value = args.find((arg) => arg.name === name)?.value;
+    if (!value) {
+      throw Error(`No argument named '${name}' found!`);
+    }
+    return value;
   }
 }
