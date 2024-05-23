@@ -8,10 +8,11 @@ import { PaynowPluginOptions } from './types';
 import { paynowPaymentMethodHandler } from './paynow.handler';
 import { PaynowCommonResolver } from './resolvers';
 import { PaynowService } from './paynow.service';
+import { PaynowController } from './paynow.controller';
 
 @MosaicPlugin({
   imports: [PluginCommonModule, HttpModule],
-  controllers: [],
+  controllers: [PaynowController],
   providers: [PaynowService],
   configuration: (config: RuntimeConfig) => {
     config.paymentOptions.paymentMethodHandlers.push(paynowPaymentMethodHandler);
