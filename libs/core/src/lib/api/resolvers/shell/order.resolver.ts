@@ -7,7 +7,10 @@ import { ActiveOrderService } from '../../../service/helpers/active-order';
 import { OrderService } from '../../../service/services/order.service';
 import {
   MutationAddItemToOrderArgs,
+  MutationAdjustOrderLineArgs,
+  MutationRemoveOrderLineArgs,
   QueryOrderByCodeArgs,
+  RemoveOrderItemsResult,
   UpdateOrderItemsResult,
 } from '../../../types';
 import {
@@ -107,14 +110,39 @@ export class OrderResolver {
     }
     return new NoActiveOrderError();
   }
-}
 
-// @Mutation()
-// @Allow(Permission.Owner)
-// async removeOrderLine(
-//   @Ctx() ctx: RequestContext,
-//   @Args() args: MutationRemoveOrderLineArgs,
-// ): Promise<ErrorResultUnion<RemoveOrderItemsResult, Order>> {
-//   const order = await this.activeOrderService.getOrderFromContext(ctx, true);
-//   return this.orderService.removeItemFromOrder(ctx, order.id, args.orderLineId);
-// }
+  @Mutation()
+  @Allow(Permission.Owner)
+  public async adjustOrderLine(
+    @Ctx() ctx: RequestContext,
+    @Args()
+    { orderLineId, quantity }: MutationAdjustOrderLineArgs & ActiveOrderArgs
+  ): Promise<ErrorResultUnion<UpdateOrderItemsResult, Order>> {
+    if (quantity === 0) {
+      return this.removeOrderLine(ctx, { orderLineId });
+    }
+
+    const order = await this.activeOrderService.getActiveOrder(ctx);
+
+    return this.orderService.adjustOrderLine(
+      ctx,
+      order.id,
+      orderLineId,
+      quantity
+    );
+  }
+
+  @Mutation()
+  @Allow(Permission.Owner)
+  public async removeOrderLine(
+    @Ctx() ctx: RequestContext,
+    @Args() args: MutationRemoveOrderLineArgs & ActiveOrderArgs
+  ): Promise<ErrorResultUnion<RemoveOrderItemsResult, Order>> {
+    const order = await this.activeOrderService.getActiveOrder(ctx);
+    return this.orderService.removeItemFromOrder(
+      ctx,
+      order.id,
+      args.orderLineId
+    );
+  }
+}

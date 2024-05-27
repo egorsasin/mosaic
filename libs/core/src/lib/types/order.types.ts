@@ -1,7 +1,15 @@
-import { NegativeQuantityError, OrderModificationError } from '../common';
+import {
+  NegativeQuantityError,
+  OrderLimitError,
+  OrderModificationError,
+} from '../common';
 import { Order } from '../data';
 
-export type UpdateOrderItemsResult = Order | NegativeQuantityError;
+export type UpdateOrderItemsResult =
+  | Order
+  | NegativeQuantityError
+  | OrderModificationError
+  | OrderLimitError;
 
 export type RemoveOrderItemsResult = Order | OrderModificationError;
 
@@ -16,4 +24,9 @@ export type MutationRemoveOrderLineArgs = {
 
 export type QueryOrderByCodeArgs = {
   code: string;
+};
+
+export type MutationAdjustOrderLineArgs = {
+  orderLineId: number;
+  quantity: number;
 };

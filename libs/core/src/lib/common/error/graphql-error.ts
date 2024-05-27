@@ -54,6 +54,17 @@ export class OrderModificationError extends ErrorResult {
   readonly message: 'ORDER_MODIFICATION_ERROR';
 }
 
+export class OrderLimitError extends ErrorResult {
+  readonly errorCode: 'ORDER_LIMIT_ERROR';
+  public readonly message: 'ORDER_LIMIT_ERROR';
+  public readonly maxItems: number;
+
+  constructor(input: { maxItems: number }) {
+    super();
+    this.maxItems = input.maxItems;
+  }
+}
+
 /** Returned if there is an error in transitioning the Order state */
 export type OrderStateTransitionError = ErrorResult & {
   __typename: 'OrderStateTransitionError';

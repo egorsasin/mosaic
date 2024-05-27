@@ -32,6 +32,10 @@ type Mutation {
   addItemToOrder(productId: Int!, quantity: Int!): UpdateOrderItemsResult!
   "Add a Payment to the Order"
   addPaymentToOrder(input: PaymentInput!): AddPaymentToOrderResult!
+  "Adjusts an OrderLine. If custom fields are defined on the OrderLine entity, a third argument 'customFields' of type `OrderLineCustomFieldsInput` will be available."
+  adjustOrderLine(orderLineId: Int!, quantity: Int!): UpdateOrderItemsResult!
+  "Remove an OrderLine from the Order"
+  removeOrderLine(orderLineId: ID!): RemoveOrderItemsResult!
 }
 
 "Returned when attempting to set a negative OrderLine quantity."
@@ -70,3 +74,5 @@ input PaymentInput {
 union UpdateOrderItemsResult = Order | NegativeQuantityError
 
 union AddPaymentToOrderResult = Order | NoActiveOrderError
+
+union RemoveOrderItemsResult = Order | OrderModificationError

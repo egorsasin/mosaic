@@ -43,6 +43,7 @@ export const defaultConfig: RuntimeConfig = {
     requireVerification: false,
   },
   orderOptions: {
+    orderItemsLimit: 999,
     orderLineItemsLimit: 999,
     process: [defaultOrderProcess],
     orderPlacedStrategy: new DefaultOrderPlacedStrategy(),

@@ -1,20 +1,28 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 
-import { PaymentInput, PaymentMethodQuote } from '@mosaic/common';
+import { PaymentInput, PaymentMethodQuote, summate } from '@mosaic/common';
 
 import { RequestContext, generatePublicId } from '../../api/common';
 import { Order, OrderLine, Payment, DATA_SOURCE_PROVIDER } from '../../data';
 import {
   ErrorResultUnion,
   NegativeQuantityError,
+  OrderLimitError,
+  OrderModificationError,
   OrderPaymentStateError,
   OrderStateTransitionError,
   isGraphQlErrorResult,
 } from '../../common';
-import { RemoveOrderItemsResult, UpdateOrderItemsResult, OrderState } from '../../types';
+import {
+  RemoveOrderItemsResult,
+  UpdateOrderItemsResult,
+  OrderState,
+} from '../../types';
 import { OrderModifier } from '../helpers/order-modifier/order-modifier';
 import { OrderStateMachine } from '../helpers/order-state-machine/order-state-machine';
+import { ConfigService } from '../../config';
+import { EventBus, OrderLineEvent } from '../../event-bus';
 
 import { UserService } from './user.service';
 import { PaymentService } from './payment.service';
@@ -28,11 +36,15 @@ export class OrderService {
     private readonly userService: UserService,
     private readonly orderModifier: OrderModifier,
     private readonly paymentService: PaymentService,
-    private readonly paymentMethodService: PaymentMethodService
+    private readonly paymentMethodService: PaymentMethodService,
+    private readonly configService: ConfigService,
+    private eventBus: EventBus
   ) {}
 
   public async findOne(id: number): Promise<Order | undefined> {
-    return this.dataSource.getRepository(Order).findOne({ where: { id }, relations: ['lines', 'lines.product'] });
+    return this.dataSource
+      .getRepository(Order)
+      .findOne({ where: { id }, relations: ['lines', 'lines.product'] });
   }
 
   async findOneByCode(orderCode: string): Promise<Order | undefined> {
@@ -53,7 +65,9 @@ export class OrderService {
     });
   }
 
-  public async getActiveOrderForUser(userId: number): Promise<Order | undefined> {
+  public async getActiveOrderForUser(
+    userId: number
+  ): Promise<Order | undefined> {
     return this.dataSource.getRepository(Order).findOne({
       where: {
         user: { id: userId },
@@ -69,7 +83,10 @@ export class OrderService {
    * @description
    * Returns an array of quotes stating which {@link PaymentMethod}s may be used on this Order.
    */
-  async getEligiblePaymentMethods(ctx: RequestContext, orderId: number): Promise<PaymentMethodQuote[]> {
+  async getEligiblePaymentMethods(
+    ctx: RequestContext,
+    orderId: number
+  ): Promise<PaymentMethodQuote[]> {
     const order = await this.getOrderOrThrow(orderId);
     return this.paymentMethodService.getEligiblePaymentMethods(order);
   }
@@ -120,7 +137,13 @@ export class OrderService {
 
     // order.payments = await this.getOrderPayments(ctx, order.id);
     // const amountToPay = order.totalWithTax - totalCoveredByPayments(order);
-    const payment = await this.paymentService.createPayment(ctx, order, amountToPay, method, metadata);
+    const payment = await this.paymentService.createPayment(
+      ctx,
+      order,
+      amountToPay,
+      method,
+      metadata
+    );
 
     if (isGraphQlErrorResult(payment)) {
       return payment;
@@ -146,19 +169,35 @@ export class OrderService {
 
   /**
    * @description
-   * Оплата может быть добавлена если:
-   * 1. Ордер в статусе `ArrangingPayment` или
-   * 2. Статус ордера может быть изменен на `PaymentAuthorized` и `PaymentSettled`
+   * Устанавливает количество в существующей строке заказа.
    */
-  private canAddPaymentToOrder(order: Order): boolean {
-    if (order.state === 'ArrangingPayment') {
-      return true;
+  public async adjustOrderLine(
+    ctx: RequestContext,
+    orderId: number,
+    orderLineId: number,
+    quantity: number
+  ): Promise<ErrorResultUnion<UpdateOrderItemsResult, Order>> {
+    const order = await this.getOrderOrThrow(orderId);
+    const orderLine = this.getOrderLineOrThrow(order, orderLineId);
+    const validationError =
+      this.assertAddingItemsState(order) ||
+      this.assertQuantityIsPositive(quantity) ||
+      this.assertNotOverOrderItemsLimit(order, quantity - orderLine.quantity) ||
+      this.assertNotOverOrderLineItemsLimit(
+        orderLine,
+        quantity - orderLine.quantity
+      );
+
+    if (validationError) {
+      return validationError;
     }
 
-    const canTransitionToPaymentAuthorized = this.orderStateMachine.canTransition(order.state, 'PaymentAuthorized');
-    const canTransitionToPaymentSettled = this.orderStateMachine.canTransition(order.state, 'PaymentSettled');
-
-    return canTransitionToPaymentAuthorized && canTransitionToPaymentSettled;
+    await this.orderModifier.updateOrderLineQuantity(
+      ctx,
+      orderLine,
+      quantity,
+      order
+    );
   }
 
   public async removeItemFromOrder(
@@ -167,11 +206,20 @@ export class OrderService {
     orderLineId: number
   ): Promise<ErrorResultUnion<RemoveOrderItemsResult, Order>> {
     const order = await this.getOrderOrThrow(orderId);
+    const validationError = this.assertAddingItemsState(order);
+
+    if (validationError) {
+      return validationError;
+    }
+
     const orderLine = this.getOrderLineOrThrow(order, orderLineId);
 
     order.lines = order.lines.filter(({ id }: OrderLine) => id !== orderLineId);
 
     await this.dataSource.getRepository(OrderLine).remove(orderLine);
+    await this.eventBus.publish(
+      new OrderLineEvent(ctx, order, orderLine, 'deleted')
+    );
     return order;
   }
 
@@ -262,5 +310,65 @@ export class OrderService {
       lines: [],
       code: generatePublicId(),
     });
+  }
+
+  /**
+   * @description
+   * Оплата может быть добавлена если:
+   * 1. Ордер в статусе `ArrangingPayment` или
+   * 2. Статус ордера может быть изменен на `PaymentAuthorized` и `PaymentSettled`
+   */
+  private canAddPaymentToOrder(order: Order): boolean {
+    if (order.state === 'ArrangingPayment') {
+      return true;
+    }
+
+    const canTransitionToPaymentAuthorized =
+      this.orderStateMachine.canTransition(order.state, 'PaymentAuthorized');
+    const canTransitionToPaymentSettled = this.orderStateMachine.canTransition(
+      order.state,
+      'PaymentSettled'
+    );
+
+    return canTransitionToPaymentAuthorized && canTransitionToPaymentSettled;
+  }
+
+  /**
+   * Возвращает ошибку если указанное количество товаров в заказе
+   * превышает максимальный лимит установленный в конфигурации
+   */
+  private assertNotOverOrderItemsLimit(
+    order: Order,
+    quantityToAdd: number
+  ): OrderLimitError {
+    const currentItemsCount = summate(order.lines, 'quantity');
+    const { orderItemsLimit } = this.configService.orderOptions;
+
+    if (orderItemsLimit < currentItemsCount + quantityToAdd) {
+      return new OrderLimitError({ maxItems: orderItemsLimit });
+    }
+  }
+
+  /**
+   * Возвращает ошибку если указанное количество товаров в строке заказа
+   * превышает максимальный лимит установленный в конфигурации
+   */
+  private assertNotOverOrderLineItemsLimit(
+    orderLine: OrderLine | undefined,
+    quantityToAdd: number
+  ): OrderLimitError {
+    const currentQuantity = orderLine?.quantity || 0;
+    const { orderLineItemsLimit } = this.configService.orderOptions;
+
+    if (orderLineItemsLimit < currentQuantity + quantityToAdd) {
+      return new OrderLimitError({ maxItems: orderLineItemsLimit });
+    }
+  }
+
+  private assertAddingItemsState(order: Order): OrderModificationError | null {
+    const allowedStatuses = ['AddingItems', 'Draft'];
+    return allowedStatuses.includes(order.state)
+      ? null
+      : new OrderModificationError();
   }
 }

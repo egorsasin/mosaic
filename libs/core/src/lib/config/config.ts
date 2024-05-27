@@ -24,6 +24,7 @@ export interface ApiOptions {
 }
 
 export interface OrderOptions {
+  orderItemsLimit?: number;
   orderLineItemsLimit?: number;
   process?: Array<OrderProcess<any>>;
   orderPlacedStrategy?: OrderPlacedStrategy;

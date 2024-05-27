@@ -2,8 +2,9 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
+import { MosAssetPreviewPipe } from '@mosaic/common-ui';
+
 import { MiniCartComponent } from './mini-cart.component';
-import { MosAssetPreviewPipe } from '../../product/asset-preview';
 
 @NgModule({
   declarations: [MiniCartComponent],

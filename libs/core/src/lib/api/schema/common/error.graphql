@@ -35,3 +35,9 @@ type PasswordValidationError implements ErrorResult {
   message: String!
   validationErrorMessage: String!
 }
+
+"Returned when attempting to modify the contents of an Order that is not in the `AddingItems` state."
+type OrderModificationError implements ErrorResult {
+  errorCode: ErrorCode!
+  message: String!
+}

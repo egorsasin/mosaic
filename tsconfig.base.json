@@ -25,7 +25,9 @@
       "@mosaic/google-auth": ["libs/google-auth/src/index.ts"],
       "@mosaic/mask": ["libs/mask/src/index.ts"],
       "@mosaic/ui": ["libs/ui/src/index.ts"],
-      "@mosaic/ui/*": ["libs/ui/src/lib/*"]
+      "@mosaic/ui/*": ["libs/ui/src/lib/*"],
+      "@mosaic/common-ui": ["libs/common-ui/src/index.ts"],
+      "@mosaic/common-ui/*": ["libs/common-ui/src/lib/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]
