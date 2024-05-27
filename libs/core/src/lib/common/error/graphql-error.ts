@@ -75,9 +75,9 @@ const errorTypeNames = new Set([
   'NoActiveOrderError',
 ]);
 
-type GraphQLValue = { __typename: string };
+export type GraphQLValue = { __typename: string };
 
-function isGraphQLError(input: GraphQLValue): input is ErrorResult {
+export function isGraphQLError(input: GraphQLValue): input is ErrorResult {
   return input instanceof ErrorResult || errorTypeNames.has(input.__typename);
 }
 

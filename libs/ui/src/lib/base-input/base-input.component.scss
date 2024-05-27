@@ -2,6 +2,11 @@
   display: block;
   position: relative;
   box-sizing: border-box;
+  @apply ring-1 ring-inset ring-gray-400 rounded-md shadow-sm flex gap-2;
+
+  &.mos-focused {
+    @apply ring-blue-500 border-blue-500 ring-2;
+  }
 
   &::after {
     position: absolute;
@@ -15,7 +20,26 @@
     border-radius: inherit;
   }
 
+  .mos-input {
+    &__input {
+      @apply pt-4 pb-1 h-11;
+    }
+  }
+
   &.mos-focused::after {
     border: none;
+  }
+
+  .label-raised {
+    transform: translateY(-0.7rem) scale(0.85);
+    @apply pl-0;
+  }
+}
+
+:host-context(.mos-label-outside) {
+  .mos-input {
+    &__input {
+      @apply pt-0 pb-0  h-9;
+    }
   }
 }

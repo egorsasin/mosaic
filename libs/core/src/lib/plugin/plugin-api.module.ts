@@ -13,13 +13,12 @@ import { ApiType } from '../api';
 const dynamicApiModuleClassMap: { [name: string]: Type<unknown> } = {};
 
 /**
- * This function dynamically creates a Nest module to house any GraphQL resolvers defined by
- * any configured plugins.
+ * Функция динамически создает Nest модуль для GraphQL резолверов
+ * определеных в конфигурации плагина
  */
 export function createDynamicGraphQlModulesForPlugins(
   apiType: ApiType
 ): DynamicModule[] {
-  console.log('__CONFIG', getConfig());
   return getConfig()
     .plugins.map((plugin) => {
       const pluginModule = isDynamicModule(plugin) ? plugin.module : plugin;

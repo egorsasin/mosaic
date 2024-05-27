@@ -61,6 +61,9 @@ export class MosSelectComponent<T>
   public customContent: TemplateRef<unknown> | null = null;
 
   @Input()
+  public labelOutside = false;
+
+  @Input()
   public stringify: StringHandler<T> = defaultStringHandler;
 
   @Input()

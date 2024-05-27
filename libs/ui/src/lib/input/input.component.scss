@@ -1,9 +1,4 @@
-:host {
-  display: block;
-  position: relative;
-  box-sizing: border-box;
-  @apply ring-1 ring-inset ring-gray-300 rounded-md shadow-sm flex gap-1;
-}
+
 
 .dropdown-list {
   max-height: inherit;

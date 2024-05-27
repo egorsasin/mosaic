@@ -13,6 +13,7 @@ import {
 import {
   ErrorResultUnion,
   ForbiddenError,
+  NoActiveOrderError,
   OrderPaymentStateError,
 } from '../../../common';
 import { MutationArgs, PaymentInput } from '@mosaic/common';
@@ -78,7 +79,7 @@ export class OrderResolver {
   public async addPaymentToOrder(
     @Ctx() ctx: RequestContext,
     @Args() { input }: MutationArgs<PaymentInput> & ActiveOrderArgs
-  ): Promise<Order | OrderPaymentStateError> {
+  ): Promise<Order | OrderPaymentStateError | NoActiveOrderError> {
     if (ctx.authorizedAsOwnerOnly) {
       const sessionOrder = await this.activeOrderService.getActiveOrder(ctx);
 
@@ -103,11 +104,9 @@ export class OrderResolver {
 
         return order;
       }
-
-      return sessionOrder;
     }
+    return new NoActiveOrderError();
   }
-  // return new NoActiveOrderError();
 }
 
 // @Mutation()

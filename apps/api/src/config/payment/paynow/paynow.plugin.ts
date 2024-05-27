@@ -15,14 +15,25 @@ import { PaynowController } from './paynow.controller';
   controllers: [PaynowController],
   providers: [PaynowService],
   configuration: (config: RuntimeConfig) => {
-    config.paymentOptions.paymentMethodHandlers.push(paynowPaymentMethodHandler);
+    config.paymentOptions.paymentMethodHandlers.push(
+      paynowPaymentMethodHandler
+    );
     return config;
   },
   shopApiExtensions: {
     schema: gql`
-      extend type Mutation {
-        createPaynowIntent: String!
+      input PaynowPaymentIntentInput {
+        orderId: Int!
       }
+      type PaynowPaymentIntent {
+        url: String!
+      }
+      extend type Mutation {
+        createPaynowIntent(
+          input: PaynowPaymentIntentInput!
+        ): PaynowPaymentIntentResult!
+      }
+      union PaynowPaymentIntentResult = PaynowPaymentIntent | NoActiveOrderError
     `,
     resolvers: [PaynowCommonResolver],
   },

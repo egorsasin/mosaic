@@ -8,3 +8,7 @@ export interface PaynowPluginOptions {
     order: Order
   ) => unknown | Promise<unknown>;
 }
+
+export interface PaynowPaymentIntent {
+  url: string;
+}

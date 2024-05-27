@@ -47,12 +47,13 @@ export class MosBaseInputComponent {
   @Input()
   public cleaner = true;
 
-  @Input()
-  public copier = false;
-
   @Input() public readonly = false;
 
   @Input() public pseudoFocused?: boolean;
+
+  @Input()
+  @HostBinding(`class.mos-label-outside`)
+  public labelOutside = false;
 
   @Output()
   public readonly valueChange = new EventEmitter<string>();
@@ -79,16 +80,17 @@ export class MosBaseInputComponent {
     return (!!element && node.contains(element)) || this.pseudoFocused;
   }
 
+  @HostBinding(`class.mos-raised`)
+  public get labelRaised(): boolean {
+    return this.focused || this.hasValue || this.placeholder !== '';
+  }
+
   private get hasValue(): boolean {
     return !(
       this.value === null ||
       this.value === undefined ||
       this.value.toString().trim() === ''
     );
-  }
-
-  get hasCopy(): boolean {
-    return this.hasValue && this.copier;
   }
 
   constructor(private elementRef: ElementRef) {}

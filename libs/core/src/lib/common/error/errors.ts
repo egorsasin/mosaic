@@ -50,3 +50,11 @@ export class OrderPaymentStateError extends GraphQLError {
     });
   }
 }
+
+export class NoActiveOrderError extends GraphQLError {
+  constructor() {
+    super('NO_ACTIVE_ORDER_ERROR', {
+      extensions: { code: 'NO_ACTIVE_ORDER_ERROR' },
+    });
+  }
+}

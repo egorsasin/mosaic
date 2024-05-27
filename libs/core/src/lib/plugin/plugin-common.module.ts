@@ -3,9 +3,12 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '../config/config.module';
 import { DataModule } from '../data/data.module';
 import { EventBusModule } from '../event-bus';
+import { ServiceModule } from '../service/service.module';
+
+const MODULES = [ConfigModule, EventBusModule, DataModule, ServiceModule];
 
 @Module({
-  imports: [ConfigModule, EventBusModule, DataModule],
-  exports: [ConfigModule, EventBusModule, DataModule],
+  imports: [...MODULES],
+  exports: [...MODULES],
 })
 export class PluginCommonModule {}

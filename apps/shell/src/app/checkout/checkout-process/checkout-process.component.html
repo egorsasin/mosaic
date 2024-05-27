@@ -1,6 +1,6 @@
-<div class="mx-auto max-w-7xl px-4 sm:px-6">
+<div *mosLet="order$ | async as order" class="mx-auto max-w-7xl px-4 sm:px-6">
   <div class="md:grid md:grid-cols-2 md:gap-6">
-    <div>
+    <form [formGroup]="form" autocomplete="off">
       <div class="grid grid-cols-6 gap-6">
         <div class="col-span-6">
           <p class="block mb-2 text-sm font-medium">Зарегистрироваться</p>
@@ -28,78 +28,59 @@
         </div>
 
         <div class="col-span-6 sm:col-span-3">
-          <label
-            for="first-name"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >First name</label
-          >
-          <input
-            type="text"
-            id="first-name"
-            class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500/50 focus:border-blue-500 block w-full p-2.5"
-            placeholder="name@mail.com"
-            required
-          />
+          <mos-input formControlName="firstname">
+            Imię
+            <span class="text-rose-500 ml-[1px]">*</span>
+          </mos-input>
         </div>
 
         <div class="col-span-6 sm:col-span-3">
-          <label
-            for="last-name"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >Last name</label
-          >
-          <input
-            type="text"
-            id="last-name"
-            class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            placeholder="name@mail.com"
-            required
-          />
+          <mos-input formControlName="lastName">
+            Nazwisko
+            <span class="text-rose-500 ml-[1px]">*</span>
+          </mos-input>
         </div>
 
         <div class="col-span-6 sm:col-span-3">
-          <label
-            for="email"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >Your email</label
-          >
-          <input
-            type="email"
-            id="email"
-            class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            placeholder="name@mail.com"
-            required
-          />
-        </div>
-
-        <div class="col-span-6 sm:col-span-3">
-          <label
-            for="phone"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >Your phone</label
-          >
-          <input
-            type="text"
-            id="phone"
-            [mosMask]="maskConfig"
-            class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            placeholder="+48 000-000-000"
-            autocomplete="off"
-          />
+          <mos-input formControlName="email">
+            Email
+            <span class="text-rose-500 ml-[1px]">*</span>
+          </mos-input>
         </div>
 
         <div class="sm:col-span-3 col-span-full">
-          <label
-            for="password"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >Password</label
+          <mos-input-password formControlName="password">
+            Password
+            <span class="text-rose-500 ml-[1px]">*</span>
+          </mos-input-password>
+        </div>
+
+        <div class="col-span-6 sm:col-span-3">
+          <mos-input formControlName="phone">
+            Phone
+            <span class="text-rose-500 ml-[1px]">*</span>
+          </mos-input>
+        </div>
+
+        <div class="col-span-6 sm:col-span-6">
+          <mos-input>
+            Ulica i numer domu
+            <span class="text-rose-500 ml-[1px]">*</span>
+          </mos-input>
+        </div>
+      </div>
+
+      <div class="py-5">
+        <span class="font-semibold">Metody dostawy</span>
+        <div class="grid gap-3 py-3">
+          <div
+            class="py-4 px-5 flex gap-3 bg-white border border-gray-300 shadow-sm rounded-lg text-sm cursor-pointer"
           >
-          <input
-            type="password"
-            id="password"
-            autocomplete="off"
-            class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-          />
+            <div>
+              <div class="font-semibold">Paczkomat InPost</div>
+              <div class="mt-2 text-gray-500" [innerHtml]=""></div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -113,6 +94,7 @@
             (click)="paymentMethod.setValue(item.code)"
           >
             <input
+              *ngIf="false"
               name="payment-method"
               type="radio"
               [formControl]="paymentMethod"
@@ -131,11 +113,99 @@
           }
         </div>
       </div>
+    </form>
+
+    <!-- CART -->
+
+    <div class="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
+      <div class="flex items-start justify-between">
+        <h2 class="text-lg font-medium text-gray-900" id="slide-over-title">
+          Podsumowanie zamówienia
+        </h2>
+      </div>
+
+      <div class="mt-8">
+        <div class="flow-root">
+          <ul role="list" class="-my-6 divide-y divide-gray-200">
+            @for (item of (items$ | async); track item.id ) {
+            <li class="flex py-6">
+              <div
+                class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200"
+              >
+                <img
+                  [src]="$any(item.product.featuredAsset)"
+                  [alt]="item.product.name"
+                  class="h-full w-full object-cover object-center"
+                />
+              </div>
+
+              <div class="ml-4 flex flex-1 flex-col">
+                <div>
+                  <div
+                    class="flex justify-between text-base font-medium text-gray-900"
+                  >
+                    <h3>
+                      <a href="#">Throwback Hip Bag</a>
+                    </h3>
+                    <p class="ml-4">$90.00</p>
+                  </div>
+                  <p class="mt-1 text-sm text-gray-500">250g</p>
+                </div>
+                <div class="flex flex-1 items-end justify-between text-sm">
+                  <p class="text-gray-500">Qty 1</p>
+
+                  <div class="flex">
+                    <button
+                      type="button"
+                      class="font-medium text-indigo-600 hover:text-indigo-500"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </li>
+            }
+            <!-- More products... -->
+          </ul>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
+        <div class="flex justify-between text-base font-medium text-gray-900">
+          <p>Subtotal</p>
+          <p>$262.00</p>
+        </div>
+        <p class="mt-0.5 text-sm text-gray-500">
+          Shipping and taxes calculated at checkout.
+        </p>
+        <div class="mt-6">
+          <a
+            href="#"
+            class="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+            >Checkout</a
+          >
+        </div>
+        <div class="mt-6 flex justify-center text-center text-sm text-gray-500">
+          <p>
+            or
+            <button
+              type="button"
+              class="font-medium text-indigo-600 hover:text-indigo-500"
+            >
+              Continue Shopping
+              <span aria-hidden="true"> &rarr;</span>
+            </button>
+          </p>
+        </div>
+      </div>
     </div>
+
+    <!-- CART -->
   </div>
 
   <button
-    (click)="addPaymentMethod()"
+    (click)="completeOrder(order)"
     class="mt-5 flex items-center justify-center border rounded-md bg-gray-600 hover:bg-gray-600 text-white py-2 px-5 focus:outline-none font-semibold shadow-sm"
   >
     Zamawiam i płacę

@@ -6,8 +6,9 @@ import {
   trigger,
   AnimationEvent,
 } from '@angular/animations';
-import { Component, HostBinding, TemplateRef, Type } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Component, TemplateRef, Type } from '@angular/core';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { Subject, filter, takeUntil } from 'rxjs';
 
 import { Sidebar, SidebarOptions } from './sidebar.types';
 
@@ -29,8 +30,9 @@ import { Sidebar, SidebarOptions } from './sidebar.types';
     '[class.mos-visible]': 'visibility === "visible"',
   },
 })
-export class SidebarComponent<T extends Sidebar<any>> {
+export class SidebarComponent<T extends Sidebar<unknown>> {
   private result: any;
+  protected destroy$: Subject<void> = new Subject<void>();
 
   public actionsTemplateRef$ = new Subject<TemplateRef<any>>();
   public titleTemplateRef$ = new Subject<TemplateRef<any>>();
@@ -40,6 +42,11 @@ export class SidebarComponent<T extends Sidebar<any>> {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   public closeSidebar: (result?: any) => void = () => {};
 
+  constructor(router: Router) {
+    router.events.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.close();
+    });
+  }
   public onCreate(componentInstance: any) {
     componentInstance.resolveSidebarWith = (result?: any) => {
       this.result = result;
@@ -77,5 +84,11 @@ export class SidebarComponent<T extends Sidebar<any>> {
 
   public registerTitleTemplate(titleTemplateRef: TemplateRef<any>): void {
     this.titleTemplateRef$.next(titleTemplateRef);
+  }
+
+  /** @internal */
+  public ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

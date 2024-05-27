@@ -38,6 +38,7 @@ export class MosInputComponent
 
   @Input() public placeholder = '';
   @Input() public readonly = false;
+  @Input() public labelOutside = false;
 
   @ViewChild(MosBaseInputComponent, { static: true })
   public baseInput?: MosBaseInputComponent;
