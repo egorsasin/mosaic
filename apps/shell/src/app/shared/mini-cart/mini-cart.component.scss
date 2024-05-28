@@ -1,3 +1,8 @@
+:host {
+  min-width: 30rem;
+  display: block;
+}
+
 .cart {
   &--product-list {
     grid-template-columns: 80px 1fr;

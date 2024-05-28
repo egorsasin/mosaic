@@ -11,7 +11,7 @@ export type UpdateOrderItemsResult =
   | OrderModificationError
   | OrderLimitError;
 
-export type RemoveOrderItemsResult = Order | OrderModificationError;
+export type RemoveOrderItemResult = Order | OrderModificationError;
 
 export type MutationAddItemToOrderArgs = {
   productId: number;

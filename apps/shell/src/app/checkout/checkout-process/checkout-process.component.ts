@@ -1,13 +1,9 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { gql } from 'apollo-angular';
 
-import { MutationArgs, PaymentInput, PaymentMethodQuote } from '@mosaic/common';
+import { Exact, MutationArgs, PaymentMethodQuote } from '@mosaic/common';
 
 import { DataService } from '../../data';
-import {
-  ADD_PAYMENT,
-  GET_ELIGIBLE_PAYMENT_METHODS,
-} from './checkout-process.graphql';
+import { GET_ELIGIBLE_PAYMENT_METHODS } from './checkout-process.graphql';
 import { Observable, map } from 'rxjs';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Order } from '../../types';
@@ -15,6 +11,7 @@ import { ActiveOrderService } from '../../active-order';
 import { CREATE_PAYNOW_PAYMENT_INTENT } from './paynow.graphql';
 import { Router } from '@angular/router';
 import { WINDOW } from '@mosaic/cdk';
+import { REMOVE_ITEM_FROM_CART } from './cart.graphql';
 
 export type GetEligiblePaymentMethodsQuery = {
   eligiblePaymentMethods: PaymentMethodQuote[];
@@ -24,8 +21,21 @@ export enum ErrorCode {
   ORDER_PAYMENT_STATE_ERROR = 'ORDER_PAYMENT_STATE_ERROR',
 }
 
-type ApiError = { errorCode: ErrorCode; message: string };
-type AddPaymentMutation = { addPaymentToOrder: ApiError | Order };
+type GraphQLError = { errorCode: ErrorCode; message: string };
+
+export type RemoveItemFromCartMutationVariables = Exact<{
+  id: number;
+}>;
+
+export type RemoveItemFromCartMutation = {
+  removeOrderLine:
+    | Order
+    | {
+        __typename?: 'OrderModificationError';
+        errorCode: ErrorCode;
+        message: string;
+      };
+};
 
 @Component({
   selector: 'mos-checkout-process',
@@ -141,5 +151,16 @@ export class CheckoutProcessComponent {
       //         break;
       //     }
     }
+  }
+
+  public removeItem(id: number) {
+    this.dataService
+      .mutate<RemoveItemFromCartMutation, RemoveItemFromCartMutationVariables>(
+        REMOVE_ITEM_FROM_CART,
+        {
+          id,
+        }
+      )
+      .subscribe();
   }
 }

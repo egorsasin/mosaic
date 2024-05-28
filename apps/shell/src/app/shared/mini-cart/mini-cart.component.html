@@ -1,4 +1,9 @@
-<span>ТОВАРЫ В КОРЗИНЕ</span>
+<h2
+  class="text-xl font-medium text-gray-900 font-['Oswald'] uppercase border-b w-full pb-2"
+>
+  Twój koszyk
+</h2>
+
 <div class="cart--product-list grid gap-x-4">
   <ng-container *ngFor="let item of items$ | async">
     <div class="col-auto group cursor-pointer relative">
@@ -17,3 +22,15 @@
 >
   Złóż zamówienie
 </a>
+
+<div class="mt-6 flex justify-center text-center text-sm text-gray-500">
+  <p>
+    albo
+    <button
+      type="button"
+      class="font-medium text-gray-600 hover:text-gray-500 hover:underline"
+    >
+      Kontynuuj zakupy
+    </button>
+  </p>
+</div>

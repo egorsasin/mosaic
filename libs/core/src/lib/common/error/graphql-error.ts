@@ -127,6 +127,12 @@ export const storeFrontErrorTypeResolvers = {
       return isGraphQLError(value) ? value.__typename : 'Order';
     },
   },
+
+  RemoveOrderItemResult: {
+    __resolveType(value: GraphQLValue) {
+      return isGraphQLError(value) ? value.__typename : 'Order';
+    },
+  },
 };
 
 export const adminErrorTypeResolvers = {

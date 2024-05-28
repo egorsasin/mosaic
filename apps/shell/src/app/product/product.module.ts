@@ -11,6 +11,7 @@ import { PaginationComponent } from '../pagination/pagination.component';
 import { ProductCardComponent } from './product-card/product-card.component';
 import { ProductListComponent } from './product-list/product-list.component';
 import { ProductService } from './product.service';
+import { MosQuantitySelectorComponent } from '../shared';
 
 const routes: Routes = [
   {
@@ -27,6 +28,7 @@ const routes: Routes = [
     CarouselModule,
     FormsModule,
     CommonModule,
+    MosQuantitySelectorComponent,
     RouterModule.forChild(routes),
   ],
   providers: [ProductService],

@@ -80,8 +80,6 @@ export class MosMaskDirective implements ControlValueAccessor, OnChanges {
     @Inject(WINDOW) window: Window
   ) {
     if (this.compositionMode == null) {
-      console.log(window);
-
       /**
        * We must check whether the agent is Android because composition events
        * behave differently between iOS and Android.

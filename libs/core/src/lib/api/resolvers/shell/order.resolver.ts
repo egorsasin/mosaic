@@ -10,7 +10,7 @@ import {
   MutationAdjustOrderLineArgs,
   MutationRemoveOrderLineArgs,
   QueryOrderByCodeArgs,
-  RemoveOrderItemsResult,
+  RemoveOrderItemResult,
   UpdateOrderItemsResult,
 } from '../../../types';
 import {
@@ -137,7 +137,7 @@ export class OrderResolver {
   public async removeOrderLine(
     @Ctx() ctx: RequestContext,
     @Args() args: MutationRemoveOrderLineArgs & ActiveOrderArgs
-  ): Promise<ErrorResultUnion<RemoveOrderItemsResult, Order>> {
+  ): Promise<ErrorResultUnion<RemoveOrderItemResult, Order>> {
     const order = await this.activeOrderService.getActiveOrder(ctx);
     return this.orderService.removeItemFromOrder(
       ctx,

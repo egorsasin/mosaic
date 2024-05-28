@@ -15,7 +15,7 @@ import {
   isGraphQlErrorResult,
 } from '../../common';
 import {
-  RemoveOrderItemsResult,
+  RemoveOrderItemResult,
   UpdateOrderItemsResult,
   OrderState,
 } from '../../types';
@@ -204,7 +204,7 @@ export class OrderService {
     ctx: RequestContext,
     orderId: number,
     orderLineId: number
-  ): Promise<ErrorResultUnion<RemoveOrderItemsResult, Order>> {
+  ): Promise<ErrorResultUnion<RemoveOrderItemResult, Order>> {
     const order = await this.getOrderOrThrow(orderId);
     const validationError = this.assertAddingItemsState(order);
 

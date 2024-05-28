@@ -35,7 +35,7 @@ type Mutation {
   "Adjusts an OrderLine. If custom fields are defined on the OrderLine entity, a third argument 'customFields' of type `OrderLineCustomFieldsInput` will be available."
   adjustOrderLine(orderLineId: Int!, quantity: Int!): UpdateOrderItemsResult!
   "Remove an OrderLine from the Order"
-  removeOrderLine(orderLineId: ID!): RemoveOrderItemsResult!
+  removeOrderLine(orderLineId: Int!): RemoveOrderItemResult!
 }
 
 "Returned when attempting to set a negative OrderLine quantity."
@@ -75,4 +75,4 @@ union UpdateOrderItemsResult = Order | NegativeQuantityError
 
 union AddPaymentToOrderResult = Order | NoActiveOrderError
 
-union RemoveOrderItemsResult = Order | OrderModificationError
+union RemoveOrderItemResult = Order | OrderModificationError
