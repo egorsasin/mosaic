@@ -140,10 +140,13 @@ export class OrderService {
       productId
     );
 
+    const newQuantity =
+      (existingOrderLine ? existingOrderLine?.quantity : 0) + quantity;
+
     await this.orderModifier.updateOrderLineQuantity(
       ctx,
       orderLine,
-      quantity,
+      newQuantity,
       order
     );
 
