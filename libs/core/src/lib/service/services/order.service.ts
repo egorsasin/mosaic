@@ -358,6 +358,7 @@ export class OrderService {
       lines: [],
       code: generatePublicId(),
       shippingAddress: {},
+      subTotal: 0,
     });
   }
 
