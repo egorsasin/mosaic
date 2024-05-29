@@ -4,6 +4,12 @@ type OrderLine implements Node {
   updatedAt: DateTime!
   product: Product!
   quantity: Int!
+  """
+  The actual line price, taking into account both item discounts _and_ prorated (proportionally-distributed)
+  Order-level discounts. This value is the true economic value of the OrderLine, and is used in tax
+  and refund calculations.
+  """
+  proratedLinePrice: Money!
 }
 
 type Order implements Node {

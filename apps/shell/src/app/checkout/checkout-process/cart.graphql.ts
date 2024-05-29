@@ -2,8 +2,8 @@ import { gql } from 'apollo-angular';
 import { CART_FRAGMENT, ERROR_RESULT_FRAGMENT } from '../../common/definitions';
 
 export const ADJUST_ITEM_QUANTITY = gql`
-  mutation AdjustItemQuantity($id: Int!, $qty: Int!) {
-    adjustOrderLine(orderLineId: $id, quantity: $qty) {
+  mutation AdjustItemQuantity($id: Int!, $quantity: Int!) {
+    adjustOrderLine(orderLineId: $id, quantity: $quantity) {
       ...Cart
       ...ErrorResult
     }

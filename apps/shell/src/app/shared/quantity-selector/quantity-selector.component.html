@@ -27,7 +27,8 @@
     <input
       class="w-8 border-none outline-none p-0 m-0 text-center bg-transparent font-semibold focus:outline-none focus:ring-transparent text-gray-900 placeholder:text-gray-900 placeholder:opacity-100"
       [mosMask]="$any(maskConfig)"
-      [(ngModel)]="value"
+      [ngModel]="value"
+      (ngModelChange)="valueChanges($event)"
       placeholder="1"
     />
   </span>

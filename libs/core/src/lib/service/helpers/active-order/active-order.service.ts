@@ -63,7 +63,7 @@ export class ActiveOrderService {
       throw new InternalServerError('NO_ACTIVE_SESSION');
     }
 
-    let order = ctx.session.activeOrderId
+    let order = ctx.session?.activeOrderId
       ? await this.orderService.findActiveOrderById(ctx.session.activeOrderId)
       : undefined;
 

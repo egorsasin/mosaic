@@ -4,7 +4,7 @@ export const CALCULATED_PROPERTIES = '__calculatedProperties__';
 
 export interface CalculatedColumnQueryInstruction {
   relations?: string[];
-  query?: (qb: SelectQueryBuilder<any>) => void;
+  query?: (qb: SelectQueryBuilder<undefined>) => void;
   expression?: string;
 }
 
@@ -16,11 +16,21 @@ export interface CalculatedColumnDefinition {
 export function Calculated<T>(
   queryInstruction?: CalculatedColumnQueryInstruction
 ): MethodDecorator {
-  return (
-    target: T,
-    propertyKey: string | symbol,
-    descriptor: PropertyDescriptor
-  ) => {
-    console.log(target);
+  return (target: T, propertyKey: string | symbol) => {
+    const definition: CalculatedColumnDefinition = {
+      name: propertyKey,
+      listQuery: queryInstruction,
+    };
+    if (target[CALCULATED_PROPERTIES]) {
+      if (
+        !target[CALCULATED_PROPERTIES].map(
+          (p: CalculatedColumnDefinition) => p.name
+        ).includes(definition.name)
+      ) {
+        target[CALCULATED_PROPERTIES].push(definition);
+      }
+    } else {
+      target[CALCULATED_PROPERTIES] = [definition];
+    }
   };
 }

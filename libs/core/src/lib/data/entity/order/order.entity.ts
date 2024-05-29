@@ -5,6 +5,7 @@ import {
   ManyToOne,
   OneToMany,
   Index,
+  OneToOne,
 } from 'typeorm';
 
 import { Calculated } from '../../../common';
@@ -12,8 +13,20 @@ import { MosaicEntity } from '../entity';
 import { User } from '../user/user.entity';
 import { OrderState } from '../../../types';
 import { Payment } from '../payment';
+import { Money } from '../../../config';
 
 import { OrderLine } from './order-line.entity';
+import { ShippingLine } from '../shipping-line';
+
+export type OrderAddress = {
+  city?: string;
+  company?: string;
+  firstName?: string;
+  lastName?: string;
+  phoneNumber?: string;
+  postalCode?: string;
+  streetLine?: string;
+};
 
 @Entity()
 export class Order extends MosaicEntity {
@@ -32,35 +45,48 @@ export class Order extends MosaicEntity {
    */
   @Column()
   @Index({ unique: true })
-  code: string;
+  public code: string;
 
   @Column({ nullable: true })
-  orderPlacedAt?: Date;
+  public orderPlacedAt?: Date;
 
   @Column({ default: true })
-  active: boolean;
+  public active: boolean;
 
-  @Column({ unsigned: true, default: 0 })
-  totalWithTax?: number;
+  @Money({ default: 0 })
+  public shipping: number;
+
+  @Money()
+  public subTotal: number;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'user_id' })
-  user?: User;
+  public user?: User;
+
+  @Column('simple-json') shippingAddress: OrderAddress;
 
   @OneToMany(() => OrderLine, (line) => line.order)
-  lines: OrderLine[];
+  public lines: OrderLine[];
 
-  get total() {
+  @OneToOne(
+    () => ShippingLine,
+    (shippingLine: ShippingLine) => shippingLine.order
+  )
+  shippingLine: ShippingLine;
+
+  public get total() {
     const items = this.lines;
 
-    return (items || []).reduce((sum, item) => {
-      const { price = 0 } = item.product;
-      return sum + item.quantity * price;
-    }, 0);
+    return (
+      (items || []).reduce((sum, item) => {
+        const { price = 0 } = item.product;
+        return sum + item.quantity * price;
+      }, 0) + this.shipping
+    );
   }
 
   @OneToMany(() => Payment, (payment) => payment.order)
-  payments: Payment[];
+  public payments: Payment[];
 
   @Calculated()
   get totalQuantity() {

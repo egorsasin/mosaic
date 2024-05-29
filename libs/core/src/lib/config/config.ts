@@ -17,6 +17,7 @@ import {
   AssetPreviewStrategy,
   AssetStorageStrategy,
 } from './asset';
+import { MoneyStrategy } from './entity';
 
 export interface ApiOptions {
   port: number;
@@ -55,15 +56,9 @@ export interface PaymentOptions {
   process?: PaymentProcess[];
 }
 
-export interface RuntimeConfig extends Required<MosaicConfig> {
-  apiOptions: Required<ApiOptions>;
-  assetOptions: Required<AssetOptions>;
-  authOptions: Required<AuthOptions>;
-  orderOptions: Required<OrderOptions>;
-  paymentOptions: Required<PaymentOptions>;
+export interface EntityOptions {
+  moneyStrategy?: MoneyStrategy;
 }
-
-export type PartialMosaicConfig = DeepPartialSimple<MosaicConfig>;
 
 export interface MosaicConfig {
   apiOptions: ApiOptions;
@@ -72,7 +67,19 @@ export interface MosaicConfig {
   dbConnectionOptions?: DataSourceOptions;
   plugins?: DynamicModule[] | Type<unknown>[];
   paymentOptions: PaymentOptions;
+  entityOptions?: EntityOptions;
 }
+
+export interface RuntimeConfig extends Required<MosaicConfig> {
+  apiOptions: Required<ApiOptions>;
+  assetOptions: Required<AssetOptions>;
+  authOptions: Required<AuthOptions>;
+  orderOptions: Required<OrderOptions>;
+  paymentOptions: Required<PaymentOptions>;
+  entityOptions: Required<EntityOptions>;
+}
+
+export type PartialMosaicConfig = DeepPartialSimple<MosaicConfig>;
 
 type DeepPartialSimple<T> = {
   [P in keyof T]?:

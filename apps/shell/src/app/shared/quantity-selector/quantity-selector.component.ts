@@ -23,6 +23,11 @@ export class MosQuantitySelectorComponent {
     mask: [/[1-9]/],
   };
 
+  public valueChanges(value: number): void {
+    this.value = value;
+    this.quantityChange.emit(value);
+  }
+
   public add(value = 1): void {
     this.value = this.value + value;
     this.quantityChange.emit(this.value);

@@ -49,14 +49,14 @@ export class NegativeQuantityError extends ErrorResult {
 
 /** Returned when attempting to modify the contents of an Order that is not in the `AddingItems` state. */
 export class OrderModificationError extends ErrorResult {
-  readonly __typename: 'OrderModificationError';
-  readonly errorCode: 'ORDER_MODIFICATION_ERROR';
-  readonly message: 'ORDER_MODIFICATION_ERROR';
+  readonly __typename = 'OrderModificationError';
+  readonly errorCode = 'ORDER_MODIFICATION_ERROR';
+  readonly message = 'ORDER_MODIFICATION_ERROR';
 }
 
 export class OrderLimitError extends ErrorResult {
-  readonly errorCode: 'ORDER_LIMIT_ERROR';
-  public readonly message: 'ORDER_LIMIT_ERROR';
+  readonly errorCode = 'ORDER_LIMIT_ERROR';
+  public readonly message = 'ORDER_LIMIT_ERROR';
   public readonly maxItems: number;
 
   constructor(input: { maxItems: number }) {
@@ -84,6 +84,7 @@ const errorTypeNames = new Set([
   'PasswordValidationError',
   'NegativeQuantityError',
   'NoActiveOrderError',
+  'OrderModificationError',
 ]);
 
 export type GraphQLValue = { __typename: string };

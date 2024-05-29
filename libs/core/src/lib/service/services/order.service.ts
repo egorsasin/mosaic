@@ -1,7 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 
-import { PaymentInput, PaymentMethodQuote, summate } from '@mosaic/common';
+import {
+  PaymentInput,
+  PaymentMethodQuote,
+  assertFound,
+  omit,
+  summate,
+} from '@mosaic/common';
 
 import { RequestContext, generatePublicId } from '../../api/common';
 import { Order, OrderLine, Payment, DATA_SOURCE_PROVIDER } from '../../data';
@@ -21,6 +27,7 @@ import {
 } from '../../types';
 import { OrderModifier } from '../helpers/order-modifier/order-modifier';
 import { OrderStateMachine } from '../helpers/order-state-machine/order-state-machine';
+import { OrderCalculator } from '../helpers/order-calculator/order-calculator';
 import { ConfigService } from '../../config';
 import { EventBus, OrderLineEvent } from '../../event-bus';
 
@@ -35,6 +42,7 @@ export class OrderService {
     private readonly orderStateMachine: OrderStateMachine,
     private readonly userService: UserService,
     private readonly orderModifier: OrderModifier,
+    private readonly orderCalculator: OrderCalculator,
     private readonly paymentService: PaymentService,
     private readonly paymentMethodService: PaymentMethodService,
     private readonly configService: ConfigService,
@@ -105,16 +113,40 @@ export class OrderService {
   }
 
   public async addItemToOrder(
+    ctx: RequestContext,
     orderId: number,
     productId: number,
     quantity: number
   ): Promise<ErrorResultUnion<UpdateOrderItemsResult, Order>> {
+    // Получаем ордер по ИД или возвращаем ошибку если ордер не найден
     const order = await this.getOrderOrThrow(orderId);
-    const validationError = this.assertQuantityIsPositive(quantity);
+    const existingOrderLine = order.lines.find(
+      ({ product }: OrderLine) => product.id === productId
+    );
+
+    const validationError =
+      this.assertQuantityIsPositive(quantity) ||
+      this.assertAddingItemsState(order) ||
+      this.assertNotOverOrderItemsLimit(order, quantity) ||
+      this.assertNotOverOrderLineItemsLimit(existingOrderLine, quantity);
+
     if (validationError) {
       return validationError;
     }
-    await this.orderModifier.getOrCreateOrderLine(order, productId, quantity);
+
+    const orderLine = await this.orderModifier.getOrCreateOrderLine(
+      ctx,
+      order,
+      productId
+    );
+
+    await this.orderModifier.updateOrderLineQuantity(
+      ctx,
+      orderLine,
+      quantity,
+      order
+    );
+
     return this.findOne(orderId);
   }
 
@@ -198,6 +230,24 @@ export class OrderService {
       quantity,
       order
     );
+
+    console.log('__DATA', order);
+
+    const updatedOrder = await this.orderCalculator.applyPriceAdjustments(
+      ctx,
+      order
+    );
+
+    await this.dataSource
+      .getRepository(Order)
+      // Explicitly omit the shippingAddress and billingAddress properties to avoid
+      // a race condition where changing one or the other in parallel can
+      // overwrite the other's changes.
+      .save(omit(updatedOrder, ['shippingAddress']), {
+        reload: false,
+      });
+
+    return assertFound(this.findOne(updatedOrder.id));
   }
 
   public async removeItemFromOrder(
@@ -217,9 +267,7 @@ export class OrderService {
     order.lines = order.lines.filter(({ id }: OrderLine) => id !== orderLineId);
 
     await this.dataSource.getRepository(OrderLine).remove(orderLine);
-    await this.eventBus.publish(
-      new OrderLineEvent(ctx, order, orderLine, 'deleted')
-    );
+    this.eventBus.publish(new OrderLineEvent(ctx, order, orderLine, 'deleted'));
     return order;
   }
 
@@ -309,6 +357,7 @@ export class OrderService {
       state: this.orderStateMachine.getInitialState(),
       lines: [],
       code: generatePublicId(),
+      shippingAddress: {},
     });
   }
 
@@ -366,7 +415,8 @@ export class OrderService {
   }
 
   private assertAddingItemsState(order: Order): OrderModificationError | null {
-    const allowedStatuses = ['AddingItems', 'Draft'];
+    const allowedStatuses = ['AddingItems', 'Draft', 'Created'];
+
     return allowedStatuses.includes(order.state)
       ? null
       : new OrderModificationError();

@@ -52,7 +52,7 @@ export class OrderResolver {
   ): Promise<Promise<ErrorResultUnion<UpdateOrderItemsResult, Order>>> {
     const order = await this.activeOrderService.getOrderFromContext(ctx, true);
 
-    return this.orderService.addItemToOrder(order.id, productId, quantity);
+    return this.orderService.addItemToOrder(ctx, order.id, productId, quantity);
   }
 
   @Query()
@@ -71,8 +71,8 @@ export class OrderResolver {
       ) {
         return order;
       }
-      // We throw even if the order does not exist, since giving a different response
-      // opens the door to an enumeration attack to find valid order codes.
+      // Возвращаем ошибку даже если заказ не существует,
+      // чтобы избежать атак с возможностью перебора возможных кодов заказов
       throw new ForbiddenError();
     }
   }

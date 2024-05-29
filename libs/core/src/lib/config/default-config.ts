@@ -13,6 +13,7 @@ import {
   NoAssetPreviewStrategy,
   NoAssetStorageStrategy,
 } from './asset';
+import { DefaultMoneyStrategy } from './entity';
 
 export const defaultConfig: RuntimeConfig = {
   apiOptions: {
@@ -51,6 +52,9 @@ export const defaultConfig: RuntimeConfig = {
   paymentOptions: {
     paymentMethodHandlers: [],
     process: [defaultPaymentProcess],
+  },
+  entityOptions: {
+    moneyStrategy: new DefaultMoneyStrategy(),
   },
   dbConnectionOptions: {
     type: 'mysql',

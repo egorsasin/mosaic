@@ -10,6 +10,7 @@ import { OrderStateMachine } from './helpers/order-state-machine/order-state-mac
 import { ConfigOptionsService } from './helpers/config-options/config-options.service';
 import { PaymentStateMachine } from './helpers/payment-state-machine/payment-state-machine';
 import { ConfigArgService } from './helpers/config-args';
+import { OrderCalculator } from './helpers/order-calculator';
 
 import { UserService } from './services/user.service';
 import { CustomerService } from './services/customer.service';
@@ -28,6 +29,7 @@ const helpers = [
   PaymentStateMachine,
   OrderStateMachine,
   OrderModifier,
+  OrderCalculator,
   ExternalAuthenticationService,
   ConfigArgService,
 ];

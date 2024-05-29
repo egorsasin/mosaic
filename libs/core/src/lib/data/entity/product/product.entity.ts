@@ -7,6 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 
+import { Money } from '../../../config';
 import { MosaicEntity, SoftDeletable } from '../entity';
 import { Asset } from '../asset';
 import { ProductAsset } from './product-asset.entity';
@@ -39,7 +40,7 @@ export class Product extends MosaicEntity implements SoftDeletable {
   })
   featuredAsset: Asset;
 
-  @Column()
+  @Money()
   public price: number;
 
   @Column({ default: true })

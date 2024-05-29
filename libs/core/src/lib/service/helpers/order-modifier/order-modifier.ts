@@ -13,39 +13,56 @@ export class OrderModifier {
   ) {}
 
   public async getOrCreateOrderLine(
+    ctx: RequestContext,
     order: Order,
-    productId: number,
-    quantity: number
-  ) {
-    let orderLine = order.lines.find(
+    productId: number
+  ): Promise<OrderLine> {
+    const existingOrderLine = order.lines.find(
       (line: OrderLine) => line.product.id === productId
     );
 
-    if (orderLine) {
-      orderLine.quantity += quantity;
-      await this.dataSource.getRepository(OrderLine).save(orderLine);
-    } else {
-      const product = await this.dataSource.getRepository(Product).findOne({
-        where: {
-          id: productId,
-          enabled: true,
-          deletedAt: null,
-        },
-      });
-
-      if (!product) {
-        throw new EntityNotFoundError(Product, { id: productId });
-      }
-
-      orderLine = new OrderLine({
-        product,
-        quantity,
-      });
-
-      await this.dataSource.getRepository(OrderLine).save(orderLine);
-      order.lines.push(orderLine);
-      await this.dataSource.getRepository(Order).save(order, { reload: false });
+    if (existingOrderLine) {
+      return existingOrderLine;
     }
+
+    const product = await this.dataSource.getRepository(Product).findOne({
+      where: {
+        id: productId,
+        enabled: true,
+        deletedAt: null,
+      },
+    });
+
+    if (!product) {
+      throw new EntityNotFoundError(Product, { id: productId });
+    }
+
+    const orderLine: OrderLine = await this.dataSource
+      .getRepository(OrderLine)
+      .save(
+        new OrderLine({
+          product,
+          listPrice: product.price,
+          adjustments: [],
+          quantity: 0,
+        })
+      );
+
+    order.lines.push(orderLine);
+    await this.dataSource.getRepository(Order).save(order, { reload: false });
+
+    const lineWithRelations = await this.dataSource
+      .getRepository(OrderLine)
+      .findOne({
+        where: { id: orderLine.id },
+        relations: ['product'],
+      });
+
+    this.eventBus.publish(
+      new OrderLineEvent(ctx, order, lineWithRelations, 'created')
+    );
+
+    return lineWithRelations;
   }
 
   /**
@@ -54,7 +71,7 @@ export class OrderModifier {
    * Returns the actual quantity that the OrderLine was updated to (which may be less than the
    * `quantity` argument if insufficient stock was available.
    */
-  async updateOrderLineQuantity(
+  public async updateOrderLineQuantity(
     ctx: RequestContext,
     orderLine: OrderLine,
     quantity: number,

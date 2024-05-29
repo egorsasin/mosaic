@@ -13,6 +13,7 @@ import {
   MosaicConfig,
   RuntimeConfig,
   setConfig,
+  setMoneyStrategy,
 } from '@mosaic/core/config';
 import { coreEntitiesMap, coreSubscribersMap } from '@mosaic/core/data';
 import {
@@ -94,6 +95,9 @@ export async function preBootstrapConfig(
 
   let config = getConfig();
   config = await runPluginConfigurations(config);
+
+  const moneyStrategy = config.entityOptions.moneyStrategy;
+  setMoneyStrategy(moneyStrategy, entities);
 
   setExposedHeaders(config);
   return config;

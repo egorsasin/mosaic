@@ -4,14 +4,15 @@ import { Exact, MutationArgs, PaymentMethodQuote } from '@mosaic/common';
 
 import { DataService } from '../../data';
 import { GET_ELIGIBLE_PAYMENT_METHODS } from './checkout-process.graphql';
-import { Observable, map } from 'rxjs';
+import { Observable, map, take } from 'rxjs';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Order } from '../../types';
+import { Order, OrderLine } from '../../types';
 import { ActiveOrderService } from '../../active-order';
 import { CREATE_PAYNOW_PAYMENT_INTENT } from './paynow.graphql';
 import { Router } from '@angular/router';
 import { WINDOW } from '@mosaic/cdk';
-import { REMOVE_ITEM_FROM_CART } from './cart.graphql';
+import { ADJUST_ITEM_QUANTITY, REMOVE_ITEM_FROM_CART } from './cart.graphql';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 export type GetEligiblePaymentMethodsQuery = {
   eligiblePaymentMethods: PaymentMethodQuote[];
@@ -28,20 +29,33 @@ export type RemoveItemFromCartMutationVariables = Exact<{
 }>;
 
 export type RemoveItemFromCartMutation = {
-  removeOrderLine:
-    | Order
-    | {
-        __typename?: 'OrderModificationError';
-        errorCode: ErrorCode;
-        message: string;
-      };
+  removeOrderLine: Order | GraphQLError;
 };
+
+export type AdjustItemQuantityMutationVariables = Exact<{
+  id: number;
+  quantity: number;
+}>;
+
+export type AdjustItemQuantityMutation = {
+  adjustOrderLine: Order | GraphQLError;
+};
+
+export const FADE_UP_ANIMATION = trigger(`fadeUpAnimation`, [
+  transition(':leave', [
+    animate(
+      '200ms ease-in',
+      style({ opacity: 0, transform: 'translateY(-100%)' })
+    ),
+  ]),
+]);
 
 @Component({
   selector: 'mos-checkout-process',
   templateUrl: './checkout-process.component.html',
   styleUrls: ['./checkout-process.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [FADE_UP_ANIMATION],
 })
 export class CheckoutProcessComponent {
   public order$: Observable<Order> = this.activeOrderService.activeOrder$;
@@ -153,6 +167,19 @@ export class CheckoutProcessComponent {
     }
   }
 
+  public onQuantityChange({ id }: OrderLine, quantity: number) {
+    this.dataService
+      .mutate<AdjustItemQuantityMutation, AdjustItemQuantityMutationVariables>(
+        ADJUST_ITEM_QUANTITY,
+        {
+          id,
+          quantity,
+        }
+      )
+      .pipe(take(1))
+      .subscribe();
+  }
+
   public removeItem(id: number) {
     this.dataService
       .mutate<RemoveItemFromCartMutation, RemoveItemFromCartMutationVariables>(
@@ -161,6 +188,7 @@ export class CheckoutProcessComponent {
           id,
         }
       )
+      .pipe(take(1))
       .subscribe();
   }
 }

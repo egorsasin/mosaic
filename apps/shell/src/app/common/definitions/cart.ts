@@ -6,6 +6,7 @@ export const CART_FRAGMENT = gql`
     lines {
       id
       quantity
+      proratedLinePrice
       product {
         id
         name
