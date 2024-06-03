@@ -1,0 +1,10 @@
+type ShippingMethod implements Node {
+  id: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  code: String!
+  name: String!
+  description: String!
+  checker: ConfigurableOperation!
+  calculator: ConfigurableOperation!
+}

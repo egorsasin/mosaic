@@ -17,6 +17,9 @@ export const CART_FRAGMENT = gql`
         }
       }
     }
+    shippingLine {
+      price
+    }
     totalQuantity
     total
   }

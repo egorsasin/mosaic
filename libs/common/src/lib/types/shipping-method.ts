@@ -3,9 +3,7 @@ export type ShippingMethodQuote = {
   customFields?: unknown;
   description: string;
   id: number;
-  /**
-   * Опциональные метаданные возвращенные ShippingCalculator или ShippingCalculationResult
-   */
+  /* Опциональные метаданные возвращенные ShippingCalculator или ShippingCalculationResult */
   metadata?: Record<string, unknown>;
   name: string;
   price: number;

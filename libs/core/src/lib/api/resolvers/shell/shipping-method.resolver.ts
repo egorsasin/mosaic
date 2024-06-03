@@ -1,6 +1,6 @@
 import { Query, Resolver } from '@nestjs/graphql';
 
-import { PaymentMethodQuote } from '@mosaic/common';
+import { ShippingMethodQuote } from '@mosaic/common';
 
 import { Allow, Ctx } from '../../decorators';
 import { Permission, RequestContext } from '../../common';
@@ -8,7 +8,7 @@ import { OrderService } from '../../../service/services/order.service';
 import { ActiveOrderService } from '../../../service/helpers/active-order';
 
 @Resolver()
-export class PaymentMethodResolver {
+export class ShippingMethodResolver {
   constructor(
     private orderService: OrderService,
     private activeOrderService: ActiveOrderService
@@ -16,16 +16,17 @@ export class PaymentMethodResolver {
 
   @Query()
   @Allow(Permission.Owner)
-  public async eligiblePaymentMethods(
+  public async eligibleShippingMethods(
     @Ctx() ctx: RequestContext
-  ): Promise<PaymentMethodQuote[]> {
+  ): Promise<ShippingMethodQuote[]> {
     if (ctx.authorizedAsOwnerOnly) {
       const sessionOrder = await this.activeOrderService.getActiveOrder(ctx);
       if (sessionOrder) {
-        return this.orderService.getEligiblePaymentMethods(
+        const methods = await this.orderService.getEligibleShippingMethods(
           ctx,
           sessionOrder.id
         );
+        return methods;
       }
     }
     return [];

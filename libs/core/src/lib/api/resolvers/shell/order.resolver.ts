@@ -40,9 +40,11 @@ export class OrderResolver {
       const sessionOrder = await this.activeOrderService.getOrderFromContext(
         ctx
       );
-      return sessionOrder
-        ? this.orderService.findOne(sessionOrder.id)
+      const order = sessionOrder
+        ? await this.orderService.findOne(sessionOrder.id)
         : undefined;
+
+      return order;
     }
   }
 
@@ -74,7 +76,7 @@ export class OrderResolver {
         return order;
       }
       // Возвращаем ошибку даже если заказ не существует,
-      // чтобы избежать атак с возможностью перебора возможных кодов заказов
+      // чтобы избежать атак с перебором возможных кодов заказов
       throw new ForbiddenError();
     }
   }

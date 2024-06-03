@@ -1,0 +1,14 @@
+type Query {
+  "Returns a list of eligible shipping methods based on the current active Order"
+  eligibleShippingMethods: [ShippingMethodQuote!]!
+}
+
+type ShippingMethodQuote {
+  id: ID!
+  price: Money!
+  code: String!
+  name: String!
+  description: String!
+  "Any optional metadata returned by the ShippingCalculator in the ShippingCalculationResult"
+  metadata: JSON
+}

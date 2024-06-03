@@ -6,6 +6,7 @@ export * from './payment';
 export * from './entity';
 export * from './order';
 export * from './asset';
+export * from './shipping-method';
 
 export { ConfigModule } from './config.module';
 export { ConfigService } from './config.service';

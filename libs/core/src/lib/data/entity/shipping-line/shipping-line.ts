@@ -1,4 +1,11 @@
-import { Column, Entity, OneToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+} from 'typeorm';
 
 import { summate } from '@mosaic/common';
 
@@ -7,6 +14,7 @@ import { Order } from '../order';
 import { Money } from '../../../config';
 import { Adjustment, roundMoney } from '../order/order-line.entity';
 import { Calculated } from '../../../common';
+import { ShippingMethod } from '../shipping-method';
 
 @Entity()
 export class ShippingLine extends MosaicEntity {
@@ -14,8 +22,8 @@ export class ShippingLine extends MosaicEntity {
     super(input);
   }
 
-  @Money({ name: 'list_price' })
-  public listPrice: number;
+  @Money()
+  public price: number;
 
   @Column('simple-json')
   adjustments: Adjustment[];
@@ -23,15 +31,20 @@ export class ShippingLine extends MosaicEntity {
   @Column('simple-json')
   metadata: string;
 
+  @Index()
+  @ManyToOne(() => ShippingMethod)
+  shippingMethod: ShippingMethod;
+
   @OneToOne(() => Order, (order: Order) => order.shippingLine, {
     nullable: false,
     onDelete: 'CASCADE',
   })
+  @JoinColumn({ name: 'order_id' })
   public order: Order;
 
   @Calculated()
   public get discountedPrice(): number {
-    const result = this.listPrice + this.getAdjustmentsTotal();
+    const result = this.price + this.getAdjustmentsTotal();
 
     return roundMoney(result);
   }

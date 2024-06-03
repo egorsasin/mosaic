@@ -14,6 +14,7 @@ export function setMoneyStrategy(
     for (const { name, options, entity } of columnConfig) {
       Column({
         ...moneyStrategy.moneyColumnOptions,
+        name: options?.name,
         nullable: options?.nullable ?? false,
         default: options?.default,
       })(entity, name);

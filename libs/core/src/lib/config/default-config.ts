@@ -14,6 +14,7 @@ import {
   NoAssetStorageStrategy,
 } from './asset';
 import { DefaultMoneyStrategy } from './entity';
+import { defaultShippingCalculator } from './shipping-method';
 
 export const defaultConfig: RuntimeConfig = {
   apiOptions: {
@@ -52,6 +53,9 @@ export const defaultConfig: RuntimeConfig = {
   paymentOptions: {
     paymentMethodHandlers: [],
     process: [defaultPaymentProcess],
+  },
+  shippingOptions: {
+    shippingCalculators: [defaultShippingCalculator],
   },
   entityOptions: {
     moneyStrategy: new DefaultMoneyStrategy(),

@@ -1,21 +1,31 @@
 <div *mosLet="order$ | async as order" class="mx-auto max-w-7xl px-4 sm:px-6">
   <div class="md:grid md:grid-cols-2 md:gap-6">
     <form [formGroup]="form" autocomplete="off">
-      <div class="pt-5">
+      <div class="pt-6">
         <h2
           class="text-xl font-medium text-gray-900 font-['Oswald'] uppercase border-b w-full pb-2"
         >
           Metody dostawy
         </h2>
         <div class="grid gap-3 pt-3">
+          <!-- SHIPPING METHODS -->
+          @for (shippingMethod of (shippingMethods$ | async); track
+          shippingMethod.id ) {
           <div
             class="py-4 px-5 flex gap-3 bg-white border border-gray-300 shadow-sm rounded-lg text-sm cursor-pointer"
+            (click)="setShippingMethod(+shippingMethod.id)"
           >
             <div>
-              <div class="font-semibold">Paczkomat InPost</div>
-              <div class="mt-2 text-gray-500" [innerHtml]=""></div>
+              <div class="font-semibold">{{ shippingMethod.name }}</div>
+              @if (shippingMethod.description) {
+              <div
+                class="mt-2 text-gray-500"
+                [innerHtml]="shippingMethod.description"
+              ></div>
+              }
             </div>
           </div>
+          }
         </div>
       </div>
 

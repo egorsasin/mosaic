@@ -35,6 +35,7 @@ export type CreatePaymentMethodMutation = {
 
 export type PaymentMethodQuote = {
   code: string;
+  customFields?: string;
   description: string;
   eligibilityMessage?: string;
   id: number;

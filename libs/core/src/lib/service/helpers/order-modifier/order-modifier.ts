@@ -6,6 +6,7 @@ import { RequestContext } from '../../../api/common';
 import { EventBus, OrderLineEvent } from '../../../event-bus';
 import { ShippingCalculator } from '../shipping-calculator';
 import { IneligibleShippingMethodError } from '../../../common';
+import { ShippingLine } from '../../../data/entity/shipping-line';
 
 @Injectable()
 export class OrderModifier {
@@ -71,7 +72,8 @@ export class OrderModifier {
   public async setShippingMethod(
     ctx: RequestContext,
     order: Order,
-    shippingMethodId: number
+    shippingMethodId: number,
+    metadata = JSON.stringify({})
   ) {
     const shippingMethod = await this.shippingCalculator.getMethodIfEligible(
       ctx,
@@ -82,6 +84,23 @@ export class OrderModifier {
     if (!shippingMethod) {
       return new IneligibleShippingMethodError();
     }
+
+    let shippingLine: ShippingLine | undefined = order.shippingLine;
+    if (shippingLine) {
+      shippingLine.shippingMethod = shippingMethod;
+      shippingLine.metadata = metadata;
+    } else {
+      shippingLine = new ShippingLine({
+        shippingMethod,
+        order,
+        adjustments: [],
+        price: 0,
+        metadata,
+      });
+      order.shippingLine = shippingLine;
+    }
+
+    await this.dataSource.getRepository(ShippingLine).save(shippingLine);
 
     return order;
   }

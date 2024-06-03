@@ -38,6 +38,7 @@ export class ShippingCalculator {
     const checkEligibilityPromises = shippingMethods.map((method) =>
       this.checkEligibilityByShippingMethod(ctx, order, method)
     );
+
     const eligibleMethods = await Promise.all(checkEligibilityPromises);
 
     return eligibleMethods
@@ -65,8 +66,10 @@ export class ShippingCalculator {
     method: ShippingMethod
   ): Promise<EligibleShippingMethod | undefined> {
     const eligible = await method.test(ctx, order);
+
     if (eligible) {
       const result = await method.apply(ctx, order);
+
       if (result) {
         return { method, result };
       }

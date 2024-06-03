@@ -10,7 +10,7 @@ import { CustomerResolver } from './customer.resolver';
 import { ProductEntityResolver } from './entity';
 
 import * as AdminResolvers from './admin';
-import * as StoreFrontResolvers from './shell';
+import * as StorefrontResolvers from './shell';
 
 const ENTITY_RESOLVERS = [ProductEntityResolver];
 
@@ -18,9 +18,10 @@ const SHOP_RESOLVERS = [
   AuthResolver,
   CustomerResolver,
   AddressResolver,
-  StoreFrontResolvers.ProductResolver,
-  StoreFrontResolvers.OrderResolver,
-  StoreFrontResolvers.PaymentMethodResolver,
+  StorefrontResolvers.ProductResolver,
+  StorefrontResolvers.OrderResolver,
+  StorefrontResolvers.PaymentMethodResolver,
+  StorefrontResolvers.ShippingMethodResolver,
 ];
 
 const ADMIN_RESOLVERS = [

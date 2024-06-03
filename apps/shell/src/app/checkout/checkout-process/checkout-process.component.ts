@@ -1,21 +1,40 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+import { animate, style, transition, trigger } from '@angular/animations';
+import { Observable, map, take } from 'rxjs';
 
-import { Exact, MutationArgs, PaymentMethodQuote } from '@mosaic/common';
+import { WINDOW } from '@mosaic/cdk';
+import {
+  Exact,
+  MutationArgs,
+  PaymentMethodQuote,
+  ShippingMethodQuote,
+} from '@mosaic/common';
 
 import { DataService } from '../../data';
-import { GET_ELIGIBLE_PAYMENT_METHODS } from './checkout-process.graphql';
-import { Observable, map, take } from 'rxjs';
-import { FormControl, FormGroup } from '@angular/forms';
+import {
+  GET_ELIGIBLE_PAYMENT_METHODS,
+  GET_ELIGIBLE_SHIPPING_METHODS,
+  SET_SHIPPING_METHOD,
+} from './checkout-process.graphql';
+
 import { Order, OrderLine } from '../../types';
 import { ActiveOrderService } from '../../active-order';
 import { CREATE_PAYNOW_PAYMENT_INTENT } from './paynow.graphql';
-import { Router } from '@angular/router';
-import { WINDOW } from '@mosaic/cdk';
 import { ADJUST_ITEM_QUANTITY, REMOVE_ITEM_FROM_CART } from './cart.graphql';
-import { animate, style, transition, trigger } from '@angular/animations';
 
 export type GetEligiblePaymentMethodsQuery = {
   eligiblePaymentMethods: PaymentMethodQuote[];
+};
+
+export type GetEligibleShippingMethodsQuery = {
+  eligibleShippingMethods: ShippingMethodQuote[];
+};
+
+export type SetShippingMethodMutationVariables = {
+  shippingMethodId: number;
+  metadata?: string;
 };
 
 export enum ErrorCode {
@@ -84,9 +103,17 @@ export class CheckoutProcessComponent {
     string | null
   >(null);
 
+  public shippingMethod: FormControl<string | null> = new FormControl<
+    string | null
+  >(null);
+
   public paymentMethods$: Observable<PaymentMethodQuote[]> = this.dataService
     .query<GetEligiblePaymentMethodsQuery>(GET_ELIGIBLE_PAYMENT_METHODS)
     .stream$.pipe(map((res) => res.eligiblePaymentMethods));
+
+  public shippingMethods$ = this.dataService
+    .query<GetEligibleShippingMethodsQuery>(GET_ELIGIBLE_SHIPPING_METHODS)
+    .stream$.pipe(map((data) => data.eligibleShippingMethods));
 
   public form = new FormGroup({
     email: new FormControl(''),
@@ -165,6 +192,20 @@ export class CheckoutProcessComponent {
       //         this.paymentErrorMessage = addPaymentToOrder.message;
       //         break;
     }
+  }
+
+  public setShippingMethod(shippingMethodId: number): void {
+    this.dataService
+      .mutate<
+        AdjustItemQuantityMutation,
+        MutationArgs<SetShippingMethodMutationVariables>
+      >(SET_SHIPPING_METHOD, {
+        input: {
+          shippingMethodId,
+        },
+      })
+      .pipe(take(1))
+      .subscribe();
   }
 
   public onQuantityChange({ id }: OrderLine, quantity: number) {

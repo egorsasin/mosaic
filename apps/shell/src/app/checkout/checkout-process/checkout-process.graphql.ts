@@ -15,6 +15,29 @@ export const GET_ELIGIBLE_PAYMENT_METHODS = gql`
   }
 `;
 
+export const GET_ELIGIBLE_SHIPPING_METHODS = gql`
+  query GetEligibleShippingMethods {
+    eligibleShippingMethods {
+      id
+      name
+      description
+      price
+      metadata
+    }
+  }
+`;
+
+export const SET_SHIPPING_METHOD = gql`
+  mutation SetShippingMethod($input: ShippingInput!) {
+    setOrderShippingMethod(input: $input) {
+      ...Cart
+      ...ErrorResult
+    }
+  }
+  ${CART_FRAGMENT}
+  ${ERROR_RESULT_FRAGMENT}
+`;
+
 export const ADD_PAYMENT = gql`
   mutation AddPayment($input: PaymentInput!) {
     addPaymentToOrder(input: $input) {

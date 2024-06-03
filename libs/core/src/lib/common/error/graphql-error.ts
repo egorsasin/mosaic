@@ -134,6 +134,12 @@ export const storeFrontErrorTypeResolvers = {
       return isGraphQLError(value) ? value.__typename : 'Order';
     },
   },
+
+  SetOrderShippingMethodResult: {
+    __resolveType(value: GraphQLValue) {
+      return isGraphQLError(value) ? value.__typename : 'Order';
+    },
+  },
 };
 
 export const adminErrorTypeResolvers = {

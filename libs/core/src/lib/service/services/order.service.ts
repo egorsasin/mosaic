@@ -11,13 +11,7 @@ import {
 } from '@mosaic/common';
 
 import { RequestContext, generatePublicId } from '../../api/common';
-import {
-  Order,
-  OrderLine,
-  Payment,
-  DATA_SOURCE_PROVIDER,
-  ShippingMethod,
-} from '../../data';
+import { Order, OrderLine, Payment, DATA_SOURCE_PROVIDER } from '../../data';
 import {
   ErrorResultUnion,
   NegativeQuantityError,
@@ -60,9 +54,10 @@ export class OrderService {
   ) {}
 
   public async findOne(id: number): Promise<Order | undefined> {
-    return this.dataSource
-      .getRepository(Order)
-      .findOne({ where: { id }, relations: ['lines', 'lines.product'] });
+    return this.dataSource.getRepository(Order).findOne({
+      where: { id },
+      relations: ['lines', 'lines.product', 'shippingLine'],
+    });
   }
 
   async findOneByCode(orderCode: string): Promise<Order | undefined> {
@@ -165,8 +160,8 @@ export class OrderService {
 
   /**
    * @description
-   * Returns an array of quotes stating which {@link ShippingMethod}s may be applied to this Order.
-   * This is determined by the configured {@link ShippingEligibilityChecker} of each ShippingMethod.
+   * Возвращает массив разрешенных способов доставки {@link ShippingMethod} которые могут быть использованы для текущего заказа.
+   * Доступность способа доставки может быть определена в {@link ShippingEligibilityChecker}.
    *
    * The quote also includes a price for each method, as determined by the configured
    * {@link ShippingCalculator} of each eligible ShippingMethod.
@@ -198,24 +193,28 @@ export class OrderService {
    * @description
    * Устанавливает способ доставки в заказе.
    */
-  async setShippingMethod(
+  public async setShippingMethod(
     ctx: RequestContext,
     orderId: number,
-    shippingMethodIds: number
+    shippingMethodId: number
   ): Promise<ErrorResultUnion<OrderModificationError, Order>> {
     const order = await this.getOrderOrThrow(orderId);
     const validationError = this.assertAddingItemsState(order);
+
     if (validationError) {
       return validationError;
     }
+
     const result = await this.orderModifier.setShippingMethod(
       ctx,
       order,
-      shippingMethodIds
+      shippingMethodId
     );
+
     if (isGraphQlErrorResult(result)) {
       return result;
     }
+
     const updatedOrder = await this.getOrderOrThrow(orderId);
     //await this.applyPriceAdjustments(ctx, updatedOrder);
     return this.dataSource.getRepository(Order).save(updatedOrder);
@@ -302,8 +301,6 @@ export class OrderService {
       quantity,
       order
     );
-
-    console.log('__DATA', order);
 
     const updatedOrder = await this.orderCalculator.applyPriceAdjustments(
       ctx,

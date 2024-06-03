@@ -19,6 +19,13 @@ type Order implements Node {
   lines: [OrderLine!]!
   totalQuantity: Int!
   total: Int!
+  shippingLine: ShippingLine
+}
+
+type ShippingLine {
+  shippingMethod: ShippingMethod!
+  price: Money!
+  discountedPrice: Money!
 }
 
 type Query {
@@ -43,7 +50,7 @@ type Mutation {
   "Remove an OrderLine from the Order"
   removeOrderLine(orderLineId: Int!): RemoveOrderItemResult!
   "Sets the shipping method to the Order"
-  setOrderShippingMethod(input: ShippingInput!): Order!
+  setOrderShippingMethod(input: ShippingInput!): SetOrderShippingMethodResult!
 }
 
 "Returned when attempting to set a negative OrderLine quantity."
@@ -89,3 +96,8 @@ union UpdateOrderItemsResult = Order | NegativeQuantityError
 union AddPaymentToOrderResult = Order | NoActiveOrderError
 
 union RemoveOrderItemResult = Order | OrderModificationError
+
+union SetOrderShippingMethodResult =
+    Order
+  | OrderModificationError
+  | NoActiveOrderError

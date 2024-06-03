@@ -19,6 +19,8 @@ import {
 } from './asset';
 import { MoneyStrategy } from './entity';
 import { CustomFields } from './custom-field';
+import { ShippingCalculator } from './shipping-method';
+import { ConfigArg } from '../types';
 
 export interface ApiOptions {
   port: number;
@@ -71,6 +73,17 @@ export interface MosaicConfig {
   entityOptions?: EntityOptions;
 }
 
+/**
+ * Доставка
+ */
+export interface ShippingOptions {
+  /**
+   * @description
+   * An array of available ShippingCalculators for use in configuring ShippingMethods
+   */
+  shippingCalculators?: Array<ShippingCalculator>;
+}
+
 export interface RuntimeConfig extends Required<MosaicConfig> {
   apiOptions: Required<ApiOptions>;
   assetOptions: Required<AssetOptions>;
@@ -79,6 +92,7 @@ export interface RuntimeConfig extends Required<MosaicConfig> {
   paymentOptions: Required<PaymentOptions>;
   entityOptions: Required<EntityOptions>;
   customFields: Required<CustomFields>;
+  shippingOptions: Required<ShippingOptions>;
 }
 
 export type PartialMosaicConfig = DeepPartialSimple<MosaicConfig>;
