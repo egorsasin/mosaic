@@ -58,3 +58,11 @@ export class NoActiveOrderError extends GraphQLError {
     });
   }
 }
+
+export class IneligibleShippingMethodError extends GraphQLError {
+  constructor() {
+    super('INELIGIBLE_SHIPPING_METHODS_ERROR', {
+      extensions: { code: 'INELIGIBLE_SHIPPING_METHODS_ERROR' },
+    });
+  }
+}

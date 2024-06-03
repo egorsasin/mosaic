@@ -12,6 +12,7 @@ import { PaymentMethod } from './payment-method';
 import { Product, ProductAsset } from './product';
 import { AnonymousSession, AuthenticatedSession, Session } from './session';
 import { ShippingLine } from './shipping-line';
+import { ShippingMethod } from './shipping-method';
 import { User } from './user';
 
 export const coreEntitiesMap = {
@@ -26,6 +27,7 @@ export const coreEntitiesMap = {
   OrderLine,
   Payment,
   PaymentMethod,
+  ShippingMethod,
   Product,
   ProductAsset,
   Session,

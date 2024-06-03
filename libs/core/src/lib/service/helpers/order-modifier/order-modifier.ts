@@ -4,11 +4,14 @@ import { DataSource, EntityNotFoundError } from 'typeorm';
 import { Order, OrderLine, Product, DATA_SOURCE_PROVIDER } from '../../../data';
 import { RequestContext } from '../../../api/common';
 import { EventBus, OrderLineEvent } from '../../../event-bus';
+import { ShippingCalculator } from '../shipping-calculator';
+import { IneligibleShippingMethodError } from '../../../common';
 
 @Injectable()
 export class OrderModifier {
   constructor(
     @Inject(DATA_SOURCE_PROVIDER) private readonly dataSource: DataSource,
+    private shippingCalculator: ShippingCalculator,
     private eventBus: EventBus
   ) {}
 
@@ -63,6 +66,24 @@ export class OrderModifier {
     );
 
     return lineWithRelations;
+  }
+
+  public async setShippingMethod(
+    ctx: RequestContext,
+    order: Order,
+    shippingMethodId: number
+  ) {
+    const shippingMethod = await this.shippingCalculator.getMethodIfEligible(
+      ctx,
+      order,
+      shippingMethodId
+    );
+
+    if (!shippingMethod) {
+      return new IneligibleShippingMethodError();
+    }
+
+    return order;
   }
 
   /**

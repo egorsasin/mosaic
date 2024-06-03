@@ -18,6 +18,7 @@ import {
   AssetStorageStrategy,
 } from './asset';
 import { MoneyStrategy } from './entity';
+import { CustomFields } from './custom-field';
 
 export interface ApiOptions {
   port: number;
@@ -77,6 +78,7 @@ export interface RuntimeConfig extends Required<MosaicConfig> {
   orderOptions: Required<OrderOptions>;
   paymentOptions: Required<PaymentOptions>;
   entityOptions: Required<EntityOptions>;
+  customFields: Required<CustomFields>;
 }
 
 export type PartialMosaicConfig = DeepPartialSimple<MosaicConfig>;

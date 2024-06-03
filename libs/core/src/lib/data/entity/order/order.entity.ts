@@ -47,7 +47,7 @@ export class Order extends MosaicEntity {
   @Index({ unique: true })
   public code: string;
 
-  @Column({ nullable: true })
+  @Column({ name: 'order_placed_at', nullable: true })
   public orderPlacedAt?: Date;
 
   @Column({ default: true })

@@ -7,6 +7,7 @@ export { Product } from './product/product.entity';
 export { Address } from './address';
 export { Customer } from './customer';
 export { PaymentMethod } from '../entity/payment-method';
+export { ShippingMethod } from '../entity/shipping-method';
 export { Payment } from './payment';
 export { Asset } from './asset';
 export { OrderableAsset } from './asset/orderable-asset.entity';

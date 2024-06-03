@@ -11,6 +11,7 @@ import { ConfigOptionsService } from './helpers/config-options/config-options.se
 import { PaymentStateMachine } from './helpers/payment-state-machine/payment-state-machine';
 import { ConfigArgService } from './helpers/config-args';
 import { OrderCalculator } from './helpers/order-calculator';
+import { ShippingCalculator } from './helpers/shipping-calculator';
 
 import { UserService } from './services/user.service';
 import { CustomerService } from './services/customer.service';
@@ -19,6 +20,7 @@ import { ExternalAuthenticationService } from './services/external-authenticatio
 import { ProductService } from './services/product.service';
 import { SessionService } from './services/session.service';
 import { PaymentMethodService } from './services/payment-method.service';
+import { ShippingMethodService } from './services/shipping-method.service';
 import { OrderService } from './services/order.service';
 import { PaymentService } from './services/payment.service';
 import { AssetService } from './services/asset.service';
@@ -32,6 +34,7 @@ const helpers = [
   OrderCalculator,
   ExternalAuthenticationService,
   ConfigArgService,
+  ShippingCalculator,
 ];
 
 const services = [
@@ -42,6 +45,7 @@ const services = [
   UserService,
   PaymentService,
   PaymentMethodService,
+  ShippingMethodService,
   ProductService,
   SessionService,
 ];

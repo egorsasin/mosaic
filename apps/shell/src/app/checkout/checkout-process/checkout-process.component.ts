@@ -133,6 +133,7 @@ export class CheckoutProcessComponent {
             this.window.open(createPaynowIntent.url, '_self');
           }
         });
+    } else {
       // this.dataService
       //   .mutate<any, any>(COMPLETE_ORDER, {
       //     input: {},
@@ -163,7 +164,6 @@ export class CheckoutProcessComponent {
       //       case 'OrderStateTransitionError':
       //         this.paymentErrorMessage = addPaymentToOrder.message;
       //         break;
-      //     }
     }
   }
 

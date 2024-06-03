@@ -42,6 +42,8 @@ type Mutation {
   adjustOrderLine(orderLineId: Int!, quantity: Int!): UpdateOrderItemsResult!
   "Remove an OrderLine from the Order"
   removeOrderLine(orderLineId: Int!): RemoveOrderItemResult!
+  "Sets the shipping method to the Order"
+  setOrderShippingMethod(input: ShippingInput!): Order!
 }
 
 "Returned when attempting to set a negative OrderLine quantity."
@@ -63,6 +65,11 @@ current session.
 type NoActiveOrderError implements ErrorResult {
   errorCode: ErrorCode!
   message: String!
+}
+
+input ShippingInput {
+  shippingMethodId: Int!
+  metadata: JSON
 }
 
 "Passed as input to the `addPaymentToOrder` mutation."

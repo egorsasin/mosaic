@@ -1,5 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
+import { MutationArgs, PaymentInput, ShippingInput } from '@mosaic/common';
+
 import { Allow, Ctx } from '../../decorators';
 import { Permission, RequestContext } from '../../common';
 import { Order } from '../../../data';
@@ -17,9 +19,9 @@ import {
   ErrorResultUnion,
   ForbiddenError,
   NoActiveOrderError,
+  OrderModificationError,
   OrderPaymentStateError,
 } from '../../../common';
-import { MutationArgs, PaymentInput } from '@mosaic/common';
 import { ACTIVE_ORDER_INPUT_FIELD_NAME } from '../../config';
 
 type ActiveOrderArgs = { [ACTIVE_ORDER_INPUT_FIELD_NAME]?: unknown };
@@ -106,6 +108,25 @@ export class OrderResolver {
         //     await this.sessionService.unsetActiveOrder(ctx, ctx.session);
 
         return order;
+      }
+    }
+    return new NoActiveOrderError();
+  }
+
+  @Mutation()
+  @Allow(Permission.Owner)
+  async setOrderShippingMethod(
+    @Ctx() ctx: RequestContext,
+    @Args() { input }: MutationArgs<ShippingInput> & ActiveOrderArgs
+  ): Promise<Order | NoActiveOrderError | OrderModificationError> {
+    if (ctx.authorizedAsOwnerOnly) {
+      const sessionOrder = await this.activeOrderService.getActiveOrder(ctx);
+      if (sessionOrder) {
+        return this.orderService.setShippingMethod(
+          ctx,
+          sessionOrder.id,
+          input.shippingMethodId
+        );
       }
     }
     return new NoActiveOrderError();

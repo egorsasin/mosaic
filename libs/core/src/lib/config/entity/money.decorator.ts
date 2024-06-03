@@ -1,6 +1,7 @@
 import { Type } from '@nestjs/common';
 
 interface MoneyColumnOptions {
+  name?: string;
   default?: number;
   /** Whether the field is nullable. Defaults to false */
   nullable?: boolean;

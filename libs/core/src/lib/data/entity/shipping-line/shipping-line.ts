@@ -14,13 +14,17 @@ export class ShippingLine extends MosaicEntity {
     super(input);
   }
 
-  @Money()
+  @Money({ name: 'list_price' })
   public listPrice: number;
 
   @Column('simple-json')
   adjustments: Adjustment[];
 
+  @Column('simple-json')
+  metadata: string;
+
   @OneToOne(() => Order, (order: Order) => order.shippingLine, {
+    nullable: false,
     onDelete: 'CASCADE',
   })
   public order: Order;

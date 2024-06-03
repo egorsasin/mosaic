@@ -1,4 +1,4 @@
-import { DataSourceOptions } from 'typeorm';
+import { DataSourceOptions, getMetadataArgsStorage } from 'typeorm';
 import { DynamicModule, Injectable, Type } from '@nestjs/common';
 
 import { getConfig } from './config-helpers';
@@ -11,10 +11,12 @@ import {
   PaymentOptions,
   RuntimeConfig,
 } from './config';
+import { CustomFields } from './custom-field';
 
 @Injectable()
 export class ConfigService implements MosaicConfig {
   private activeConfig: RuntimeConfig;
+  private allCustomFieldsConfig: Required<CustomFields> | undefined;
 
   constructor() {
     this.activeConfig = getConfig();
@@ -46,5 +48,33 @@ export class ConfigService implements MosaicConfig {
 
   public get paymentOptions(): Required<PaymentOptions> {
     return this.activeConfig.paymentOptions;
+  }
+
+  get customFields(): Required<CustomFields> {
+    if (!this.allCustomFieldsConfig) {
+      this.allCustomFieldsConfig = this.getCustomFieldsForAllEntities();
+    }
+    return this.allCustomFieldsConfig;
+  }
+
+  private getCustomFieldsForAllEntities(): Required<CustomFields> {
+    const definedCustomFields = this.activeConfig.customFields;
+    const metadataArgsStorage = getMetadataArgsStorage();
+
+    if (Array.isArray(this.dbConnectionOptions.entities)) {
+      for (const entity of this.dbConnectionOptions.entities) {
+        if (typeof entity === 'function' && !definedCustomFields[entity.name]) {
+          const hasCustomFields = !!metadataArgsStorage
+            .filterEmbeddeds(entity)
+            .find((c) => c.propertyName === 'customFields');
+
+          if (hasCustomFields) {
+            definedCustomFields[entity.name] = [];
+          }
+        }
+      }
+    }
+
+    return definedCustomFields;
   }
 }

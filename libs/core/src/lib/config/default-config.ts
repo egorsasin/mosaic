@@ -60,4 +60,7 @@ export const defaultConfig: RuntimeConfig = {
     type: 'mysql',
   },
   plugins: [],
+  customFields: {
+    Address: [],
+  },
 };

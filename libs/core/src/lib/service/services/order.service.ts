@@ -4,13 +4,20 @@ import { DataSource } from 'typeorm';
 import {
   PaymentInput,
   PaymentMethodQuote,
+  ShippingMethodQuote,
   assertFound,
   omit,
   summate,
 } from '@mosaic/common';
 
 import { RequestContext, generatePublicId } from '../../api/common';
-import { Order, OrderLine, Payment, DATA_SOURCE_PROVIDER } from '../../data';
+import {
+  Order,
+  OrderLine,
+  Payment,
+  DATA_SOURCE_PROVIDER,
+  ShippingMethod,
+} from '../../data';
 import {
   ErrorResultUnion,
   NegativeQuantityError,
@@ -28,12 +35,14 @@ import {
 import { OrderModifier } from '../helpers/order-modifier/order-modifier';
 import { OrderStateMachine } from '../helpers/order-state-machine/order-state-machine';
 import { OrderCalculator } from '../helpers/order-calculator/order-calculator';
+import { ShippingCalculator } from '../helpers/shipping-calculator';
 import { ConfigService } from '../../config';
 import { EventBus, OrderLineEvent } from '../../event-bus';
 
 import { UserService } from './user.service';
 import { PaymentService } from './payment.service';
 import { PaymentMethodService } from './payment-method.service';
+import { EligibleShippingMethod } from '../helpers/shipping-calculator/shipping-calculator';
 
 @Injectable()
 export class OrderService {
@@ -43,6 +52,7 @@ export class OrderService {
     private readonly userService: UserService,
     private readonly orderModifier: OrderModifier,
     private readonly orderCalculator: OrderCalculator,
+    private shippingCalculator: ShippingCalculator,
     private readonly paymentService: PaymentService,
     private readonly paymentMethodService: PaymentMethodService,
     private readonly configService: ConfigService,
@@ -151,7 +161,66 @@ export class OrderService {
   }
 
   /**
-   * Добавляет платеж к ордеру
+   * @description
+   * Returns an array of quotes stating which {@link ShippingMethod}s may be applied to this Order.
+   * This is determined by the configured {@link ShippingEligibilityChecker} of each ShippingMethod.
+   *
+   * The quote also includes a price for each method, as determined by the configured
+   * {@link ShippingCalculator} of each eligible ShippingMethod.
+   */
+  public async getEligibleShippingMethods(
+    ctx: RequestContext,
+    orderId: number
+  ): Promise<ShippingMethodQuote[]> {
+    const order = await this.getOrderOrThrow(orderId);
+    const eligibleMethods: EligibleShippingMethod[] =
+      await this.shippingCalculator.getEligibleShippingMethods(ctx, order);
+
+    return eligibleMethods.map((eligible: EligibleShippingMethod) => {
+      const { method, result } = eligible;
+
+      return {
+        id: method.id,
+        price: result.price,
+        description: method.description,
+        name: method.name,
+        code: method.code,
+        metadata: result.metadata,
+        customFields: eligible.method.customFields,
+      } as ShippingMethodQuote;
+    });
+  }
+
+  /**
+   * @description
+   * Устанавливает способ доставки в заказе.
+   */
+  async setShippingMethod(
+    ctx: RequestContext,
+    orderId: number,
+    shippingMethodIds: number
+  ): Promise<ErrorResultUnion<OrderModificationError, Order>> {
+    const order = await this.getOrderOrThrow(orderId);
+    const validationError = this.assertAddingItemsState(order);
+    if (validationError) {
+      return validationError;
+    }
+    const result = await this.orderModifier.setShippingMethod(
+      ctx,
+      order,
+      shippingMethodIds
+    );
+    if (isGraphQlErrorResult(result)) {
+      return result;
+    }
+    const updatedOrder = await this.getOrderOrThrow(orderId);
+    //await this.applyPriceAdjustments(ctx, updatedOrder);
+    return this.dataSource.getRepository(Order).save(updatedOrder);
+  }
+
+  /**
+   * @description
+   * Добавляет платеж к заказу
    */
   async addPaymentToOrder(
     ctx: RequestContext,

@@ -9,3 +9,8 @@ export type PaymentInput = {
   /** This field should correspond to the `code` property of a PaymentMethod. */
   method: string;
 };
+
+export type ShippingInput = {
+  metadata: Record<string, unknown>;
+  shippingMethodId: number;
+};
