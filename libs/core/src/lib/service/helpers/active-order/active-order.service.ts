@@ -42,7 +42,7 @@ export class ActiveOrderService {
     }
 
     if (!order) {
-      const order = createIfNotExists
+      order = createIfNotExists
         ? await this.orderService.create(ctx.activeUserId)
         : null;
 

@@ -38,6 +38,7 @@ export class ProductCardComponent {
     this.productService.addToCart(this.product?.id, +value).subscribe({
       next: (data) => {
         const { addItemToOrder: order } = data;
+
         this.store.dispatch(setActiveOrder({ order }));
         this.store.dispatch(showSidebarCart());
       },
