@@ -8,6 +8,11 @@ const routes: Routes = [
       import('./pages/product/product.module').then((m) => m.ProductModule),
   },
   {
+    path: 'orders',
+    loadChildren: () =>
+      import('./pages/order/order.module').then((m) => m.OrderModule),
+  },
+  {
     path: 'assets',
     loadChildren: () =>
       import('./pages/asset/asset.module').then((m) => m.AssetModule),
@@ -21,7 +26,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '/products',
+    redirectTo: '/orders',
   },
 ];
 

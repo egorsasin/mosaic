@@ -6,7 +6,7 @@ import { ContextWrapper } from '@mosaic/cdk';
 import { ProductItemComponent } from './product';
 
 @Component({
-  selector: 'mosaic-routed-modal',
+  selector: 'mos-routed-modal',
   template: '',
   standalone: true,
 })
