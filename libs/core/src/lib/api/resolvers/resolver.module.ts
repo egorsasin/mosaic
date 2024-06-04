@@ -28,6 +28,7 @@ const ADMIN_RESOLVERS = [
   AdminResolvers.ProductResolver,
   AdminResolvers.AssetResolver,
   AdminResolvers.PaymentMethodResolver,
+  AdminResolvers.OrderResolver,
 ];
 
 @Module({

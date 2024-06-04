@@ -14,17 +14,20 @@ import { RequestContext, generatePublicId } from '../../api/common';
 import { Order, OrderLine, Payment, DATA_SOURCE_PROVIDER } from '../../data';
 import {
   ErrorResultUnion,
+  ListQueryOptions,
   NegativeQuantityError,
   OrderLimitError,
   OrderModificationError,
   OrderPaymentStateError,
   OrderStateTransitionError,
+  PaginatedList,
   isGraphQlErrorResult,
 } from '../../common';
 import {
   RemoveOrderItemResult,
   UpdateOrderItemsResult,
   OrderState,
+  QueryListArgs,
 } from '../../types';
 import { OrderModifier } from '../helpers/order-modifier/order-modifier';
 import { OrderStateMachine } from '../helpers/order-state-machine/order-state-machine';
@@ -52,6 +55,21 @@ export class OrderService {
     private readonly configService: ConfigService,
     private eventBus: EventBus
   ) {}
+
+  public async findAll(
+    options?: ListQueryOptions
+  ): Promise<PaginatedList<Order>> {
+    return this.dataSource
+      .getRepository(Order)
+      .findAndCount({
+        ...options,
+        relations: ['lines', 'shippingLine', 'payments', 'lines.product'],
+      })
+      .then(async ([items, totalItems]) => ({
+        items,
+        totalItems,
+      }));
+  }
 
   public async findOne(id: number): Promise<Order | undefined> {
     return this.dataSource.getRepository(Order).findOne({
@@ -83,7 +101,7 @@ export class OrderService {
   ): Promise<Order | undefined> {
     return this.dataSource.getRepository(Order).findOne({
       where: {
-        user: { id: userId },
+        //user: { id: userId },
         active: true,
       },
       order: {
@@ -109,7 +127,7 @@ export class OrderService {
     if (userId) {
       const user = await this.userService.getUserById(userId);
       if (user) {
-        newOrder.user = user;
+        // newOrder.user = user;
       }
     }
 

@@ -9,7 +9,7 @@ const PRODUCT_LIST_QUERY_PRODUCT_FRAGMENT = gql`
 `;
 
 export const PRODUCT_LIST_QUERY = gql`
-  query ProductListQuery($options: ListOptions) {
+  query ProductListQuery($options: ProductListOptions) {
     products(options: $options) {
       items {
         ...ProductListQueryProductFragment

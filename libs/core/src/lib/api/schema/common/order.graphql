@@ -25,6 +25,8 @@ type Order implements Node {
   lines: [OrderLine!]!
   totalQuantity: Int!
   total: Int!
+  code: String!
+  state: String!
   shippingLine: ShippingLine
 }
 

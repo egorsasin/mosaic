@@ -4,7 +4,6 @@ import {
   Entity,
   EntitySubscriberInterface,
   EventSubscriber,
-  InsertEvent,
   JoinColumn,
   OneToMany,
   OneToOne,
@@ -14,6 +13,7 @@ import {
 import { MosaicEntity, SoftDeletable } from '../entity';
 import { Address } from '../address';
 import { User } from '../user';
+import { Order } from '../order';
 
 @Entity()
 export class Customer extends MosaicEntity implements SoftDeletable {
@@ -35,6 +35,9 @@ export class Customer extends MosaicEntity implements SoftDeletable {
 
   @OneToMany(() => Address, (address) => address.customer)
   addresses: Address[];
+
+  @OneToMany(() => Order, (order) => order.customer)
+  orders: Order[];
 
   @OneToOne(() => User, { eager: true })
   @JoinColumn({ name: 'user_id' })

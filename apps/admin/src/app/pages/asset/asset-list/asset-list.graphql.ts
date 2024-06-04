@@ -3,7 +3,7 @@ import { gql } from 'apollo-angular';
 import { ASSET_FRAGMENT } from '../../../schema';
 
 export const GET_ASSET_LIST = gql`
-  query GetAssetList($options: ListOptions) {
+  query GetAssetList($options: AssetListOptions) {
     assets(options: $options) {
       items {
         ...Asset

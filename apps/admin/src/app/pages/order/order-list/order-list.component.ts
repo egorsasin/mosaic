@@ -6,6 +6,7 @@ import { OrderDataService } from '../order.service';
 
 export interface Order {
   id: number;
+  code: string;
 }
 
 @Component({

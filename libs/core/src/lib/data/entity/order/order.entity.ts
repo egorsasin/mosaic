@@ -17,6 +17,7 @@ import { Money } from '../../../config';
 
 import { OrderLine } from './order-line.entity';
 import { ShippingLine } from '../shipping-line';
+import { Customer } from '../customer';
 
 export type OrderAddress = {
   city?: string;
@@ -59,9 +60,9 @@ export class Order extends MosaicEntity {
   @Money()
   public subTotal: number;
 
-  @ManyToOne(() => User)
-  @JoinColumn({ name: 'user_id' })
-  public user?: User;
+  @Index()
+  @ManyToOne(() => Customer, (customer) => customer.orders)
+  customer?: Customer;
 
   @Column('simple-json') shippingAddress: OrderAddress;
 

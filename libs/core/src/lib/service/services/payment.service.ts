@@ -23,7 +23,8 @@ export class PaymentService {
     method: string,
     metadata: Record<string, unknown>
   ): Promise<Payment> {
-    const { paymentMethod, handler } = await this.paymentMethodService.getMethodAndOperations(ctx, method);
+    const { paymentMethod, handler } =
+      await this.paymentMethodService.getMethodAndOperations(ctx, method);
 
     // if (paymentMethod.checker && checker) {
     //   const eligible = await checker.check(
@@ -40,8 +41,6 @@ export class PaymentService {
     //   }
     // }
 
-    console.log('__HANDLER', handler);
-
     const result = await handler.createPayment(
       ctx,
       order,
@@ -56,11 +55,23 @@ export class PaymentService {
       .getRepository(Payment)
       .save(new Payment({ ...result, method, state: initialState }));
 
-    const { finalize } = await this.paymentStateMachine.transition(ctx, order, payment, result.state);
+    const { finalize } = await this.paymentStateMachine.transition(
+      ctx,
+      order,
+      payment,
+      result.state
+    );
 
-    await this.dataSource.getRepository(Payment).save(payment, { reload: false });
+    await this.dataSource
+      .getRepository(Payment)
+      .save(payment, { reload: false });
 
-    await this.dataSource.getRepository(Order).createQueryBuilder().relation(Order, 'payments').of(order).add(payment);
+    await this.dataSource
+      .getRepository(Order)
+      .createQueryBuilder()
+      .relation(Order, 'payments')
+      .of(order)
+      .add(payment);
 
     // this.eventBus.publish(
     //   new PaymentStateTransitionEvent(

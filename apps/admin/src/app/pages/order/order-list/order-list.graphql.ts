@@ -3,13 +3,12 @@ import { gql } from 'apollo-angular';
 const ORDER_FRAGMENT = gql`
   fragment Order on Order {
     id
-    name
-    slug
+    code
   }
 `;
 
 export const ORDER_LIST_QUERY = gql`
-  query OrderListQuery($options: ListOptions) {
+  query OrderListQuery($options: OrderListOptions) {
     orders(options: $options) {
       items {
         ...Order
