@@ -1,8 +1,10 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 
+import { InvalidCredentialsError, NotVerifiedError } from '@mosaic/common';
+
 import { ConfigService, AuthenticationStrategy } from '../../config';
 import { AuthenticatedSession, User } from '../../data';
-import { InvalidCredentialsError, NotVerifiedError } from '../../common';
+import { ErrorResultUnion } from '../../common';
 import { RequestContext } from '../../api/common';
 
 import { SessionService } from './session.service';
@@ -19,7 +21,10 @@ export class AuthService {
     authenticationMethod: string,
     authenticationData: any
   ): Promise<
-    AuthenticatedSession | InvalidCredentialsError | NotVerifiedError
+    ErrorResultUnion<
+      InvalidCredentialsError | NotVerifiedError,
+      AuthenticatedSession
+    >
   > {
     const authenticationStrategy =
       this.getAuthenticationStrategy(authenticationMethod);

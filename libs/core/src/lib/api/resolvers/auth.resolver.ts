@@ -1,13 +1,13 @@
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Response } from 'express';
 
-import { ForbiddenError } from '@mosaic/common';
+import { ForbiddenError, NotVerifiedError } from '@mosaic/common';
 
 import { UserService } from '../../service/services';
 import { User } from '../../data';
 import { Permission, RequestContext } from '../common';
 import { Allow, Ctx } from '../decorators';
-import { isGraphQlErrorResult, NotVerifiedError } from '../../common';
+import { isGraphQlErrorResult } from '../../common';
 import {
   AuthenticationResult,
   CurrentUser,

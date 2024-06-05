@@ -1,31 +1,23 @@
+import { GraphQLError } from 'graphql';
+
 import { MosaicEntity } from '../../data';
 
-export type GraphQLErrorResult = {
-  errorCode: string;
-  message: string;
-};
-
-export type JustErrorResults<T extends GraphQLErrorResult | U, U = any> = Exclude<
+export type JustErrorResults<T extends GraphQLError | U, U = unknown> = Exclude<
   T,
-  T extends GraphQLErrorResult ? never : T
+  T extends GraphQLError ? never : T
 >;
 
-export type ErrorResultUnion<T extends GraphQLErrorResult | U, E extends MosaicEntity, U = any> =
-  | JustErrorResults<T>
-  | E;
+export type ErrorResultUnion<
+  T extends GraphQLError | U,
+  E extends MosaicEntity,
+  U = unknown
+> = JustErrorResults<T> | E;
 
-export function isGraphQlErrorResult<T extends GraphQLErrorResult | U, U = any>(
-  input: T,
+export function isGraphQlErrorResult<T extends GraphQLError | U, U = unknown>(
+  input: T
 ): input is JustErrorResults<T>;
 export function isGraphQlErrorResult<T, E extends MosaicEntity>(
-  input: ErrorResultUnion<T, E>,
+  input: ErrorResultUnion<T, E>
 ): input is JustErrorResults<ErrorResultUnion<T, E>> {
-  return (
-    input &&
-    !!(
-      (input as unknown as GraphQLErrorResult).errorCode &&
-      (input as unknown as GraphQLErrorResult).message != null
-    ) &&
-    (input as any).__typename
-  );
+  return input && !!((input as unknown as GraphQLError).message != null);
 }

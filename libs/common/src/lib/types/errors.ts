@@ -51,7 +51,31 @@ export class AlreadyLoggedInError extends GraphQLError {
   }
 }
 
+export class InvalidCredentialsError extends GraphQLError {
+  constructor(public authenticationError: string) {
+    super('INVALID_CREDENTIALS_ERROR', {
+      extensions: { code: 'INVALID_CREDENTIALS_ERROR' },
+    });
+  }
+}
+
+export class NotVerifiedError extends GraphQLError {
+  constructor() {
+    super('NOT_VERIFIED_ERROR', {
+      extensions: { code: 'NOT_VERIFIED_ERROR' },
+    });
+  }
+}
+
 /* ORDER */
+
+export class GuestCheckoutError extends GraphQLError {
+  constructor() {
+    super('GUEST_CHECKOUT_ERROR', {
+      extensions: { code: 'GUEST_CHECKOUT_ERROR' },
+    });
+  }
+}
 
 export class EmailAddressConflictError extends GraphQLError {
   constructor() {

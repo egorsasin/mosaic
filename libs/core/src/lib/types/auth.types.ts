@@ -1,10 +1,10 @@
-import { EmailAddressConflictError, Maybe } from '@mosaic/common';
-
 import {
+  EmailAddressConflictError,
   InvalidCredentialsError,
-  NativeAuthStrategyError,
-  PasswordValidationError,
-} from '../common';
+  Maybe,
+} from '@mosaic/common';
+
+import { NativeAuthStrategyError, PasswordValidationError } from '../common';
 
 export declare type Success = {
   success: boolean;

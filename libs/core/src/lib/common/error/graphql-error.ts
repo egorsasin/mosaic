@@ -1,3 +1,5 @@
+import { GraphQLError } from 'graphql';
+
 export class ErrorResult {
   public readonly __typename: string;
   public readonly errorCode: string;
@@ -8,22 +10,6 @@ export class NativeAuthStrategyError extends ErrorResult {
   readonly __typename = 'NativeAuthStrategyError';
   readonly errorCode = 'NATIVE_AUTH_STRATEGY_ERROR';
   readonly message = 'NATIVE_AUTH_STRATEGY_ERROR';
-}
-
-export class NotVerifiedError extends ErrorResult {
-  readonly __typename = 'NotVerifiedError';
-  readonly errorCode = 'NOT_VERIFIED_ERROR';
-  readonly message = 'NOT_VERIFIED_ERROR';
-}
-
-export class InvalidCredentialsError extends ErrorResult {
-  readonly __typename = 'InvalidCredentialsError';
-  readonly errorCode = 'INVALID_CREDENTIALS_ERROR';
-  readonly message = 'INVALID_CREDENTIALS_ERROR';
-
-  constructor(public authenticationError: string) {
-    super();
-  }
 }
 
 export class PasswordValidationError extends ErrorResult {
