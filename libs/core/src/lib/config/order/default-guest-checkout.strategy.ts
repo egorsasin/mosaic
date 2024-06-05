@@ -1,4 +1,6 @@
-import { CustomerService } from '../../service/services';
+import { CreateCustomerInput } from '@mosaic/common';
+
+import { CustomerService } from '../../service/services/customer.service';
 import { Injector, RequestContext } from '../../api/common';
 import { Customer, Order } from '../../data';
 
@@ -29,15 +31,16 @@ export class DefaultGuestCheckoutStrategy implements GuestCheckoutStrategy {
     ctx: RequestContext,
     order: Order,
     input: CreateCustomerInput
-  ): Promise<SetCustomerForOrderResult | Customer> {
+  ): Promise<Customer> {
+    //SetCustomerForOrderResult
     if (!this.options.allowGuestCheckouts) {
-      return new GuestCheckoutError({
-        errorDetail: 'Guest checkouts are disabled',
-      });
+      // return new GuestCheckoutError({
+      //   errorDetail: 'Guest checkouts are disabled',
+      // });
     }
 
     if (ctx.activeUserId) {
-      return new AlreadyLoggedInError();
+      // return new AlreadyLoggedInError();
     }
     const errorOnExistingUser =
       !this.options.allowGuestCheckoutForRegisteredCustomers;

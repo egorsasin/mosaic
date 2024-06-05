@@ -5,7 +5,7 @@ export { User } from './user/user.entity';
 export { Order, OrderLine } from './order/';
 export { Product } from './product/product.entity';
 export { Address } from './address';
-export { Customer } from './customer';
+export { Customer } from './customer/customer.entity';
 export { PaymentMethod } from '../entity/payment-method';
 export { ShippingMethod } from '../entity/shipping-method';
 export { Payment } from './payment';

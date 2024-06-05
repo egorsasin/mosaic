@@ -1,23 +1,14 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  Index,
-  OneToOne,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, Index, OneToOne } from 'typeorm';
 
 import { Calculated } from '../../../common';
 import { MosaicEntity } from '../entity';
-import { User } from '../user/user.entity';
 import { OrderState } from '../../../types';
 import { Payment } from '../payment';
-import { Money } from '../../../config';
+import { Money } from '../../../config/entity/money.decorator';
 
 import { OrderLine } from './order-line.entity';
 import { ShippingLine } from '../shipping-line';
-import { Customer } from '../customer';
+import { Customer } from '../customer/customer.entity';
 
 export type OrderAddress = {
   city?: string;

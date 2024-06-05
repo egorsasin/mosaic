@@ -20,7 +20,7 @@ import {
 import { MoneyStrategy } from './entity';
 import { CustomFields } from './custom-field';
 import { ShippingCalculator } from './shipping-method';
-import { ConfigArg } from '../types';
+import { GuestCheckoutStrategy } from './order/guest-checkout.strategy';
 
 export interface ApiOptions {
   port: number;
@@ -30,8 +30,9 @@ export interface ApiOptions {
 export interface OrderOptions {
   orderItemsLimit?: number;
   orderLineItemsLimit?: number;
-  process?: Array<OrderProcess<any>>;
+  process?: OrderProcess<string>[];
   orderPlacedStrategy?: OrderPlacedStrategy;
+  guestCheckoutStrategy?: GuestCheckoutStrategy;
 }
 
 export interface AuthOptions {

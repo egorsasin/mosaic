@@ -1,10 +1,11 @@
 import { GraphQLResolveInfo } from 'graphql';
 import { Request, Response } from 'express';
-
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
-import { AuthService, SessionService } from '../../service/services';
+import { ForbiddenError } from '@mosaic/common';
+
+import { SessionService } from '../../service/services';
 import { CachedSession, ConfigService } from '../../config';
 
 import {
@@ -14,13 +15,11 @@ import {
   RequestContext,
   REQUEST_CONTEXT_KEY,
 } from '../common';
-import { ForbiddenError } from '@mosaic/common';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
-    private readonly authService: AuthService,
     private readonly configService: ConfigService,
     private readonly sessionService: SessionService
   ) {}

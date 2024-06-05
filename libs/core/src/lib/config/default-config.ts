@@ -15,6 +15,7 @@ import {
 } from './asset';
 import { DefaultMoneyStrategy } from './entity';
 import { defaultShippingCalculator } from './shipping-method';
+import { DefaultGuestCheckoutStrategy } from './order/default-guest-checkout.strategy';
 
 export const defaultConfig: RuntimeConfig = {
   apiOptions: {
@@ -49,6 +50,7 @@ export const defaultConfig: RuntimeConfig = {
     orderLineItemsLimit: 999,
     process: [defaultOrderProcess],
     orderPlacedStrategy: new DefaultOrderPlacedStrategy(),
+    guestCheckoutStrategy: new DefaultGuestCheckoutStrategy(),
   },
   paymentOptions: {
     paymentMethodHandlers: [],

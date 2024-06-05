@@ -13,7 +13,7 @@ import {
 import { MosaicEntity, SoftDeletable } from '../entity';
 import { Address } from '../address';
 import { User } from '../user';
-import { Order } from '../order';
+import { Order } from '../order/order.entity';
 
 @Entity()
 export class Customer extends MosaicEntity implements SoftDeletable {

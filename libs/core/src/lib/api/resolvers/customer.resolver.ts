@@ -3,7 +3,7 @@ import { Query, Resolver } from '@nestjs/graphql';
 import { Permission, RequestContext } from '../common';
 import { Allow, Ctx } from '../decorators';
 import { Customer } from '../../data';
-import { CustomerService } from '../../service/services';
+import { CustomerService } from '../../service/services/customer.service';
 
 @Resolver()
 export class CustomerResolver {

@@ -11,7 +11,7 @@ import { summate } from '@mosaic/common';
 
 import { MosaicEntity } from '../entity';
 import { Order } from '../order';
-import { Money } from '../../../config';
+import { Money } from '../../../config/entity/money.decorator';
 import { Adjustment, roundMoney } from '../order/order-line.entity';
 import { Calculated } from '../../../common';
 import { ShippingMethod } from '../shipping-method';

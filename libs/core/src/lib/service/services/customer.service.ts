@@ -1,8 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DataSource, IsNull } from 'typeorm';
 
+import { CreateCustomerInput, normalizeEmailAddress } from '@mosaic/common';
+
 import { Address, Customer, DATA_SOURCE_PROVIDER } from '../../data';
 import { CreateAddressInput } from '../../types';
+import { RequestContext } from '../../api/common';
 
 @Injectable()
 export class CustomerService {
@@ -23,6 +26,38 @@ export class CustomerService {
     return this.dataSource.getRepository(Address).find({
       where: { customer: { id: customerId } },
     });
+  }
+
+  public async createOrUpdate(
+    ctx: RequestContext,
+    input: CreateCustomerInput,
+    errorOnExistingUser = false
+  ): Promise<Customer> {
+    //| EmailAddressConflictError
+    input.emailAddress = normalizeEmailAddress(input.emailAddress);
+    let customer: Customer;
+    const existing = await this.dataSource.getRepository(Customer).findOne({
+      where: {
+        emailAddress: input.emailAddress,
+        deletedAt: IsNull(),
+      },
+    });
+    if (existing) {
+      if (existing.user && errorOnExistingUser) {
+        // It is not permitted to modify an existing *registered* Customer
+        //return new EmailAddressConflictError();
+      }
+      customer = { ...existing, ...input };
+    } else {
+      customer = await this.dataSource
+        .getRepository(Customer)
+        .save(new Customer(input));
+      // await this.eventBus.publish(
+      //   new CustomerEvent(ctx, customer, 'created', input)
+      // );
+    }
+
+    return await this.dataSource.getRepository(Customer).save(customer);
   }
 
   public async createAddress(

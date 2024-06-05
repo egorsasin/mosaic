@@ -1,13 +1,15 @@
-import { Customer, Order } from '../../data';
-import { RequestContext } from '../../api/common';
-import { InjectableStrategy, NoActiveOrderError } from '../../common';
+import { NoActiveOrderError, CreateCustomerInput } from '@mosaic/common';
 
-export type SetCustomerForOrderResult =
-  | AlreadyLoggedInError
-  | EmailAddressConflictError
-  | GuestCheckoutError
-  | NoActiveOrderError
-  | Order;
+import { Order } from '../../data/entity/order/order.entity';
+import { Customer } from '../../data/entity/customer/customer.entity';
+import { RequestContext } from '../../api/common';
+import { InjectableStrategy } from '../../common';
+
+export type SetCustomerForOrderResult = NoActiveOrderError | Order;
+
+// | AlreadyLoggedInError
+// | EmailAddressConflictError
+// | GuestCheckoutError
 
 export interface GuestCheckoutStrategy extends InjectableStrategy {
   setCustomerForOrder(

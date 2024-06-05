@@ -5,7 +5,7 @@ import {
   ExternalAuthenticationMethod,
   NativeAuthenticationMethod,
 } from './authentication';
-import { Customer } from './customer';
+import { Customer } from './customer/customer.entity';
 import { Order, OrderLine } from './order';
 import { Payment } from './payment';
 import { PaymentMethod } from './payment-method';

@@ -21,3 +21,11 @@ export async function awaitPromiseOrObservable<T>(
   }
   return result;
 }
+
+export function normalizeEmailAddress(input: string): string {
+  return isEmailAddressLike(input) ? input.trim().toLowerCase() : input.trim();
+}
+
+export function isEmailAddressLike(input: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.trim());
+}

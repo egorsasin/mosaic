@@ -4,7 +4,8 @@ import { MosaicEntity } from '../entity';
 import { Product } from '../product/product.entity';
 import { Order } from './order.entity';
 import { Calculated } from '../../../common';
-import { Money, MoneyStrategy, getConfig } from '../../../config';
+import { MoneyStrategy, getConfig } from '../../../config';
+import { Money } from '../../../config/entity/money.decorator';
 
 export enum AdjustmentType {
   DISTRIBUTED_ORDER_PROMOTION = 'DISTRIBUTED_ORDER_PROMOTION',

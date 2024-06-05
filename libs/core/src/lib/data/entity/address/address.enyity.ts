@@ -1,7 +1,7 @@
 import { Column, Entity, Index, ManyToOne } from 'typeorm';
 
 import { MosaicEntity } from '../entity';
-import { Customer } from '../customer';
+import { Customer } from '../customer/customer.entity';
 
 @Entity()
 export class Address extends MosaicEntity {

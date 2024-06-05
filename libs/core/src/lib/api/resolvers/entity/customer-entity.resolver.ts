@@ -1,6 +1,6 @@
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
 
-import { CustomerService } from '../../../service/services';
+import { CustomerService } from '../../../service/services/customer.service';
 import { Ctx } from '../../decorators';
 import { RequestContext } from '../../common';
 import { Address, Customer } from '../../../data';

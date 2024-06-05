@@ -3,7 +3,7 @@ import { Response } from 'express';
 
 import { ForbiddenError } from '@mosaic/common';
 
-import { AuthService, UserService } from '../../service/services';
+import { UserService } from '../../service/services';
 import { User } from '../../data';
 import { Permission, RequestContext } from '../common';
 import { Allow, Ctx } from '../decorators';
@@ -14,6 +14,7 @@ import {
   MutationAuthenticateArgs,
 } from '../../types';
 import { ConfigService } from '../../config';
+import { AuthService } from '../../service/services/auth.service';
 
 @Resolver()
 export class AuthResolver {

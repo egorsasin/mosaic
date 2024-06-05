@@ -7,7 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 
-import { Money } from '../../../config';
+import { Money } from '../../../config/entity/money.decorator';
 import { MosaicEntity, SoftDeletable } from '../entity';
 import { Asset } from '../asset';
 import { ProductAsset } from './product-asset.entity';

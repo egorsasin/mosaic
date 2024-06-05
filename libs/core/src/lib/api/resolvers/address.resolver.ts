@@ -5,7 +5,7 @@ import { ForbiddenError, InternalServerError } from '@mosaic/common';
 import { Permission, RequestContext } from '../common';
 import { Allow, Ctx } from '../decorators';
 import { Address, Customer } from '../../data';
-import { CustomerService } from '../../service/services';
+import { CustomerService } from '../../service/services/customer.service';
 
 import { MutationCreateCustomerAddressArgs } from '../../types';
 

@@ -50,9 +50,15 @@ export class ConfigModule
 
   private getInjectableStrategies(): InjectableStrategy[] {
     const { process: paymentProcess } = this.configService.paymentOptions;
-    const { process: orderProcess } = this.configService.orderOptions;
+    const { process: orderProcess, guestCheckoutStrategy } =
+      this.configService.orderOptions;
     const { authenticationStrategy } = this.configService.authOptions;
 
-    return [...authenticationStrategy, ...paymentProcess, ...orderProcess];
+    return [
+      ...authenticationStrategy,
+      ...paymentProcess,
+      ...orderProcess,
+      guestCheckoutStrategy,
+    ];
   }
 }

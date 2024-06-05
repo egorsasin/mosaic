@@ -32,13 +32,13 @@ import { OrderModifier } from '../helpers/order-modifier/order-modifier';
 import { OrderStateMachine } from '../helpers/order-state-machine/order-state-machine';
 import { OrderCalculator } from '../helpers/order-calculator/order-calculator';
 import { ShippingCalculator } from '../helpers/shipping-calculator';
+import { EligibleShippingMethod } from '../helpers/shipping-calculator/shipping-calculator';
 import { ConfigService } from '../../config';
 import { EventBus, OrderLineEvent } from '../../event-bus';
 
 import { UserService } from './user.service';
 import { PaymentService } from './payment.service';
 import { PaymentMethodService } from './payment-method.service';
-import { EligibleShippingMethod } from '../helpers/shipping-calculator/shipping-calculator';
 
 @Injectable()
 export class OrderService {
