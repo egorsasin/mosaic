@@ -1,7 +1,6 @@
-import { Maybe } from '@mosaic/common';
+import { EmailAddressConflictError, Maybe } from '@mosaic/common';
 
 import {
-  EmailAddressConflictError,
   InvalidCredentialsError,
   NativeAuthStrategyError,
   PasswordValidationError,

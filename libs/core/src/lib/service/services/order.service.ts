@@ -6,6 +6,8 @@ import {
   PaymentMethodQuote,
   ShippingMethodQuote,
   assertFound,
+  OrderPaymentStateError,
+  OrderModificationError,
   omit,
   summate,
 } from '@mosaic/common';
@@ -17,8 +19,6 @@ import {
   ListQueryOptions,
   NegativeQuantityError,
   OrderLimitError,
-  OrderModificationError,
-  OrderPaymentStateError,
   OrderStateTransitionError,
   PaginatedList,
   isGraphQlErrorResult,
@@ -27,7 +27,6 @@ import {
   RemoveOrderItemResult,
   UpdateOrderItemsResult,
   OrderState,
-  QueryListArgs,
 } from '../../types';
 import { OrderModifier } from '../helpers/order-modifier/order-modifier';
 import { OrderStateMachine } from '../helpers/order-state-machine/order-state-machine';
@@ -140,7 +139,7 @@ export class OrderService {
     orderId: number,
     productId: number,
     quantity: number
-  ): Promise<ErrorResultUnion<UpdateOrderItemsResult, Order>> {
+  ): Promise<UpdateOrderItemsResult | Order> {
     // Получаем ордер по ИД или возвращаем ошибку если ордер не найден
     const order = await this.getOrderOrThrow(orderId);
     const existingOrderLine = order.lines.find(
@@ -215,7 +214,7 @@ export class OrderService {
     ctx: RequestContext,
     orderId: number,
     shippingMethodId: number
-  ): Promise<ErrorResultUnion<OrderModificationError, Order>> {
+  ): Promise<OrderModificationError | Order> {
     const order = await this.getOrderOrThrow(orderId);
     const validationError = this.assertAddingItemsState(order);
 
@@ -297,10 +296,10 @@ export class OrderService {
     orderId: number,
     orderLineId: number,
     quantity: number
-  ): Promise<ErrorResultUnion<UpdateOrderItemsResult, Order>> {
+  ): Promise<UpdateOrderItemsResult | Order> {
     const order = await this.getOrderOrThrow(orderId);
     const orderLine = this.getOrderLineOrThrow(order, orderLineId);
-    const validationError =
+    const validationError: UpdateOrderItemsResult =
       this.assertAddingItemsState(order) ||
       this.assertQuantityIsPositive(quantity) ||
       this.assertNotOverOrderItemsLimit(order, quantity - orderLine.quantity) ||
@@ -341,7 +340,7 @@ export class OrderService {
     ctx: RequestContext,
     orderId: number,
     orderLineId: number
-  ): Promise<ErrorResultUnion<RemoveOrderItemResult, Order>> {
+  ): Promise<RemoveOrderItemResult | Order> {
     const order = await this.getOrderOrThrow(orderId);
     const validationError = this.assertAddingItemsState(order);
 

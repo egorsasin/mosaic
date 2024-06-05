@@ -1,5 +1,4 @@
-import { RequestContext } from '../../api/common';
-import { InternalServerError } from '../../common';
+import { InternalServerError } from '@mosaic/common';
 
 import { AssetPreviewStrategy } from './strategies';
 

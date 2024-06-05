@@ -1,4 +1,5 @@
 import {
+  InternalServerError,
   ConfigArgDefinition,
   ConfigurableOperationDefinition,
   Maybe,
@@ -8,7 +9,6 @@ import {
 
 import { ConfigArg, ConfigArgValues } from '../types';
 
-import { InternalServerError } from './error/errors';
 import { InjectableStrategy } from './injectable-strategy';
 
 export type ConfigArgType = 'string' | 'int' | 'float' | 'boolean' | 'datetime';

@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import { Stream } from 'stream';
 
-import { InternalServerError } from '../../common/error/errors';
+import { InternalServerError } from '@mosaic/common';
 
 import { AssetStorageStrategy } from './strategies';
 

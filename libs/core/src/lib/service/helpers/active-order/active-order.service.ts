@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
+import { InternalServerError } from '@mosaic/common';
+
 import { Order } from '../../../data';
-import { InternalServerError } from '../../../common';
 import { RequestContext } from '../../../api/common/request-context';
 import { SessionService } from '../../services/session.service';
 import { OrderService } from '../../services/order.service';

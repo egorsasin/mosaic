@@ -6,7 +6,6 @@ import { Reflector } from '@nestjs/core';
 
 import { AuthService, SessionService } from '../../service/services';
 import { CachedSession, ConfigService } from '../../config';
-import { ForbiddenError } from '../../common';
 
 import {
   parseContext,
@@ -15,6 +14,7 @@ import {
   RequestContext,
   REQUEST_CONTEXT_KEY,
 } from '../common';
+import { ForbiddenError } from '@mosaic/common';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -22,13 +22,16 @@ export class AuthGuard implements CanActivate {
     private readonly reflector: Reflector,
     private readonly authService: AuthService,
     private readonly configService: ConfigService,
-    private readonly sessionService: SessionService,
+    private readonly sessionService: SessionService
   ) {}
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const { req, res, info } = parseContext(context);
     const isFieldResolver = this.isFieldResolver(info);
-    const permissions = this.reflector.get<Permission[]>(PERMISSIONS_METADATA_KEY, context.getHandler());
+    const permissions = this.reflector.get<Permission[]>(
+      PERMISSIONS_METADATA_KEY,
+      context.getHandler()
+    );
 
     if (isFieldResolver && !permissions) {
       return true;
@@ -36,7 +39,8 @@ export class AuthGuard implements CanActivate {
 
     const authDisabled = this.configService.authOptions.disableAuth;
     const isPublic = permissions?.includes(Permission.Public);
-    const hasOwnerPermission = !!permissions && permissions.includes(Permission.Owner);
+    const hasOwnerPermission =
+      !!permissions && permissions.includes(Permission.Owner);
 
     let requestContext: RequestContext;
 
@@ -52,7 +56,8 @@ export class AuthGuard implements CanActivate {
     if (authDisabled || !permissions || isPublic) {
       return true;
     } else {
-      const canActivate = requestContext.isAuthorized || requestContext.authorizedAsOwnerOnly;
+      const canActivate =
+        requestContext.isAuthorized || requestContext.authorizedAsOwnerOnly;
       if (!canActivate) {
         throw new ForbiddenError();
       } else {
@@ -72,7 +77,7 @@ export class AuthGuard implements CanActivate {
   private async getSession(
     req: Request,
     res: Response,
-    hasOwnerPermission: boolean,
+    hasOwnerPermission: boolean
   ): Promise<CachedSession | undefined> {
     const authOtions = this.configService.authOptions;
     const sessionToken = extractAuthToken(req);
@@ -80,7 +85,9 @@ export class AuthGuard implements CanActivate {
     let serializedSession: CachedSession | undefined;
 
     if (sessionToken) {
-      serializedSession = await this.sessionService.getSessionFromToken(sessionToken);
+      serializedSession = await this.sessionService.getSessionFromToken(
+        sessionToken
+      );
       if (serializedSession) {
         return serializedSession;
       }
@@ -98,9 +105,10 @@ export class AuthGuard implements CanActivate {
   private async fromRequest(
     req: Request,
     requiredPermissions?: Permission[],
-    session?: CachedSession,
+    session?: CachedSession
   ): Promise<RequestContext> {
-    const authorizedAsOwnerOnly = !!requiredPermissions && requiredPermissions.includes(Permission.Owner);
+    const authorizedAsOwnerOnly =
+      !!requiredPermissions && requiredPermissions.includes(Permission.Owner);
     const user = session && session.user;
     const isAuthorized = !!user && user.verified;
 

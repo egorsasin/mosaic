@@ -7,16 +7,18 @@ import path from 'path';
 import { camelCase } from 'typeorm/util/StringUtils';
 import { RelationMetadata } from 'typeorm/metadata/RelationMetadata';
 
-import { notNullOrUndefined } from '@mosaic/common';
+import {
+  notNullOrUndefined,
+  InternalServerError,
+  MimeTypeError,
+} from '@mosaic/common';
 
 import { Asset, MosaicEntity, DATA_SOURCE_PROVIDER } from '../../data';
 import { CreateAssetInput, CreateAssetResult } from '../../types';
 import { ConfigService } from '../../config';
 import {
   AssetType,
-  InternalServerError,
   ListQueryOptions,
-  MimeTypeError,
   PaginatedList,
   getAssetType,
 } from '../../common';
@@ -54,7 +56,9 @@ export class AssetService {
       });
   }
 
-  public async findAll(options?: ListQueryOptions): Promise<PaginatedList<Asset>> {
+  public async findAll(
+    options?: ListQueryOptions
+  ): Promise<PaginatedList<Asset>> {
     return this.dataSource
       .getRepository(Asset)
       .findAndCount(options)
@@ -64,7 +68,10 @@ export class AssetService {
       }));
   }
 
-  public async findOne(id: number, relations?: FindOptionsRelations<Asset>): Promise<Asset | undefined> {
+  public async findOne(
+    id: number,
+    relations?: FindOptionsRelations<Asset>
+  ): Promise<Asset | undefined> {
     return this.dataSource
       .getRepository(Asset)
       .findOne({
@@ -92,7 +99,9 @@ export class AssetService {
     });
   }
 
-  async getFeaturedAsset<T extends Omit<EntityWithAssets, 'assets'>>(entity: T): Promise<Asset | undefined> {
+  async getFeaturedAsset<T extends Omit<EntityWithAssets, 'assets'>>(
+    entity: T
+  ): Promise<Asset | undefined> {
     const entityType: Type<T> = Object.getPrototypeOf(entity).constructor;
     const entityWithFeaturedAsset = await this.dataSource
       .getRepository(entityType)
@@ -104,10 +113,16 @@ export class AssetService {
       } as FindOneOptions<T>)
       .then((result) => result ?? undefined);
 
-    return (entityWithFeaturedAsset && entityWithFeaturedAsset.featuredAsset) || undefined;
+    return (
+      (entityWithFeaturedAsset && entityWithFeaturedAsset.featuredAsset) ||
+      undefined
+    );
   }
 
-  public async updateFeaturedAsset<T extends EntityWithAssets>(entity: T, input: EntityAssetInput): Promise<T> {
+  public async updateFeaturedAsset<T extends EntityWithAssets>(
+    entity: T,
+    input: EntityAssetInput
+  ): Promise<T> {
     const { assetIds, featuredAssetId } = input;
     if (featuredAssetId === null || (assetIds && assetIds.length === 0)) {
       entity.featuredAsset = null;
@@ -124,16 +139,23 @@ export class AssetService {
     return entity;
   }
 
-  public async updateEntityAssets<T extends EntityWithAssets>(entity: T, input: EntityAssetInput): Promise<T> {
+  public async updateEntityAssets<T extends EntityWithAssets>(
+    entity: T,
+    input: EntityAssetInput
+  ): Promise<T> {
     if (!entity.id) {
       throw new InternalServerError('error.entity-must-have-an-id');
     }
     const { assetIds } = input;
     if (assetIds && assetIds.length) {
-      const assets: Asset[] = await this.dataSource.getRepository(Asset).find({ where: { id: In(assetIds) } });
+      const assets: Asset[] = await this.dataSource
+        .getRepository(Asset)
+        .find({ where: { id: In(assetIds) } });
 
       const sortedAssets = assetIds
-        .map((assetId: number) => assets.find(({ id }: Asset) => id === assetId))
+        .map((assetId: number) =>
+          assets.find(({ id }: Asset) => id === assetId)
+        )
         .filter(notNullOrUndefined);
 
       await this.removeExistingOrderableAssets(entity);
@@ -145,15 +167,20 @@ export class AssetService {
     return entity;
   }
 
-  public async getEntityAssets<T extends EntityWithAssets>(entity: T): Promise<Asset[] | undefined> {
+  public async getEntityAssets<T extends EntityWithAssets>(
+    entity: T
+  ): Promise<Asset[] | undefined> {
     let orderableAssets = entity.assets;
 
     if (!orderableAssets) {
-      const entityType: Type<EntityWithAssets> = Object.getPrototypeOf(entity).constructor;
-      const entityWithAssets = await this.dataSource.getRepository(entityType).findOne({
-        where: { id: entity.id },
-        relations: ['assets', 'assets.asset'],
-      });
+      const entityType: Type<EntityWithAssets> =
+        Object.getPrototypeOf(entity).constructor;
+      const entityWithAssets = await this.dataSource
+        .getRepository(entityType)
+        .findOne({
+          where: { id: entity.id },
+          relations: ['assets', 'assets.asset'],
+        });
 
       orderableAssets = entityWithAssets?.assets ?? [];
     } else if (orderableAssets.length) {
@@ -161,11 +188,15 @@ export class AssetService {
         where: { id: In(orderableAssets.map((a) => a.assetId)) },
       });
 
-      orderableAssets = orderableAssets.filter(({ assetId }) => !!assets.find(({ id }) => id === assetId));
+      orderableAssets = orderableAssets.filter(
+        ({ assetId }) => !!assets.find(({ id }) => id === assetId)
+      );
     } else {
       orderableAssets = [];
     }
-    return orderableAssets.sort((a, b) => a.position - b.position).map((a) => a.asset);
+    return orderableAssets
+      .sort((a, b) => a.position - b.position)
+      .map((a) => a.asset);
   }
 
   private async createAssetInternal(
@@ -182,13 +213,24 @@ export class AssetService {
     const { assetPreviewStrategy, assetStorageStrategy } = assetOptions;
     const sourceFileName = await this.getSourceFileName(filename);
     const previewFileName = await this.getPreviewFileName(sourceFileName);
-    const sourceFileIdentifier = await assetStorageStrategy.writeFileFromStream(sourceFileName, stream);
-    const sourceFile = await assetStorageStrategy.readFileToBuffer(sourceFileIdentifier);
-    const preview = await assetPreviewStrategy.generatePreviewImage(mimetype, sourceFile);
+    const sourceFileIdentifier = await assetStorageStrategy.writeFileFromStream(
+      sourceFileName,
+      stream
+    );
+    const sourceFile = await assetStorageStrategy.readFileToBuffer(
+      sourceFileIdentifier
+    );
+    const preview = await assetPreviewStrategy.generatePreviewImage(
+      mimetype,
+      sourceFile
+    );
 
-    const previewFileIdentifier = await assetStorageStrategy.writeFileFromBuffer(previewFileName, preview);
+    const previewFileIdentifier =
+      await assetStorageStrategy.writeFileFromBuffer(previewFileName, preview);
     const type = getAssetType(mimetype);
-    const { width, height } = this.getDimensions(type === AssetType.IMAGE ? sourceFile : preview);
+    const { width, height } = this.getDimensions(
+      type === AssetType.IMAGE ? sourceFile : preview
+    );
     const asset = new Asset({
       type,
       width,
@@ -204,12 +246,23 @@ export class AssetService {
     return this.dataSource.getRepository(Asset).save(asset);
   }
 
-  private createOrderableAssets(entity: EntityWithAssets, assets: Asset[]): Promise<OrderableAsset[]> {
-    const orderableAssets = assets.map((asset, i) => this.getOrderableAsset(entity, asset, i));
-    return this.dataSource.getRepository(orderableAssets[0].constructor).save(orderableAssets);
+  private createOrderableAssets(
+    entity: EntityWithAssets,
+    assets: Asset[]
+  ): Promise<OrderableAsset[]> {
+    const orderableAssets = assets.map((asset, i) =>
+      this.getOrderableAsset(entity, asset, i)
+    );
+    return this.dataSource
+      .getRepository(orderableAssets[0].constructor)
+      .save(orderableAssets);
   }
 
-  private getOrderableAsset(entity: EntityWithAssets, asset: Asset, index: number): OrderableAsset {
+  private getOrderableAsset(
+    entity: EntityWithAssets,
+    asset: Asset,
+    index: number
+  ): OrderableAsset {
     const entityIdProperty = getHostEntityIdProperty(entity);
     const orderableAssetType = this.getOrderableAssetType(entity);
 
@@ -222,20 +275,27 @@ export class AssetService {
 
   private async removeExistingOrderableAssets(entity: EntityWithAssets) {
     const entityIdProperty = getHostEntityIdProperty(entity);
-    const orderableAssetType: Type<OrderableAsset> = this.getOrderableAssetType(entity);
+    const orderableAssetType: Type<OrderableAsset> =
+      this.getOrderableAssetType(entity);
 
     await this.dataSource.getRepository(orderableAssetType).delete({
       [entityIdProperty]: entity.id,
     });
   }
 
-  private getOrderableAssetType(entity: EntityWithAssets): Type<OrderableAsset> {
+  private getOrderableAssetType(
+    entity: EntityWithAssets
+  ): Type<OrderableAsset> {
     const assetRelation = this.dataSource
       .getRepository(entity.constructor)
-      .metadata.relations.find(({ propertyName }: RelationMetadata) => propertyName === 'assets');
+      .metadata.relations.find(
+        ({ propertyName }: RelationMetadata) => propertyName === 'assets'
+      );
 
     if (!assetRelation || typeof assetRelation.type === 'string') {
-      throw new InternalServerError('error.could-not-find-matching-orderable-asset');
+      throw new InternalServerError(
+        'error.could-not-find-matching-orderable-asset'
+      );
     }
 
     return assetRelation.type as Type<OrderableAsset>;
@@ -261,7 +321,9 @@ export class AssetService {
     let outputFileName: string | undefined;
     do {
       outputFileName = generateNameFn(inputFileName, outputFileName);
-    } while (await assetOptions.assetStorageStrategy.fileExists(outputFileName));
+    } while (
+      await assetOptions.assetStorageStrategy.fileExists(outputFileName)
+    );
     return outputFileName;
   }
 

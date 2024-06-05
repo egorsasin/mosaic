@@ -13,14 +13,14 @@ export class ForbiddenError extends GraphQLError {
 }
 
 export class InternalServerError extends GraphQLError {
-  constructor(public message: string) {
+  constructor(message: string) {
     super(message, { extensions: { code: 'INTERNAL_SERVER_ERROR' } });
   }
 }
 
 export class UserInputError extends GraphQLError {
   constructor(
-    public message: string,
+    message: string,
     public variables: { [key: string]: string | number } = {}
   ) {
     super(message, {
@@ -40,6 +40,24 @@ export class MimeTypeError extends GraphQLError {
     });
     this.fileName = fileName;
     this.mimeType = mimeType;
+  }
+}
+
+export class AlreadyLoggedInError extends GraphQLError {
+  constructor() {
+    super('ALREADY_LOGGED_IN_ERROR', {
+      extensions: { code: 'ALREADY_LOGGED_IN_ERROR' },
+    });
+  }
+}
+
+/* ORDER */
+
+export class EmailAddressConflictError extends GraphQLError {
+  constructor() {
+    super('EMAIL_ADDRESS_CONFLICT_ERROR', {
+      extensions: { code: 'EMAIL_ADDRESS_CONFLICT_ERROR' },
+    });
   }
 }
 
@@ -63,6 +81,14 @@ export class IneligibleShippingMethodError extends GraphQLError {
   constructor() {
     super('INELIGIBLE_SHIPPING_METHODS_ERROR', {
       extensions: { code: 'INELIGIBLE_SHIPPING_METHODS_ERROR' },
+    });
+  }
+}
+
+export class OrderModificationError extends GraphQLError {
+  constructor() {
+    super('ORDER_MODIFICATION_ERROR', {
+      extensions: { code: 'ORDER_MODIFICATION_ERROR' },
     });
   }
 }

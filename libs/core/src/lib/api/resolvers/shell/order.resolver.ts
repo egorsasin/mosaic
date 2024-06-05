@@ -1,6 +1,14 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { MutationArgs, PaymentInput, ShippingInput } from '@mosaic/common';
+import {
+  MutationArgs,
+  PaymentInput,
+  ShippingInput,
+  ForbiddenError,
+  NoActiveOrderError,
+  OrderModificationError,
+  OrderPaymentStateError,
+} from '@mosaic/common';
 
 import { Allow, Ctx } from '../../decorators';
 import { Permission, RequestContext } from '../../common';
@@ -15,13 +23,7 @@ import {
   RemoveOrderItemResult,
   UpdateOrderItemsResult,
 } from '../../../types';
-import {
-  ErrorResultUnion,
-  ForbiddenError,
-  NoActiveOrderError,
-  OrderModificationError,
-  OrderPaymentStateError,
-} from '../../../common';
+import { ErrorResultUnion } from '../../../common';
 import { ACTIVE_ORDER_INPUT_FIELD_NAME } from '../../config';
 
 type ActiveOrderArgs = { [ACTIVE_ORDER_INPUT_FIELD_NAME]?: unknown };
@@ -53,7 +55,7 @@ export class OrderResolver {
   public async addItemToOrder(
     @Ctx() ctx: RequestContext,
     @Args() { productId, quantity }: MutationAddItemToOrderArgs
-  ): Promise<Promise<ErrorResultUnion<UpdateOrderItemsResult, Order>>> {
+  ): Promise<UpdateOrderItemsResult | Order> {
     const order = await this.activeOrderService.getOrderFromContext(ctx, true);
 
     return this.orderService.addItemToOrder(ctx, order.id, productId, quantity);
@@ -141,7 +143,7 @@ export class OrderResolver {
     @Ctx() ctx: RequestContext,
     @Args()
     { orderLineId, quantity }: MutationAdjustOrderLineArgs & ActiveOrderArgs
-  ): Promise<ErrorResultUnion<UpdateOrderItemsResult, Order>> {
+  ): Promise<UpdateOrderItemsResult | Order> {
     if (quantity === 0) {
       return this.removeOrderLine(ctx, { orderLineId });
     }
@@ -161,7 +163,7 @@ export class OrderResolver {
   public async removeOrderLine(
     @Ctx() ctx: RequestContext,
     @Args() args: MutationRemoveOrderLineArgs & ActiveOrderArgs
-  ): Promise<ErrorResultUnion<RemoveOrderItemResult, Order>> {
+  ): Promise<RemoveOrderItemResult | Order> {
     const order = await this.activeOrderService.getActiveOrder(ctx);
     return this.orderService.removeItemFromOrder(
       ctx,

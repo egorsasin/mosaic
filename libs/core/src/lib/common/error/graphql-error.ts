@@ -26,12 +26,6 @@ export class InvalidCredentialsError extends ErrorResult {
   }
 }
 
-export class EmailAddressConflictError extends ErrorResult {
-  readonly __typename = 'EmailAddressConflictError';
-  readonly errorCode = 'EMAIL_ADDRESS_CONFLICT_ERROR';
-  readonly message = 'EMAIL_ADDRESS_CONFLICT_ERROR';
-}
-
 export class PasswordValidationError extends ErrorResult {
   readonly __typename = 'PasswordValidationError';
   readonly errorCode = 'PASSWORD_VALIDATION_ERROR' as any;
@@ -45,13 +39,6 @@ export class NegativeQuantityError extends ErrorResult {
   readonly __typename = 'NegativeQuantityError';
   readonly errorCode = 'NEGATIVE_QUANTITY_ERROR' as any;
   readonly message = 'NEGATIVE_QUANTITY_ERROR';
-}
-
-/** Returned when attempting to modify the contents of an Order that is not in the `AddingItems` state. */
-export class OrderModificationError extends ErrorResult {
-  readonly __typename = 'OrderModificationError';
-  readonly errorCode = 'ORDER_MODIFICATION_ERROR';
-  readonly message = 'ORDER_MODIFICATION_ERROR';
 }
 
 export class OrderLimitError extends ErrorResult {

@@ -1,11 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DataSource, EntityNotFoundError } from 'typeorm';
 
+import { IneligibleShippingMethodError } from '@mosaic/common';
+
 import { Order, OrderLine, Product, DATA_SOURCE_PROVIDER } from '../../../data';
 import { RequestContext } from '../../../api/common';
 import { EventBus, OrderLineEvent } from '../../../event-bus';
 import { ShippingCalculator } from '../shipping-calculator';
-import { IneligibleShippingMethodError } from '../../../common';
 import { ShippingLine } from '../../../data/entity/shipping-line';
 
 @Injectable()

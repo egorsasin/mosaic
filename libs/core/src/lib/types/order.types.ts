@@ -1,8 +1,6 @@
-import {
-  NegativeQuantityError,
-  OrderLimitError,
-  OrderModificationError,
-} from '../common';
+import { OrderModificationError } from '@mosaic/common';
+
+import { NegativeQuantityError, OrderLimitError } from '../common';
 import { Order } from '../data';
 
 export type UpdateOrderItemsResult =

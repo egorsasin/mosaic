@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
+import { UserInputError } from '@mosaic/common';
+
 import { ConfigService } from '../../../config';
-import { UserInputError } from '../../../common';
 import { ConfigDefType, ConfigDefTypeMap } from '../../../types';
 
 @Injectable()

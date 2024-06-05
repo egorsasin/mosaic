@@ -1,6 +1,7 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
-import { ForbiddenError, InternalServerError } from '../../common';
+import { ForbiddenError, InternalServerError } from '@mosaic/common';
+
 import { Permission, RequestContext } from '../common';
 import { Allow, Ctx } from '../decorators';
 import { Address, Customer } from '../../data';
