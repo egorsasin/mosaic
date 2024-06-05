@@ -1,7 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DataSource, IsNull } from 'typeorm';
 
-import { CreateCustomerInput, normalizeEmailAddress } from '@mosaic/common';
+import {
+  CreateCustomerInput,
+  EmailAddressConflictError,
+  normalizeEmailAddress,
+} from '@mosaic/common';
+import { CustomerEvent, EventBus } from '@mosaic/core/event-bus';
 
 import { Address, Customer, DATA_SOURCE_PROVIDER } from '../../data';
 import { CreateAddressInput } from '../../types';
@@ -10,7 +15,8 @@ import { RequestContext } from '../../api/common';
 @Injectable()
 export class CustomerService {
   constructor(
-    @Inject(DATA_SOURCE_PROVIDER) private readonly dataSource: DataSource
+    @Inject(DATA_SOURCE_PROVIDER) private readonly dataSource: DataSource,
+    private readonly eventBus: EventBus
   ) {}
 
   public findOneByUserId(userId: number): Promise<Customer | undefined> {
@@ -32,8 +38,7 @@ export class CustomerService {
     ctx: RequestContext,
     input: CreateCustomerInput,
     errorOnExistingUser = false
-  ): Promise<Customer> {
-    //| EmailAddressConflictError
+  ): Promise<Customer | EmailAddressConflictError> {
     input.emailAddress = normalizeEmailAddress(input.emailAddress);
     let customer: Customer;
     const existing = await this.dataSource.getRepository(Customer).findOne({
@@ -45,16 +50,16 @@ export class CustomerService {
     if (existing) {
       if (existing.user && errorOnExistingUser) {
         // It is not permitted to modify an existing *registered* Customer
-        //return new EmailAddressConflictError();
+        return new EmailAddressConflictError();
       }
       customer = { ...existing, ...input };
     } else {
       customer = await this.dataSource
         .getRepository(Customer)
         .save(new Customer(input));
-      // await this.eventBus.publish(
-      //   new CustomerEvent(ctx, customer, 'created', input)
-      // );
+      await this.eventBus.publish(
+        new CustomerEvent(ctx, customer, 'created', input)
+      );
     }
 
     return await this.dataSource.getRepository(Customer).save(customer);

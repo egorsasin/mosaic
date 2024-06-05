@@ -1,0 +1,6 @@
+input CreateCustomerInput {
+  firstName: String!
+  lastName: String!
+  phoneNumber: String!
+  emailAddress: String!
+}

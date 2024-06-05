@@ -13,7 +13,13 @@ import {
 } from '@mosaic/common';
 
 import { RequestContext, generatePublicId } from '../../api/common';
-import { Order, OrderLine, Payment, DATA_SOURCE_PROVIDER } from '../../data';
+import {
+  Order,
+  OrderLine,
+  Payment,
+  DATA_SOURCE_PROVIDER,
+  Customer,
+} from '../../data';
 import {
   ErrorResultUnion,
   ListQueryOptions,
@@ -235,6 +241,40 @@ export class OrderService {
     const updatedOrder = await this.getOrderOrThrow(orderId);
     //await this.applyPriceAdjustments(ctx, updatedOrder);
     return this.dataSource.getRepository(Order).save(updatedOrder);
+  }
+
+  /**
+   * @description
+   * Связывает покупателя с заказом.
+   */
+  public async addCustomerToOrder(
+    ctx: RequestContext,
+    orderIdOrOrder: number | Order,
+    customer: Customer
+  ): Promise<Order> {
+    const order =
+      orderIdOrOrder instanceof Order
+        ? orderIdOrOrder
+        : await this.getOrderOrThrow(orderIdOrOrder);
+    order.customer = customer;
+
+    await this.dataSource.getRepository(Order).save(order, { reload: false });
+    // let updatedOrder = order;
+    // Check that any applied couponCodes are still valid now that
+    // we know the Customer.
+    // if (order.active && order.couponCodes) {
+    //   for (const couponCode of order.couponCodes.slice()) {
+    //     const validationResult = await this.promotionService.validateCouponCode(
+    //       ctx,
+    //       couponCode,
+    //       customer.id
+    //     );
+    //     if (isGraphQlErrorResult(validationResult)) {
+    //       updatedOrder = await this.removeCouponCode(ctx, order.id, couponCode);
+    //     }
+    //   }
+    // }
+    return order;
   }
 
   /**

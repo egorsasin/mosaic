@@ -8,6 +8,8 @@ import {
   NoActiveOrderError,
   OrderModificationError,
   OrderPaymentStateError,
+  CreateCustomerInput,
+  SetCustomerForOrderResult,
 } from '@mosaic/common';
 
 import { Allow, Ctx } from '../../decorators';
@@ -23,8 +25,9 @@ import {
   RemoveOrderItemResult,
   UpdateOrderItemsResult,
 } from '../../../types';
-import { ErrorResultUnion } from '../../../common';
 import { ACTIVE_ORDER_INPUT_FIELD_NAME } from '../../config';
+import { ErrorResultUnion, isGraphQlErrorResult } from '../../../common';
+import { ConfigService } from '../../../config';
 
 type ActiveOrderArgs = { [ACTIVE_ORDER_INPUT_FIELD_NAME]?: unknown };
 
@@ -32,7 +35,8 @@ type ActiveOrderArgs = { [ACTIVE_ORDER_INPUT_FIELD_NAME]?: unknown };
 export class OrderResolver {
   constructor(
     private orderService: OrderService,
-    private activeOrderService: ActiveOrderService
+    private activeOrderService: ActiveOrderService,
+    private configService: ConfigService
   ) {}
 
   @Query()
@@ -168,5 +172,33 @@ export class OrderResolver {
       order.id,
       args.orderLineId
     );
+  }
+
+  @Mutation()
+  @Allow(Permission.Owner)
+  async setCustomerForOrder(
+    @Ctx() ctx: RequestContext,
+    @Args() { input }: MutationArgs<CreateCustomerInput> & ActiveOrderArgs
+  ): Promise<ErrorResultUnion<SetCustomerForOrderResult, Order>> {
+    if (ctx.authorizedAsOwnerOnly) {
+      const sessionOrder = await this.activeOrderService.getActiveOrder(ctx);
+      if (sessionOrder) {
+        const { guestCheckoutStrategy } = this.configService.orderOptions;
+        const result = await guestCheckoutStrategy.setCustomerForOrder(
+          ctx,
+          sessionOrder,
+          input
+        );
+        if (isGraphQlErrorResult(result)) {
+          return result;
+        }
+        return this.orderService.addCustomerToOrder(
+          ctx,
+          sessionOrder.id,
+          result
+        );
+      }
+    }
+    return new NoActiveOrderError();
   }
 }

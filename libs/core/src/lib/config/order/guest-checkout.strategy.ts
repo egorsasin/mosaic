@@ -1,21 +1,9 @@
-import {
-  NoActiveOrderError,
-  CreateCustomerInput,
-  GuestCheckoutError,
-} from '@mosaic/common';
+import { CreateCustomerInput, SetCustomerForOrderResult } from '@mosaic/common';
 
 import { Order } from '../../data/entity/order/order.entity';
 import { Customer } from '../../data/entity/customer/customer.entity';
 import { RequestContext } from '../../api/common';
-import { InjectableStrategy } from '../../common';
-
-export type SetCustomerForOrderResult =
-  | NoActiveOrderError
-
-  // | AlreadyLoggedInError
-  // | EmailAddressConflictError
-  | GuestCheckoutError
-  | Order;
+import { ErrorResultUnion, InjectableStrategy } from '../../common';
 
 export interface GuestCheckoutStrategy extends InjectableStrategy {
   setCustomerForOrder(
@@ -23,7 +11,6 @@ export interface GuestCheckoutStrategy extends InjectableStrategy {
     order: Order,
     input: CreateCustomerInput
   ):
-    | SetCustomerForOrderResult
-    | Customer
-    | Promise<SetCustomerForOrderResult | Customer>;
+    | ErrorResultUnion<SetCustomerForOrderResult, Customer>
+    | Promise<ErrorResultUnion<SetCustomerForOrderResult, Customer>>;
 }

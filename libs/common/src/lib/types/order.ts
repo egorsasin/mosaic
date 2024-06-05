@@ -1,3 +1,15 @@
+import {
+  AlreadyLoggedInError,
+  EmailAddressConflictError,
+  GuestCheckoutError,
+  NoActiveOrderError,
+} from './errors';
+
+export interface Order {
+  id: number;
+  code: string;
+}
+
 /** Passed as input to the `addPaymentToOrder` mutation. */
 export type PaymentInput = {
   /**
@@ -14,3 +26,10 @@ export type ShippingInput = {
   metadata: Record<string, unknown>;
   shippingMethodId: number;
 };
+
+export type SetCustomerForOrderResult =
+  | NoActiveOrderError
+  | AlreadyLoggedInError
+  | EmailAddressConflictError
+  | GuestCheckoutError
+  | Order;

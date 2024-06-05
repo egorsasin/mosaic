@@ -2,16 +2,15 @@ import {
   AlreadyLoggedInError,
   CreateCustomerInput,
   GuestCheckoutError,
+  SetCustomerForOrderResult,
 } from '@mosaic/common';
 
 import { CustomerService } from '../../service/services/customer.service';
 import { Injector, RequestContext } from '../../api/common';
 import { Customer, Order } from '../../data';
+import { ErrorResultUnion } from '../../common';
 
-import {
-  GuestCheckoutStrategy,
-  SetCustomerForOrderResult,
-} from './guest-checkout.strategy';
+import { GuestCheckoutStrategy } from './guest-checkout.strategy';
 
 export interface DefaultGuestCheckoutStrategyOptions {
   allowGuestCheckouts?: boolean;
@@ -38,7 +37,7 @@ export class DefaultGuestCheckoutStrategy implements GuestCheckoutStrategy {
     ctx: RequestContext,
     order: Order,
     input: CreateCustomerInput
-  ): Promise<Customer | SetCustomerForOrderResult> {
+  ): Promise<ErrorResultUnion<SetCustomerForOrderResult, Customer>> {
     if (!this.options.allowGuestCheckouts) {
       return new GuestCheckoutError();
     }

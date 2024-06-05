@@ -15,12 +15,17 @@ type Mutation {
   addItemToOrder(productId: Int!, quantity: Int!): UpdateOrderItemsResult!
   "Add a Payment to the Order"
   addPaymentToOrder(input: PaymentInput!): AddPaymentToOrderResult!
-  "Adjusts an OrderLine. If custom fields are defined on the OrderLine entity, a third argument 'customFields' of type `OrderLineCustomFieldsInput` will be available."
+  """
+  Adjusts an OrderLine. If custom fields are defined on the OrderLine entity,
+  a third argument 'customFields' of type `OrderLineCustomFieldsInput` will be available.
+  """
   adjustOrderLine(orderLineId: Int!, quantity: Int!): UpdateOrderItemsResult!
   "Remove an OrderLine from the Order"
   removeOrderLine(orderLineId: Int!): RemoveOrderItemResult!
   "Sets the shipping method to the Order"
   setOrderShippingMethod(input: ShippingInput!): SetOrderShippingMethodResult!
+  "Set the Customer for the Order. Required only if the Customer is not currently logged in"
+  setCustomerForOrder(input: CreateCustomerInput!): SetCustomerForOrderResult!
 }
 
 "Returned when attempting to set a negative OrderLine quantity."
@@ -31,6 +36,12 @@ type NegativeQuantityError implements ErrorResult {
 
 "Returned when attempting to set a negative OrderLine quantity."
 type NegativeQuantityError implements ErrorResult {
+  errorCode: ErrorCode!
+  message: String!
+}
+
+"Returned when attempting to set the Customer for an Order when already logged in."
+type AlreadyLoggedInError implements ErrorResult {
   errorCode: ErrorCode!
   message: String!
 }
@@ -71,3 +82,23 @@ union SetOrderShippingMethodResult =
     Order
   | OrderModificationError
   | NoActiveOrderError
+
+union SetCustomerForOrderResult =
+    Order
+  | AlreadyLoggedInError
+  | EmailAddressConflictError
+  | NoActiveOrderError
+  | GuestCheckoutError
+
+"Returned when attempting to create a Customer with an email address already registered to an existing User."
+type EmailAddressConflictError implements ErrorResult {
+  errorCode: ErrorCode!
+  message: String!
+}
+
+"Returned when attempting to set the Customer on a guest checkout when the configured GuestCheckoutStrategy does not allow it."
+type GuestCheckoutError implements ErrorResult {
+  errorCode: ErrorCode!
+  message: String!
+  errorDetail: String!
+}
