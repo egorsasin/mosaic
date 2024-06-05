@@ -6,7 +6,9 @@ import { CreateAddressInput } from '../../types';
 
 @Injectable()
 export class CustomerService {
-  constructor(@Inject(DATA_SOURCE_PROVIDER) private readonly dataSource: DataSource) {}
+  constructor(
+    @Inject(DATA_SOURCE_PROVIDER) private readonly dataSource: DataSource
+  ) {}
 
   public findOneByUserId(userId: number): Promise<Customer | undefined> {
     return this.dataSource.getRepository(Customer).findOne({
@@ -23,7 +25,10 @@ export class CustomerService {
     });
   }
 
-  public async createAddress(customerId: number, input: CreateAddressInput): Promise<Address> {
+  public async createAddress(
+    customerId: number,
+    input: CreateAddressInput
+  ): Promise<Address> {
     const customer = await this.dataSource.getRepository(Customer).findOne({
       where: {
         id: customerId,
@@ -34,7 +39,9 @@ export class CustomerService {
     const address = new Address({
       ...input,
     });
-    const createdAddress = await this.dataSource.getRepository(Address).save(address);
+    const createdAddress = await this.dataSource
+      .getRepository(Address)
+      .save(address);
     customer.addresses.push(createdAddress);
 
     await this.dataSource.getRepository(Customer).save(customer, {
@@ -46,18 +53,25 @@ export class CustomerService {
     return createdAddress;
   }
 
-  private async enforceSingleDefaultAddress(addressId: number, input: CreateAddressInput) {
+  private async enforceSingleDefaultAddress(
+    addressId: number,
+    input: CreateAddressInput
+  ) {
     const result = await this.dataSource.getRepository(Address).findOne({
       where: { id: addressId },
       relations: ['customer', 'customer.addresses'],
     });
     if (result) {
-      const customerAddressIds = result.customer.addresses.map((a) => a.id).filter((id) => id !== addressId);
+      const customerAddressIds = result.customer.addresses
+        .map((a) => a.id)
+        .filter((id) => id !== addressId);
 
       if (customerAddressIds.length && input.default === true) {
-        await this.dataSource.getRepository(Address).update(customerAddressIds, {
-          default: false,
-        });
+        await this.dataSource
+          .getRepository(Address)
+          .update(customerAddressIds, {
+            default: false,
+          });
       }
     }
   }

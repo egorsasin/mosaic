@@ -30,6 +30,9 @@ export class Customer extends MosaicEntity implements SoftDeletable {
   @Column({ name: 'last_name' })
   lastName: string;
 
+  @Column({ name: 'email_address' })
+  emailAddress: string;
+
   @Column({ name: 'user_id', unsigned: true, select: false })
   userId: number;
 

@@ -72,9 +72,7 @@ export class OrderResolver {
 
       if (
         order &&
-        !ctx.activeUserId &&
-        !order.customer //||
-        // (order.user && order.user?.id === ctx.activeUserId)
+        (!ctx.activeUserId || order.customer?.user?.id === ctx.activeUserId)
       ) {
         return order;
       }
