@@ -14,30 +14,30 @@ import { QueryResult } from './query-result';
 export class DataService {
   constructor(private apollo: Apollo) {}
 
-  public query<T, V extends OperationVariables = EmptyObject>(
+  public query<R, V extends OperationVariables = EmptyObject>(
     query: DocumentNode,
     variables?: V,
     fetchPolicy: WatchQueryFetchPolicy = 'cache-and-network'
-  ): QueryResult<T, V> {
-    const queryRef = this.apollo.watchQuery<T, V>({
+  ): QueryResult<R, V> {
+    const queryRef = this.apollo.watchQuery<R, V>({
       query,
       variables,
       fetchPolicy,
     });
-    return new QueryResult<T, V>(queryRef);
+    return new QueryResult<R, V>(queryRef);
   }
 
-  public mutate<T, V extends OperationVariables = EmptyObject>(
+  public mutate<R, V extends OperationVariables = EmptyObject>(
     mutation: DocumentNode,
     variables?: V,
-    update?: MutationUpdaterFn<T>
-  ): Observable<T> {
+    update?: MutationUpdaterFn<R>
+  ): Observable<R> {
     return this.apollo
-      .mutate<T, V>({
+      .mutate<R, V>({
         mutation,
         variables,
         update,
       })
-      .pipe(map((result) => result.data as T));
+      .pipe(map((result) => result.data as R));
   }
 }

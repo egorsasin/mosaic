@@ -10,6 +10,7 @@ import {
   OrderPaymentStateError,
   CreateCustomerInput,
   SetCustomerForOrderResult,
+  AddressInput,
 } from '@mosaic/common';
 
 import { Allow, Ctx } from '../../decorators';
@@ -122,25 +123,6 @@ export class OrderResolver {
 
   @Mutation()
   @Allow(Permission.Owner)
-  async setOrderShippingMethod(
-    @Ctx() ctx: RequestContext,
-    @Args() { input }: MutationArgs<ShippingInput> & ActiveOrderArgs
-  ): Promise<Order | NoActiveOrderError | OrderModificationError> {
-    if (ctx.authorizedAsOwnerOnly) {
-      const sessionOrder = await this.activeOrderService.getActiveOrder(ctx);
-      if (sessionOrder) {
-        return this.orderService.setShippingMethod(
-          ctx,
-          sessionOrder.id,
-          input.shippingMethodId
-        );
-      }
-    }
-    return new NoActiveOrderError();
-  }
-
-  @Mutation()
-  @Allow(Permission.Owner)
   public async adjustOrderLine(
     @Ctx() ctx: RequestContext,
     @Args()
@@ -196,6 +178,44 @@ export class OrderResolver {
           ctx,
           sessionOrder.id,
           result
+        );
+      }
+    }
+    return new NoActiveOrderError();
+  }
+
+  @Mutation()
+  @Allow(Permission.Owner)
+  async setOrderShippingMethod(
+    @Ctx() ctx: RequestContext,
+    @Args() { input }: MutationArgs<ShippingInput> & ActiveOrderArgs
+  ): Promise<Order | NoActiveOrderError | OrderModificationError> {
+    if (ctx.authorizedAsOwnerOnly) {
+      const sessionOrder = await this.activeOrderService.getActiveOrder(ctx);
+      if (sessionOrder) {
+        return this.orderService.setShippingMethod(
+          ctx,
+          sessionOrder.id,
+          input.shippingMethodId
+        );
+      }
+    }
+    return new NoActiveOrderError();
+  }
+
+  @Mutation()
+  @Allow(Permission.Owner)
+  async setOrderShippingAddress(
+    @Ctx() ctx: RequestContext,
+    @Args() args: MutationArgs<AddressInput> & ActiveOrderArgs
+  ): Promise<ErrorResultUnion<NoActiveOrderError, Order>> {
+    if (ctx.authorizedAsOwnerOnly) {
+      const sessionOrder = await this.activeOrderService.getActiveOrder(ctx);
+      if (sessionOrder) {
+        return this.orderService.setShippingAddress(
+          ctx,
+          sessionOrder.id,
+          args.input
         );
       }
     }

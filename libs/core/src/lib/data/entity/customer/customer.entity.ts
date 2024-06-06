@@ -33,7 +33,7 @@ export class Customer extends MosaicEntity implements SoftDeletable {
   @Column({ name: 'email_address' })
   emailAddress: string;
 
-  @Column({ name: 'user_id', unsigned: true, select: false })
+  @Column({ name: 'user_id', unsigned: true, select: false, nullable: true })
   userId: number;
 
   @OneToMany(() => Address, (address) => address.customer)

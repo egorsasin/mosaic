@@ -34,3 +34,14 @@ type OrderList implements PaginatedList {
   items: [Order!]!
   totalItems: Int!
 }
+
+input CreateAddressInput {
+  company: String
+  vatNumber: String
+  firstName: String!
+  lastName: String!
+  phoneNumber: String!
+  city: String!
+  postalCode: String!
+  streetLine: String!
+}

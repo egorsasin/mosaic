@@ -39,7 +39,7 @@
         </div>
 
         <div class="col-span-6 sm:col-span-3">
-          <mos-input formControlName="firstname">
+          <mos-input formControlName="firstName">
             Imię
             <span class="text-rose-500 ml-[1px]">*</span>
           </mos-input>
@@ -53,14 +53,14 @@
         </div>
 
         <div class="col-span-6 sm:col-span-3">
-          <mos-input formControlName="email">
+          <mos-input formControlName="emailAddress">
             Email
             <span class="text-rose-500 ml-[1px]">*</span>
           </mos-input>
         </div>
 
         <div class="col-span-6 sm:col-span-3">
-          <mos-input formControlName="phone">
+          <mos-input formControlName="phoneNumber">
             Phone
             <span class="text-rose-500 ml-[1px]">*</span>
           </mos-input>
@@ -197,17 +197,18 @@
         <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
           <div class="flex justify-between text-base font-medium text-gray-900">
             <p>Produkty razem</p>
-            <p>{{ order.total / 100 | number : '1.2-2' }} zł</p>
+            <p>{{ order?.total / 100 | number : '1.2-2' }} zł</p>
           </div>
           <p class="mt-0.5 text-sm text-gray-500">
             Shipping and taxes calculated at checkout.
           </p>
           <div class="mt-6">
-            <a
-              href="#"
+            <button
+              (click)="completeOrder(order)"
               class="flex items-center justify-center rounded-md border border-transparent bg-gray-900 px-6 py-2 text-base font-medium text-white shadow-sm hover:bg-gray-700"
-              >Zamawiam i płacę</a
             >
+              Zamawiam i płacę
+            </button>
           </div>
         </div>
       </div>

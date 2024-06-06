@@ -10,6 +10,7 @@ import {
   OrderModificationError,
   omit,
   summate,
+  AddressInput,
 } from '@mosaic/common';
 
 import { RequestContext, generatePublicId } from '../../api/common';
@@ -241,6 +242,22 @@ export class OrderService {
     const updatedOrder = await this.getOrderOrThrow(orderId);
     //await this.applyPriceAdjustments(ctx, updatedOrder);
     return this.dataSource.getRepository(Order).save(updatedOrder);
+  }
+
+  /**
+   * @description
+   * Устанавливает адрес доставки в заказе.
+   */
+  public async setShippingAddress(
+    ctx: RequestContext,
+    orderId: number,
+    input: AddressInput
+  ): Promise<Order> {
+    const order = await this.getOrderOrThrow(orderId);
+    await this.dataSource
+      .getRepository(Order)
+      .update({ id: orderId }, { shippingAddress: input });
+    return order;
   }
 
   /**

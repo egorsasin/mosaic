@@ -24,6 +24,8 @@ type Mutation {
   removeOrderLine(orderLineId: Int!): RemoveOrderItemResult!
   "Sets the shipping method to the Order"
   setOrderShippingMethod(input: ShippingInput!): SetOrderShippingMethodResult!
+  "Sets the shipping address for this order"
+  setOrderShippingAddress(input: CreateAddressInput!): ActiveOrderResult!
   "Set the Customer for the Order. Required only if the Customer is not currently logged in"
   setCustomerForOrder(input: CreateCustomerInput!): SetCustomerForOrderResult!
 }
@@ -77,6 +79,8 @@ union UpdateOrderItemsResult = Order | NegativeQuantityError
 union AddPaymentToOrderResult = Order | NoActiveOrderError
 
 union RemoveOrderItemResult = Order | OrderModificationError
+
+union ActiveOrderResult = Order | NoActiveOrderError
 
 union SetOrderShippingMethodResult =
     Order

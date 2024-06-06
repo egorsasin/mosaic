@@ -1,8 +1,27 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  OnDestroy,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Observable, map, take } from 'rxjs';
+import {
+  Observable,
+  Subject,
+  debounceTime,
+  filter,
+  map,
+  switchMap,
+  take,
+  takeUntil,
+} from 'rxjs';
 
 import { WINDOW } from '@mosaic/cdk';
 import {
@@ -10,12 +29,15 @@ import {
   MutationArgs,
   PaymentMethodQuote,
   ShippingMethodQuote,
+  CreateCustomerInput,
+  SetCustomerForOrderResult,
 } from '@mosaic/common';
 
 import { DataService } from '../../data';
 import {
   GET_ELIGIBLE_PAYMENT_METHODS,
   GET_ELIGIBLE_SHIPPING_METHODS,
+  SET_CUSTOMER_FOR_ORDER,
   SET_SHIPPING_METHOD,
 } from './checkout-process.graphql';
 
@@ -69,6 +91,13 @@ export const FADE_UP_ANIMATION = trigger(`fadeUpAnimation`, [
   ]),
 ]);
 
+export interface CheckoutForm {
+  emailAddress: FormControl<string>;
+  firstName: FormControl<string>;
+  lastName: FormControl<string>;
+  phoneNumber: FormControl<string>;
+}
+
 @Component({
   selector: 'mos-checkout-process',
   templateUrl: './checkout-process.component.html',
@@ -76,7 +105,7 @@ export const FADE_UP_ANIMATION = trigger(`fadeUpAnimation`, [
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [FADE_UP_ANIMATION],
 })
-export class CheckoutProcessComponent {
+export class CheckoutProcessComponent implements OnDestroy {
   public order$: Observable<Order> = this.activeOrderService.activeOrder$;
   public maskConfig = {
     mask: [
@@ -115,24 +144,55 @@ export class CheckoutProcessComponent {
     .query<GetEligibleShippingMethodsQuery>(GET_ELIGIBLE_SHIPPING_METHODS)
     .stream$.pipe(map((data) => data.eligibleShippingMethods));
 
-  public form = new FormGroup({
-    email: new FormControl(''),
-    firstName: new FormControl(''),
-    lastName: new FormControl(''),
-    password: new FormControl(''),
-    phone: new FormControl(''),
+  public form = this.formBuilder.group<CheckoutForm>({
+    emailAddress: this.formBuilder.nonNullable.control<string>('', {
+      validators: Validators.required,
+    }),
+    firstName: this.formBuilder.nonNullable.control<string>('', {
+      validators: Validators.required,
+    }),
+    lastName: this.formBuilder.nonNullable.control<string>('', {
+      validators: [Validators.required, Validators.email],
+    }),
+    phoneNumber: this.formBuilder.nonNullable.control<string>('', {
+      validators: Validators.required,
+    }),
   });
 
   public items$ = this.activeOrderService.activeOrder$.pipe(
     map((order) => order.lines)
   );
 
+  private destroy$: Subject<void> = new Subject<void>();
+
   constructor(
     @Inject(WINDOW) private window: Window,
     private dataService: DataService,
     private activeOrderService: ActiveOrderService,
-    private router: Router
-  ) {}
+    private formBuilder: FormBuilder
+  ) {
+    this.form.valueChanges
+      .pipe(
+        filter(() => this.form.valid),
+        debounceTime(300),
+        map(() => this.form.getRawValue()),
+        switchMap(({ firstName, lastName, phoneNumber, emailAddress }) =>
+          this.dataService.mutate<unknown, MutationArgs<CreateCustomerInput>>(
+            SET_CUSTOMER_FOR_ORDER,
+            {
+              input: {
+                firstName,
+                lastName,
+                phoneNumber,
+                emailAddress,
+              },
+            }
+          )
+        ),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((value) => {});
+  }
 
   // public addPaymentMethod() {
   //   this.dataService
@@ -231,5 +291,10 @@ export class CheckoutProcessComponent {
       )
       .pipe(take(1))
       .subscribe();
+  }
+
+  public ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

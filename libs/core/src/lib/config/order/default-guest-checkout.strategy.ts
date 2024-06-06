@@ -47,12 +47,17 @@ export class DefaultGuestCheckoutStrategy implements GuestCheckoutStrategy {
     }
     const errorOnExistingUser =
       !this.options.allowGuestCheckoutForRegisteredCustomers;
-    const customer = await this.customerService.createOrUpdate(
+
+    if (order.customer) {
+      return await this.customerService.update(ctx, {
+        id: order.customer.id,
+        ...input,
+      });
+    }
+    return await this.customerService.createOrUpdate(
       ctx,
       input,
       errorOnExistingUser
     );
-
-    return customer;
   }
 }

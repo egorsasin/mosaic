@@ -1,9 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DataSource, IsNull } from 'typeorm';
+import { DataSource, EntityNotFoundError, IsNull } from 'typeorm';
 
 import {
   CreateCustomerInput,
   EmailAddressConflictError,
+  assertFound,
   normalizeEmailAddress,
 } from '@mosaic/common';
 import { CustomerEvent, EventBus } from '@mosaic/core/event-bus';
@@ -18,6 +19,18 @@ export class CustomerService {
     @Inject(DATA_SOURCE_PROVIDER) private readonly dataSource: DataSource,
     private readonly eventBus: EventBus
   ) {}
+
+  public async findOne(
+    ctx: RequestContext,
+    id: number
+  ): Promise<Customer | undefined> {
+    return this.dataSource
+      .getRepository(Customer)
+      .findOne({
+        where: { id, deletedAt: IsNull() },
+      })
+      .then((result) => result ?? undefined);
+  }
 
   public findOneByUserId(userId: number): Promise<Customer | undefined> {
     return this.dataSource.getRepository(Customer).findOne({
@@ -57,12 +70,29 @@ export class CustomerService {
       customer = await this.dataSource
         .getRepository(Customer)
         .save(new Customer(input));
-      await this.eventBus.publish(
-        new CustomerEvent(ctx, customer, 'created', input)
-      );
+      this.eventBus.publish(new CustomerEvent(ctx, customer, 'created', input));
     }
 
     return await this.dataSource.getRepository(Customer).save(customer);
+  }
+
+  public async update(
+    ctx: RequestContext,
+    { id, ...input }: CreateCustomerInput & { id: number }
+  ): Promise<Customer> {
+    const customer = await this.findOne(ctx, id);
+
+    if (!customer) {
+      throw new EntityNotFoundError(Customer.name, id);
+    }
+
+    const updatedCustomer = { ...customer, ...input };
+    await this.dataSource
+      .getRepository(Customer)
+      .save(updatedCustomer, { reload: false });
+
+    this.eventBus.publish(new CustomerEvent(ctx, customer, 'updated', input));
+    return assertFound(this.findOne(ctx, customer.id));
   }
 
   public async createAddress(

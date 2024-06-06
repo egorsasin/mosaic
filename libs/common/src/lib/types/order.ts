@@ -27,6 +27,17 @@ export type ShippingInput = {
   shippingMethodId: number;
 };
 
+export type AddressInput = {
+  company?: string;
+  vatNumber?: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  city: string;
+  postalCode: string;
+  streetLine: string;
+};
+
 export type SetCustomerForOrderResult =
   | NoActiveOrderError
   | AlreadyLoggedInError
