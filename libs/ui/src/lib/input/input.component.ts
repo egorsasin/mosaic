@@ -85,6 +85,10 @@ export class MosInputComponent
     this.updateValue(value);
   }
 
+  public onFocused(focused: boolean): void {
+    this.updateFocused(focused);
+  }
+
   protected getFallbackValue(): string {
     return '';
   }

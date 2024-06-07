@@ -19,8 +19,15 @@ export const CART_FRAGMENT = gql`
     }
     shippingLine {
       price
+      shippingMethod {
+        id
+        code
+        name
+      }
     }
     totalQuantity
+    subTotal
+    shipping
     total
   }
 `;

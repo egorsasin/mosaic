@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Directive } from '@angular/core';
+import { ChangeDetectorRef, Directive, HostBinding } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 
 const EMPTY_FUNCTION = () => {
@@ -12,6 +12,20 @@ export abstract class MosAbstractControl<T> implements ControlValueAccessor {
 
   private previousValue?: T | null;
   protected readonly fallbackValue = this.getFallbackValue();
+
+  @HostBinding('class.mos-invalid')
+  public get computedInvalid(): boolean {
+    console.log('__TOUCHED', this.touched, this.invalid);
+    return this.touched && this.invalid;
+  }
+
+  public get invalid(): boolean {
+    return this.safeNgControlData<boolean>(({ invalid }) => invalid, false);
+  }
+
+  public get touched(): boolean {
+    return this.safeNgControlData<boolean>(({ touched }) => touched, false);
+  }
 
   public get value(): T {
     return this.previousValue ?? this.fallbackValue;

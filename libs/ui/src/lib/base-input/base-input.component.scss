@@ -2,10 +2,14 @@
   display: block;
   position: relative;
   box-sizing: border-box;
-  @apply ring-1 ring-inset ring-gray-400 rounded-md shadow-sm flex gap-2;
+  @apply ring-1 ring-inset ring-gray-300 rounded-md shadow-sm flex gap-2;
 
   &.mos-focused {
     @apply ring-blue-500 border-blue-500 ring-2;
+  }
+
+  &.mos-invalid {
+    @apply ring-red-600;
   }
 
   &::after {
@@ -31,8 +35,8 @@
   }
 
   .label-raised {
-    transform: translateY(-0.7rem) scale(0.85);
-    @apply pl-0;
+    transform: translateY(-0.7rem) scale(0.8);
+    transform-origin: bottom left;
   }
 }
 

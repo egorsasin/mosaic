@@ -36,7 +36,7 @@ export class OrderCalculator {
     for (const line of order.lines) {
       totalPrice += line.proratedLinePrice;
     }
-    order.subTotal = totalPrice;
+    // TODO order.subTotal = totalPrice;
 
     const shippingPrice = order.shippingLine?.discountedPrice || 0;
 

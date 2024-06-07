@@ -1,4 +1,4 @@
-<div *mosLet="order$ | async as order" class="mx-auto max-w-7xl px-4 sm:px-6">
+<div *ngIf="order$ | async as order" class="mx-auto max-w-7xl px-4 sm:px-6">
   <div class="md:grid md:grid-cols-2 md:gap-6">
     <form [formGroup]="form" autocomplete="off">
       <div class="pt-6">
@@ -12,14 +12,24 @@
           @for (shippingMethod of (shippingMethods$ | async); track
           shippingMethod.id ) {
           <div
-            class="py-4 px-5 flex gap-3 bg-white border border-gray-300 shadow-sm rounded-lg text-sm cursor-pointer"
+            class="p-4 flex gap-3 bg-white border border-gray-300 shadow-sm rounded-lg text-sm cursor-pointer"
             (click)="setShippingMethod(+shippingMethod.id)"
+            [class.payment-metods--active]="
+              shippingMethod.id === $any(order).shippingLine.shippingMethod.id
+            "
           >
-            <div>
-              <div class="font-semibold">{{ shippingMethod.name }}</div>
+            <div class="w-full">
+              <div class="font-semibold flex justify-between">
+                <span class="flex-1">{{ shippingMethod.name }}</span>
+                @if (shippingMethod.price) {
+                <p>{{ shippingMethod.price / 100 | number : '1.2-2' }} zł</p>
+                } @else {
+                <p>Za darmo!</p>
+                }
+              </div>
               @if (shippingMethod.description) {
               <div
-                class="mt-2 text-gray-500"
+                class="mt-1 text-gray-500"
                 [innerHtml]="shippingMethod.description"
               ></div>
               }
@@ -61,14 +71,28 @@
 
         <div class="col-span-6 sm:col-span-3">
           <mos-input formControlName="phoneNumber">
-            Phone
+            Telefon
+            <span class="text-rose-500 ml-[1px]">*</span>
+          </mos-input>
+        </div>
+
+        <div class="col-span-3 sm:col-span-2">
+          <mos-input formControlName="postalCode">
+            Kod pocztowy
+            <span class="text-rose-500 ml-[1px]">*</span>
+          </mos-input>
+        </div>
+
+        <div class="col-span-3 sm:col-span-4">
+          <mos-input formControlName="city">
+            Miasto
             <span class="text-rose-500 ml-[1px]">*</span>
           </mos-input>
         </div>
 
         <div class="col-span-6 sm:col-span-6">
           <mos-input>
-            Ulica i numer domu
+            Ulica i numer
             <span class="text-rose-500 ml-[1px]">*</span>
           </mos-input>
         </div>
@@ -194,15 +218,35 @@
         </div>
 
         <!-- TOTALS -->
-        <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
-          <div class="flex justify-between text-base font-medium text-gray-900">
+        <div
+          class="border-t border-gray-200 px-4 sm:px-6 divide-y divide-gray-200"
+        >
+          <div
+            class="flex justify-between text-sm font-medium text-gray-600 py-2"
+          >
             <p>Produkty razem</p>
-            <p>{{ order?.total / 100 | number : '1.2-2' }} zł</p>
+            <p>{{ $any(order).subTotal / 100 | number : '1.2-2' }} zł</p>
           </div>
-          <p class="mt-0.5 text-sm text-gray-500">
-            Shipping and taxes calculated at checkout.
-          </p>
-          <div class="mt-6">
+
+          <div
+            class="flex justify-between text-sm font-medium text-gray-600 py-2"
+          >
+            <p>Dostawa</p>
+            @if (order.shipping) {
+            <p>{{ $any(order).shipping / 100 | number : '1.2-2' }} zł</p>
+            } @else {
+            <p>Za darmo!</p>
+            }
+          </div>
+
+          <div
+            class="flex justify-between text-base font-medium text-gray-900 py-3"
+          >
+            <p>Razem do zapłaty</p>
+            <p>{{ $any(order).total / 100 | number : '1.2-2' }} zł</p>
+          </div>
+
+          <div class="pt-6">
             <button
               (click)="completeOrder(order)"
               class="flex items-center justify-center rounded-md border border-transparent bg-gray-900 px-6 py-2 text-base font-medium text-white shadow-sm hover:bg-gray-700"

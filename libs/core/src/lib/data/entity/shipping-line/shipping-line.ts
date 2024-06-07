@@ -33,6 +33,7 @@ export class ShippingLine extends MosaicEntity {
 
   @Index()
   @ManyToOne(() => ShippingMethod)
+  @JoinColumn({ name: 'shipping_method_id' })
   shippingMethod: ShippingMethod;
 
   @OneToOne(() => Order, (order: Order) => order.shippingLine, {

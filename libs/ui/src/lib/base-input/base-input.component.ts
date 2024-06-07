@@ -44,10 +44,9 @@ export class MosBaseInputComponent {
   @Input()
   public value = '';
 
-  @Input()
-  public cleaner = true;
-
   @Input() public readonly = false;
+
+  @Input() public invalid = false;
 
   @Input() public pseudoFocused?: boolean;
 
@@ -85,7 +84,12 @@ export class MosBaseInputComponent {
     return this.focused || this.hasValue || this.placeholder !== '';
   }
 
-  private get hasValue(): boolean {
+  @HostBinding('class.mos-invalid')
+  protected get computedInvalid(): boolean {
+    return !this.disabled && this.invalid;
+  }
+
+  protected get hasValue(): boolean {
     return !(
       this.value === null ||
       this.value === undefined ||

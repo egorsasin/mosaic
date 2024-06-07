@@ -114,6 +114,12 @@ export const storeFrontErrorTypeResolvers = {
     },
   },
 
+  ActiveOrderResult: {
+    __resolveType(value: GraphQLValue) {
+      return isGraphQLError(value) ? value.__typename : 'Order';
+    },
+  },
+
   SetCustomerForOrderResult: {
     __resolveType(value: GraphQLValue) {
       return isGraphQLError(value) ? value.__typename : 'Order';

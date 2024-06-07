@@ -45,12 +45,6 @@ export class Order extends MosaicEntity {
   @Column({ default: true })
   public active: boolean;
 
-  @Money({ default: 0 })
-  public shipping: number;
-
-  @Money()
-  public subTotal: number;
-
   @Index()
   @ManyToOne(() => Customer, (customer) => customer.orders)
   customer?: Customer;
@@ -66,15 +60,25 @@ export class Order extends MosaicEntity {
   )
   shippingLine: ShippingLine;
 
-  public get total() {
+  /**
+   * @description
+   * Стоимость доставки.
+   */
+  @Money({ default: 0 })
+  public shipping: number;
+
+  public get subTotal() {
     const items = this.lines;
 
-    return (
-      (items || []).reduce((sum, item) => {
-        const { price = 0 } = item.product;
-        return sum + item.quantity * price;
-      }, 0) + this.shipping
-    );
+    return (items || []).reduce((sum, item) => {
+      const { price = 0 } = item.product;
+      return sum + item.quantity * price;
+    }, 0);
+  }
+
+  @Calculated()
+  get total(): number {
+    return this.subTotal + (this.shipping || 0);
   }
 
   @OneToMany(() => Payment, (payment) => payment.order)

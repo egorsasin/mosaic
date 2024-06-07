@@ -12,16 +12,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { animate, style, transition, trigger } from '@angular/animations';
-import {
-  Observable,
-  Subject,
-  debounceTime,
-  filter,
-  map,
-  switchMap,
-  take,
-  takeUntil,
-} from 'rxjs';
+import { Observable, Subject, forkJoin, map, take } from 'rxjs';
 
 import { WINDOW } from '@mosaic/cdk';
 import {
@@ -30,7 +21,8 @@ import {
   PaymentMethodQuote,
   ShippingMethodQuote,
   CreateCustomerInput,
-  SetCustomerForOrderResult,
+  AddressInput,
+  NoActiveOrderError,
 } from '@mosaic/common';
 
 import { DataService } from '../../data';
@@ -38,6 +30,7 @@ import {
   GET_ELIGIBLE_PAYMENT_METHODS,
   GET_ELIGIBLE_SHIPPING_METHODS,
   SET_CUSTOMER_FOR_ORDER,
+  SET_SHIPPING_ADDRESS,
   SET_SHIPPING_METHOD,
 } from './checkout-process.graphql';
 
@@ -96,6 +89,9 @@ export interface CheckoutForm {
   firstName: FormControl<string>;
   lastName: FormControl<string>;
   phoneNumber: FormControl<string>;
+  city: FormControl<string>;
+  postalCode: FormControl<string>;
+  streetLine: FormControl<string>;
 }
 
 @Component({
@@ -144,17 +140,26 @@ export class CheckoutProcessComponent implements OnDestroy {
     .query<GetEligibleShippingMethodsQuery>(GET_ELIGIBLE_SHIPPING_METHODS)
     .stream$.pipe(map((data) => data.eligibleShippingMethods));
 
-  public form = this.formBuilder.group<CheckoutForm>({
+  public form: FormGroup<CheckoutForm> = this.formBuilder.group<CheckoutForm>({
     emailAddress: this.formBuilder.nonNullable.control<string>('', {
-      validators: Validators.required,
+      validators: [Validators.required, Validators.email],
     }),
     firstName: this.formBuilder.nonNullable.control<string>('', {
       validators: Validators.required,
     }),
     lastName: this.formBuilder.nonNullable.control<string>('', {
-      validators: [Validators.required, Validators.email],
+      validators: Validators.required,
     }),
     phoneNumber: this.formBuilder.nonNullable.control<string>('', {
+      validators: Validators.required,
+    }),
+    city: this.formBuilder.nonNullable.control<string>('', {
+      validators: Validators.required,
+    }),
+    postalCode: this.formBuilder.nonNullable.control<string>('', {
+      validators: Validators.required,
+    }),
+    streetLine: this.formBuilder.nonNullable.control<string>('', {
       validators: Validators.required,
     }),
   });
@@ -171,27 +176,27 @@ export class CheckoutProcessComponent implements OnDestroy {
     private activeOrderService: ActiveOrderService,
     private formBuilder: FormBuilder
   ) {
-    this.form.valueChanges
-      .pipe(
-        filter(() => this.form.valid),
-        debounceTime(300),
-        map(() => this.form.getRawValue()),
-        switchMap(({ firstName, lastName, phoneNumber, emailAddress }) =>
-          this.dataService.mutate<unknown, MutationArgs<CreateCustomerInput>>(
-            SET_CUSTOMER_FOR_ORDER,
-            {
-              input: {
-                firstName,
-                lastName,
-                phoneNumber,
-                emailAddress,
-              },
-            }
-          )
-        ),
-        takeUntil(this.destroy$)
-      )
-      .subscribe((value) => {});
+    // this.form.valueChanges
+    //   .pipe(
+    //     filter(() => this.form.valid),
+    //     debounceTime(300),
+    //     map(() => this.form.getRawValue()),
+    //     switchMap(({ firstName, lastName, phoneNumber, emailAddress }) =>
+    //       this.dataService.mutate<unknown, MutationArgs<CreateCustomerInput>>(
+    //         SET_CUSTOMER_FOR_ORDER,
+    //         {
+    //           input: {
+    //             firstName,
+    //             lastName,
+    //             phoneNumber,
+    //             emailAddress,
+    //           },
+    //         }
+    //       )
+    //     ),
+    //     takeUntil(this.destroy$)
+    //   )
+    //   .subscribe((value) => {});
   }
 
   // public addPaymentMethod() {
@@ -207,7 +212,23 @@ export class CheckoutProcessComponent implements OnDestroy {
   //     });
   // }
 
-  public completeOrder(order: Order) {
+  public completeOrder(order: Order): void {
+    if (this.form.invalid) {
+      return;
+    }
+
+    const { emailAddress, ...shippingAddress } = this.form.getRawValue();
+    const setShippingAddress$ = this.dataService.mutate<
+      NoActiveOrderError | Order,
+      MutationArgs<AddressInput>
+    >(SET_SHIPPING_ADDRESS, {
+      input: shippingAddress,
+    });
+
+    setShippingAddress$.subscribe();
+  }
+
+  public _completeOrder(order: Order) {
     if (this.paymentMethod.value === 'paynow') {
       this.dataService
         .mutate<any, MutationArgs<any>>(CREATE_PAYNOW_PAYMENT_INTENT, {

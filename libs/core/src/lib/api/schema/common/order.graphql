@@ -24,10 +24,13 @@ type Order implements Node {
   updatedAt: DateTime!
   lines: [OrderLine!]!
   totalQuantity: Int!
+  subTotal: Int!
+  shipping: Int!
   total: Int!
   code: String!
   state: String!
   shippingLine: ShippingLine
+  shippingAddress: OrderAddress
 }
 
 type OrderList implements PaginatedList {
@@ -36,6 +39,17 @@ type OrderList implements PaginatedList {
 }
 
 input CreateAddressInput {
+  company: String
+  vatNumber: String
+  firstName: String!
+  lastName: String!
+  phoneNumber: String!
+  city: String!
+  postalCode: String!
+  streetLine: String!
+}
+
+type OrderAddress {
   company: String
   vatNumber: String
   firstName: String!

@@ -1,6 +1,10 @@
 import { gql } from 'apollo-angular';
 
-import { CART_FRAGMENT, ERROR_RESULT_FRAGMENT } from '../../common/definitions';
+import {
+  CART_FRAGMENT,
+  ERROR_RESULT_FRAGMENT,
+  ORDER_ADDRESS_FRAGMENT,
+} from '../../common/definitions';
 
 export const SET_CUSTOMER_FOR_ORDER = gql`
   mutation SetCustomerForOrder($input: CreateCustomerInput!) {
@@ -47,6 +51,23 @@ export const SET_SHIPPING_METHOD = gql`
     }
   }
   ${CART_FRAGMENT}
+  ${ERROR_RESULT_FRAGMENT}
+`;
+
+export const SET_SHIPPING_ADDRESS = gql`
+  mutation SetShippingAddress($input: CreateAddressInput!) {
+    setOrderShippingAddress(input: $input) {
+      ...Cart
+      ... on Order {
+        shippingAddress {
+          ...OrderAddress
+        }
+      }
+      ...ErrorResult
+    }
+  }
+  ${CART_FRAGMENT}
+  ${ORDER_ADDRESS_FRAGMENT}
   ${ERROR_RESULT_FRAGMENT}
 `;
 

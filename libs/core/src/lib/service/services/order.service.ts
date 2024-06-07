@@ -22,7 +22,6 @@ import {
   Customer,
 } from '../../data';
 import {
-  ErrorResultUnion,
   ListQueryOptions,
   NegativeQuantityError,
   OrderLimitError,
@@ -69,7 +68,13 @@ export class OrderService {
       .getRepository(Order)
       .findAndCount({
         ...options,
-        relations: ['lines', 'shippingLine', 'payments', 'lines.product'],
+        relations: [
+          'lines',
+          'shippingLine',
+          'payments',
+          'lines.product',
+          'shippingLine.shippingMethod',
+        ],
       })
       .then(async ([items, totalItems]) => ({
         items,
@@ -77,10 +82,18 @@ export class OrderService {
       }));
   }
 
-  public async findOne(id: number): Promise<Order | undefined> {
+  public async findOne(
+    id: number,
+    relations?: string[]
+  ): Promise<Order | undefined> {
     return this.dataSource.getRepository(Order).findOne({
       where: { id },
-      relations: ['lines', 'lines.product', 'shippingLine'],
+      relations: relations || [
+        'lines',
+        'lines.product',
+        'shippingLine',
+        'shippingLine.shippingMethod',
+      ],
     });
   }
 
@@ -209,7 +222,7 @@ export class OrderService {
         code: method.code,
         metadata: result.metadata,
         customFields: eligible.method.customFields,
-      } as ShippingMethodQuote;
+      };
     });
   }
 
@@ -240,7 +253,7 @@ export class OrderService {
     }
 
     const updatedOrder = await this.getOrderOrThrow(orderId);
-    //await this.applyPriceAdjustments(ctx, updatedOrder);
+    await this.applyPriceAdjustments(ctx, updatedOrder);
     return this.dataSource.getRepository(Order).save(updatedOrder);
   }
 
@@ -565,4 +578,11 @@ export class OrderService {
       ? null
       : new OrderModificationError();
   }
+
+  /**
+   * @description
+   * Applies promotions, taxes and shipping to the Order. If the `updatedOrderLines` argument is passed in,
+   * then all of those OrderLines will have their prices re-calculated using the configured {@link OrderItemPriceCalculationStrategy}.
+   */
+  public async applyPriceAdjustments(ctx: RequestContext, order: Order) {}
 }

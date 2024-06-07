@@ -5,11 +5,13 @@
   [mosDropdown]="dropdownTemplate"
   [show]="!!dropdownList && open"
   [mosHosted]="dropdownList"
+  [invalid]="computedInvalid"
   [pseudoFocused]="!!dropdownList && open"
   [readonly]="readonly"
   [labelOutside]="labelOutside"
   (mosActiveZoneChange)="onActiveZone($event)"
   (valueChange)="valueChanges($event)"
+  (focusChanged)="onFocused($event)"
 >
   <ng-content></ng-content>
 </mos-base-input>
