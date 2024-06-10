@@ -1,5 +1,7 @@
 import { GraphQLError } from 'graphql';
 
+import { OrderState } from '../../types';
+
 export class ErrorResult {
   public readonly __typename: string;
   public readonly errorCode: string;
@@ -39,18 +41,23 @@ export class OrderLimitError extends ErrorResult {
 }
 
 /** Returned if there is an error in transitioning the Order state */
-export type OrderStateTransitionError = ErrorResult & {
-  __typename: 'OrderStateTransitionError';
-  errorCode: 'ORDER_STATE_TRANSITION_ERROR';
-  fromState: string;
-  message: string;
-  toState: string;
-  transitionError: string;
-};
+export class OrderStateTransitionError extends GraphQLError {
+  public readonly errorCode = 'ORDER_STATE_TRANSITION_ERROR';
+  public readonly maxItems: number;
+
+  constructor(
+    public readonly transitionError: string,
+    public readonly fromState: OrderState,
+    public readonly toState: OrderState
+  ) {
+    super('ORDER_STATE_TRANSITION_ERROR');
+  }
+}
 
 const errorTypeNames = new Set([
   'InvalidCredentialsError',
   'NotVerifiedError',
+  'OrderStateTransitionError',
   'NativeAuthStrategyError',
   'PasswordValidationError',
   'EmailAddressConflictError',

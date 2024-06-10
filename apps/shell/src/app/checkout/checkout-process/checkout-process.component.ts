@@ -102,7 +102,16 @@ export interface CheckoutForm {
   animations: [FADE_UP_ANIMATION],
 })
 export class CheckoutProcessComponent implements OnDestroy {
+  private shippingMethodsQuery =
+    this.dataService.query<GetEligibleShippingMethodsQuery>(
+      GET_ELIGIBLE_SHIPPING_METHODS
+    );
+
   public order$: Observable<Order> = this.activeOrderService.activeOrder$;
+  public shippingMethods$ = this.shippingMethodsQuery.stream$.pipe(
+    map((data) => data.eligibleShippingMethods)
+  );
+
   public maskConfig = {
     mask: [
       '+',
@@ -136,10 +145,6 @@ export class CheckoutProcessComponent implements OnDestroy {
     .query<GetEligiblePaymentMethodsQuery>(GET_ELIGIBLE_PAYMENT_METHODS)
     .stream$.pipe(map((res) => res.eligiblePaymentMethods));
 
-  public shippingMethods$ = this.dataService
-    .query<GetEligibleShippingMethodsQuery>(GET_ELIGIBLE_SHIPPING_METHODS)
-    .stream$.pipe(map((data) => data.eligibleShippingMethods));
-
   public form: FormGroup<CheckoutForm> = this.formBuilder.group<CheckoutForm>({
     emailAddress: this.formBuilder.nonNullable.control<string>('', {
       validators: [Validators.required, Validators.email],
@@ -164,9 +169,7 @@ export class CheckoutProcessComponent implements OnDestroy {
     }),
   });
 
-  public items$ = this.activeOrderService.activeOrder$.pipe(
-    map((order) => order.lines)
-  );
+  public items$ = this.order$.pipe(map((order) => order.lines));
 
   private destroy$: Subject<void> = new Subject<void>();
 
@@ -299,7 +302,7 @@ export class CheckoutProcessComponent implements OnDestroy {
         }
       )
       .pipe(take(1))
-      .subscribe();
+      .subscribe(() => this.shippingMethodsQuery.ref.refetch());
   }
 
   public removeItem(id: number) {
@@ -311,7 +314,7 @@ export class CheckoutProcessComponent implements OnDestroy {
         }
       )
       .pipe(take(1))
-      .subscribe();
+      .subscribe(() => this.shippingMethodsQuery.ref.refetch());
   }
 
   public ngOnDestroy(): void {

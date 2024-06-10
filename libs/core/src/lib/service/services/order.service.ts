@@ -253,7 +253,8 @@ export class OrderService {
     }
 
     const updatedOrder = await this.getOrderOrThrow(orderId);
-    await this.applyPriceAdjustments(ctx, updatedOrder);
+    await this.orderCalculator.applyPriceAdjustments(ctx, updatedOrder);
+
     return this.dataSource.getRepository(Order).save(updatedOrder);
   }
 
@@ -429,9 +430,9 @@ export class OrderService {
 
   /**
    * @description
-   * Transitions the Order to the given state.
+   * Устанавливает заказу указанный статус
    */
-  async transitionToState(
+  public async transitionToState(
     ctx: RequestContext,
     orderId: number,
     state: OrderState
@@ -445,26 +446,16 @@ export class OrderService {
       const result = await this.orderStateMachine.transition(ctx, order, state);
 
       finalize = result.finalize;
-    } catch (e: any) {
-      // const transitionError = ctx.translate(e.message, {
-      //   fromState,
-      //   toState: state,
-      // });
-      // return new OrderStateTransitionError({
-      //   transitionError,
-      //   fromState,
-      //   toState: state,
-      // });
+    } catch (transitionError: any) {
+      return new OrderStateTransitionError(transitionError, fromState, state);
     }
-    // await this.connection
-    //   .getRepository(ctx, Order)
-    //   .save(order, { reload: false });
-    // this.eventBus.publish(
-    //   new OrderStateTransitionEvent(fromState, state, ctx, order)
-    // );
 
     await finalize();
     await this.dataSource.getRepository(Order).save(order, { reload: false });
+
+    // this.eventBus.publish(
+    //   new OrderStateTransitionEvent(fromState, state, ctx, order)
+    // );
 
     return order;
   }
@@ -578,11 +569,4 @@ export class OrderService {
       ? null
       : new OrderModificationError();
   }
-
-  /**
-   * @description
-   * Applies promotions, taxes and shipping to the Order. If the `updatedOrderLines` argument is passed in,
-   * then all of those OrderLines will have their prices re-calculated using the configured {@link OrderItemPriceCalculationStrategy}.
-   */
-  public async applyPriceAdjustments(ctx: RequestContext, order: Order) {}
 }

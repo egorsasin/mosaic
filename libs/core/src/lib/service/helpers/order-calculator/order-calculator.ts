@@ -4,6 +4,7 @@ import { DataSource } from 'typeorm';
 import { Order, DATA_SOURCE_PROVIDER } from '../../../data';
 import { RequestContext } from '../../../api/common';
 import { EventBus } from '../../../event-bus';
+import { ShippingMethodService } from '../../services/shipping-method.service';
 
 /**
  * Этот класс используется для внесения изменений в заказ, пересчета цен и стоимости доставки
@@ -12,6 +13,7 @@ import { EventBus } from '../../../event-bus';
 export class OrderCalculator {
   constructor(
     @Inject(DATA_SOURCE_PROVIDER) private readonly dataSource: DataSource,
+    private shippingMethodService: ShippingMethodService,
     private eventBus: EventBus
   ) {}
 
@@ -20,11 +22,11 @@ export class OrderCalculator {
     order: Order,
     options?: { recalculateShipping?: boolean }
   ): Promise<Order> {
-    if (options?.recalculateShipping !== false) {
-      // TODO Пересчитать доставку
-      //await this.applyShipping(ctx, order);
-      //await this.applyShippingPromotions(ctx, order, promotions);
-    }
+    //if (options?.recalculateShipping !== false) {
+    // TODO Пересчитать доставку
+    await this.applyShipping(ctx, order);
+    //await this.applyShippingPromotions(ctx, order, promotions);
+    //}
 
     this.calculateOrderTotals(order);
 
@@ -41,5 +43,31 @@ export class OrderCalculator {
     const shippingPrice = order.shippingLine?.discountedPrice || 0;
 
     order.shipping = shippingPrice;
+  }
+
+  private async applyShipping(ctx: RequestContext, order: Order) {
+    const shippingLine = order.shippingLine;
+
+    const currentShippingMethod =
+      shippingLine?.shippingMethod &&
+      (await this.shippingMethodService.findOne(
+        shippingLine.shippingMethod.id
+      ));
+
+    if (!currentShippingMethod) {
+      return;
+    }
+
+    const currentMethodStillEligible = await currentShippingMethod.test(
+      ctx,
+      order
+    );
+
+    if (currentMethodStillEligible) {
+      const result = await currentShippingMethod.apply(ctx, order);
+      shippingLine.price = result.price || 0;
+    } else {
+      order.shippingLine = null;
+    }
   }
 }

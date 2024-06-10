@@ -10,10 +10,25 @@ export const defaultShippingCalculator = new ShippingCalculator({
       ui: { component: 'currency-form-input' },
       label: 'Shipping price',
     },
+    amount: {
+      type: 'int',
+      defaultValue: 0,
+      ui: { component: 'currency-form-input' },
+      label: 'Max order prics',
+    },
   },
   calculate: (ctx, order, args) => {
+    const { rate = 0, amount = null } = args;
+
+    let price: number;
+    if (amount) {
+      price = order.subTotal >= amount ? 0 : rate;
+    } else {
+      price = rate;
+    }
+
     return {
-      price: args.rate || 0,
+      price,
     };
   },
 });
