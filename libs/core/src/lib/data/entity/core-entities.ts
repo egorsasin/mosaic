@@ -6,6 +6,7 @@ import {
   NativeAuthenticationMethod,
 } from './authentication';
 import { Customer } from './customer/customer.entity';
+import { HistoryEntry, OrderHistoryEntry } from './history';
 import { Order, OrderLine } from './order';
 import { Payment } from './payment';
 import { PaymentMethod } from './payment-method';
@@ -32,6 +33,8 @@ export const coreEntitiesMap = {
   ProductAsset,
   Session,
   AnonymousSession,
+  HistoryEntry,
+  OrderHistoryEntry,
   AuthenticatedSession,
   ShippingLine,
 };

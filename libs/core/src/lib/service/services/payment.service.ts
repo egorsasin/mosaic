@@ -5,6 +5,7 @@ import { RequestContext } from '../../api/common';
 import { Order, Payment } from '../../data';
 import { DATA_SOURCE_PROVIDER } from '../../data/constants';
 import { PaymentStateMachine } from '../helpers';
+import { PaymentState } from '../../types';
 
 import { PaymentMethodService } from './payment-method.service';
 
@@ -50,7 +51,7 @@ export class PaymentService {
       paymentMethod
     );
 
-    const initialState = 'Created';
+    const initialState: PaymentState = 'Created';
     const payment = await this.dataSource
       .getRepository(Payment)
       .save(new Payment({ ...result, method, state: initialState }));

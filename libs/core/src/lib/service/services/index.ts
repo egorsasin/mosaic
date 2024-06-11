@@ -1,3 +1,4 @@
+export { HistoryService } from './history.service';
 export { AssetService } from './asset.service';
 export { ExternalAuthenticationService } from './external-authentication.service';
 export { ProductService } from './product.service';

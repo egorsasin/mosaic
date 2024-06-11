@@ -67,6 +67,24 @@ export class NotVerifiedError extends GraphQLError {
   }
 }
 
+/* PAYMENT */
+
+export class PaymentDeclinedError extends GraphQLError {
+  constructor(message = '') {
+    super(message, {
+      extensions: { code: 'PAYMENT_DECLINED_ERROR' },
+    });
+  }
+}
+
+export class PaymentFailedError extends GraphQLError {
+  constructor(message = '') {
+    super(message, {
+      extensions: { code: 'PAYMENT_FAILED_ERROR' },
+    });
+  }
+}
+
 /* ORDER */
 
 export class GuestCheckoutError extends GraphQLError {

@@ -5,3 +5,4 @@ export * from './custom-field';
 export * from './shipping-method';
 export * from './errors';
 export * from './customer';
+export * from './history';

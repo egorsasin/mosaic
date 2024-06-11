@@ -15,3 +15,4 @@ export { OrderableAsset } from './asset/orderable-asset.entity';
 export * from './authentication';
 export * from './session';
 export * from './subscribers';
+export * from './history';

@@ -11,6 +11,8 @@ import {
   omit,
   summate,
   AddressInput,
+  PaymentFailedError,
+  PaymentDeclinedError,
 } from '@mosaic/common';
 
 import { RequestContext, generatePublicId } from '../../api/common';
@@ -312,22 +314,20 @@ export class OrderService {
    * @description
    * Добавляет платеж к заказу
    */
-  async addPaymentToOrder(
+  public async addPaymentToOrder(
     ctx: RequestContext,
     orderId: number,
     { method, metadata }: PaymentInput
   ): Promise<OrderPaymentStateError | Order> {
+    // Получим заказ из базы данных. Если заказ не существует, возвращаем ошибку
     const order = await this.getOrderOrThrow(orderId);
 
-    // TODO Calculate ammount
-    const amountToPay = 100;
-
+    // Проверим, можем ли мы добавить платеж в заказа
     if (!this.canAddPaymentToOrder(order)) {
       return new OrderPaymentStateError();
     }
 
-    // order.payments = await this.getOrderPayments(ctx, order.id);
-    // const amountToPay = order.totalWithTax - totalCoveredByPayments(order);
+    const amountToPay = order.total;
     const payment = await this.paymentService.createPayment(
       ctx,
       order,
@@ -338,23 +338,11 @@ export class OrderService {
 
     if (isGraphQlErrorResult(payment)) {
       return payment;
+    } else if (payment.state === 'Error') {
+      return new PaymentFailedError(payment.errorMessage);
+    } else if (payment.state === 'Declined') {
+      return new PaymentDeclinedError(payment.errorMessage);
     }
-    // await this.connection
-    //   .getRepository(ctx, Order)
-    //   .createQueryBuilder()
-    //   .relation('payments')
-    //   .of(order)
-    //   .add(payment);
-    // if (payment.state === 'Error') {
-    //   return new PaymentFailedError({
-    //     paymentErrorMessage: payment.errorMessage || '',
-    //   });
-    // }
-    // if (payment.state === 'Declined') {
-    //   return new PaymentDeclinedError({
-    //     paymentErrorMessage: payment.errorMessage || '',
-    //   });
-    // }
     return order;
   }
 
@@ -505,7 +493,7 @@ export class OrderService {
       lines: [],
       code: generatePublicId(),
       shippingAddress: {},
-      subTotal: 0,
+      //subTotal: 0,
     });
   }
 

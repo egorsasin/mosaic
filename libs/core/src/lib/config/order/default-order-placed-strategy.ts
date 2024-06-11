@@ -5,11 +5,12 @@ import { OrderPlacedStrategy } from './order-placed-strategy';
 
 /**
  * @description
- * The default {@link OrderPlacedStrategy}. The order is set as "placed" when it transitions from
+ * Стратегия размещения заказа по умолчанию {@link OrderPlacedStrategy}.
+ * The order is set as "placed" when it transitions from
  * 'ArrangingPayment' to either 'PaymentAuthorized' or 'PaymentSettled'.
  */
 export class DefaultOrderPlacedStrategy implements OrderPlacedStrategy {
-  shouldSetAsPlaced(
+  public shouldSetAsPlaced(
     ctx: RequestContext,
     fromState: OrderState,
     toState: OrderState

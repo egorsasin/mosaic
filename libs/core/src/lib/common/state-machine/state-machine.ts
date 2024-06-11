@@ -36,6 +36,7 @@ export class StateMachine<T extends string, Data = any> {
     const finalizeNoop: () => Promise<unknown> = async () => {
       /**/
     };
+
     if (this.canTransitionTo(state)) {
       // if (typeof this.config.onTransitionStart === 'function') {
       //   const canTransition = await awaitPromiseOrObservable(

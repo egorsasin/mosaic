@@ -10,7 +10,7 @@ import { ActiveOrderService } from '../../active-order';
 })
 export class MiniCartComponent {
   public items$ = this.activeOrderService.activeOrder$.pipe(
-    map((order) => order.lines)
+    map((order) => order?.lines || [])
   );
 
   constructor(private readonly activeOrderService: ActiveOrderService) {}

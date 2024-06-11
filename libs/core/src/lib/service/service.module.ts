@@ -23,7 +23,8 @@ import { PaymentMethodService } from './services/payment-method.service';
 import { ShippingMethodService } from './services/shipping-method.service';
 import { OrderService } from './services/order.service';
 import { PaymentService } from './services/payment.service';
-import { AssetService } from './services/asset.service';
+import { AssetService } from './services';
+import { HistoryService } from './services';
 
 const helpers = [
   ConfigOptionsService,
@@ -48,6 +49,7 @@ const services = [
   ShippingMethodService,
   ProductService,
   SessionService,
+  HistoryService,
 ];
 
 @Module({

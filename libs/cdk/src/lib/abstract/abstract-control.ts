@@ -15,7 +15,6 @@ export abstract class MosAbstractControl<T> implements ControlValueAccessor {
 
   @HostBinding('class.mos-invalid')
   public get computedInvalid(): boolean {
-    console.log('__TOUCHED', this.touched, this.invalid);
     return this.touched && this.invalid;
   }
 

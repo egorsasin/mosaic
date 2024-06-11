@@ -42,7 +42,6 @@ export function configureDefaultOrderProcess() {
     async onTransitionEnd(fromState, toState, data) {
       const { ctx, order } = data;
       const { orderPlacedStrategy } = configService.orderOptions;
-
       const shouldSetAsPlaced = orderPlacedStrategy.shouldSetAsPlaced(
         ctx,
         fromState,

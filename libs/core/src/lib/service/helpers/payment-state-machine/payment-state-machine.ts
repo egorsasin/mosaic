@@ -8,7 +8,7 @@ import { PaymentState, StateMachineConfig, Transitions } from '../../../types';
 import { StateMachine, mergeTransitionDefinitions } from '../../../common';
 import { ConfigService } from '../../../config';
 
-import { PaymentTransitionData } from './types';
+import { PaymentProcess, PaymentTransitionData } from './types';
 
 @Injectable()
 export class PaymentStateMachine {
@@ -57,7 +57,9 @@ export class PaymentStateMachine {
     PaymentState,
     PaymentTransitionData
   > {
-    const processes = [...(this.configService.paymentOptions.process ?? [])];
+    const processes: PaymentProcess[] = [
+      ...(this.configService.paymentOptions.process ?? []),
+    ];
     const allTransitions = processes.reduce(
       (transitions, process) =>
         mergeTransitionDefinitions(
@@ -70,6 +72,7 @@ export class PaymentStateMachine {
     return {
       transitions: allTransitions,
       onTransitionEnd: async (fromState, toState, data) => {
+        // Выполняем все обработчики и процессов оплаты
         for (const process of processes) {
           if (typeof process.onTransitionEnd === 'function') {
             await awaitPromiseOrObservable(

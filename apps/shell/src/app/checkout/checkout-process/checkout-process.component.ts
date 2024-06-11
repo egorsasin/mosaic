@@ -10,9 +10,17 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Observable, Subject, forkJoin, map, take } from 'rxjs';
+import {
+  Observable,
+  Subject,
+  concatMap,
+  forkJoin,
+  map,
+  mergeMap,
+  take,
+} from 'rxjs';
 
 import { WINDOW } from '@mosaic/cdk';
 import {
@@ -27,6 +35,7 @@ import {
 
 import { DataService } from '../../data';
 import {
+  ADD_PAYMENT,
   GET_ELIGIBLE_PAYMENT_METHODS,
   GET_ELIGIBLE_SHIPPING_METHODS,
   SET_CUSTOMER_FOR_ORDER,
@@ -177,7 +186,9 @@ export class CheckoutProcessComponent implements OnDestroy {
     @Inject(WINDOW) private window: Window,
     private dataService: DataService,
     private activeOrderService: ActiveOrderService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {
     // this.form.valueChanges
     //   .pipe(
@@ -202,20 +213,9 @@ export class CheckoutProcessComponent implements OnDestroy {
     //   .subscribe((value) => {});
   }
 
-  // public addPaymentMethod() {
-  //   this.dataService
-  //     .mutate<AddPaymentMutation, MutationArgs<PaymentInput>>(ADD_PAYMENT, {
-  //       input: {
-  //         method: this.paymentMethod.value,
-  //         metadata: {},
-  //       },
-  //     })
-  //     .subscribe(async ({ addPaymentToOrder }) => {
-  //       console.log(addPaymentToOrder);
-  //     });
-  // }
-
   public completeOrder(order: Order): void {
+    console.log('__FORM', this.form);
+
     if (this.form.invalid) {
       return;
     }
@@ -228,54 +228,70 @@ export class CheckoutProcessComponent implements OnDestroy {
       input: shippingAddress,
     });
 
-    setShippingAddress$.subscribe();
+    const { firstName, lastName, phoneNumber } = shippingAddress;
+    const setCustomer$ = this.dataService.mutate<
+      unknown,
+      MutationArgs<CreateCustomerInput>
+    >(SET_CUSTOMER_FOR_ORDER, {
+      input: {
+        firstName,
+        lastName,
+        phoneNumber,
+        emailAddress,
+      },
+    });
+
+    setCustomer$.pipe(mergeMap(() => setShippingAddress$)).subscribe(() => {
+      this.addPaymentMethod();
+    });
   }
 
-  public _completeOrder(order: Order) {
-    if (this.paymentMethod.value === 'paynow') {
-      this.dataService
-        .mutate<any, MutationArgs<any>>(CREATE_PAYNOW_PAYMENT_INTENT, {
-          input: {
-            orderId: order.id,
-          },
-        })
-        .subscribe(({ createPaynowIntent }) => {
-          if (createPaynowIntent.url) {
-            this.window.open(createPaynowIntent.url, '_self');
-          }
-        });
-    } else {
-      // this.dataService
-      //   .mutate<any, any>(COMPLETE_ORDER, {
-      //     input: {},
-      //   })
-      //   .subscribe(async ({ addPaymentToOrder }) => {
-      //     switch (addPaymentToOrder?.__typename) {
-      //       case 'Order':
-      //         const order = addPaymentToOrder;
-      //         if (
-      //           order &&
-      //           (order.state === 'PaymentSettled' ||
-      //             order.state === 'PaymentAuthorized')
-      //         ) {
-      //           await new Promise<void>((resolve) =>
-      //             setTimeout(() => {
-      //               this.stateService.setState('activeOrderId', null);
-      //               resolve();
-      //             }, 500)
-      //           );
-      //           this.router.navigate(['../confirmation', order.code], {
-      //             relativeTo: this.route,
-      //           });
-      //         }
-      //         break;
-      //       case 'OrderPaymentStateError':
-      //       case 'PaymentDeclinedError':
-      //       case 'PaymentFailedError':
-      //       case 'OrderStateTransitionError':
-      //         this.paymentErrorMessage = addPaymentToOrder.message;
-      //         break;
-    }
+  private addPaymentMethod() {
+    // if (this.paymentMethod.value === 'paynow') {
+    //   return this.dataService
+    //     .mutate<any, MutationArgs<any>>(CREATE_PAYNOW_PAYMENT_INTENT, {
+    //       input: {
+    //         orderId: order.id,
+    //       },
+    //     })
+    //     .subscribe(({ createPaynowIntent }) => {
+    //       if (createPaynowIntent.url) {
+    //         this.window.open(createPaynowIntent.url, '_self');
+    //       }
+    //     });
+    // } else {
+    return this.dataService
+      .mutate<any, any>(ADD_PAYMENT, {
+        input: {
+          method: this.paymentMethod.value,
+          metadata: {},
+        },
+      })
+      .subscribe(async ({ addPaymentToOrder: result }) => {
+        switch (result?.__typename) {
+          case 'Order':
+            if (
+              ['PaymentSettled', 'PaymentAuthorized'].includes(result?.state)
+            ) {
+              //  await new Promise<void>((resolve) =>
+              //    setTimeout(() => {
+              //      this.stateService.setState('activeOrderId', null);
+              //      resolve();
+              //    }, 500)
+              //  );
+              this.router.navigate(['../confirmation', result.code], {
+                relativeTo: this.activatedRoute,
+              });
+            }
+          //         break;
+          //       case 'OrderPaymentStateError':
+          //       case 'PaymentDeclinedError':
+          //       case 'PaymentFailedError':
+          //       case 'OrderStateTransitionError':
+          //         this.paymentErrorMessage = addPaymentToOrder.message;
+          //         break;
+        }
+      });
   }
 
   public setShippingMethod(shippingMethodId: number): void {
