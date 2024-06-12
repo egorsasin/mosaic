@@ -18,7 +18,7 @@ import { transformImage } from './transform-image';
 import { defaultAssetStorageStrategyFactory } from './default-factory';
 import { SharpAssetPreviewStrategy } from './sharp-asset-preview-strategy';
 import { HashedAssetNamingStrategy } from './hashed-asset-naming-strategy';
-import { DEFAULT_CACHE_HEADER } from './constants';
+import { DEFAULT_ASSET_UPLOAD_DIR, DEFAULT_CACHE_HEADER } from './constants';
 
 @MosaicPlugin({
   imports: [PluginCommonModule],
@@ -91,8 +91,8 @@ export class AssetServerPlugin implements NestModule, OnApplicationBootstrap {
       }
     }
 
-    const cachePath = path.join(
-      AssetServerPlugin.options.assetUploadDir,
+    const cachePath = path.posix.join(
+      AssetServerPlugin.options.assetCacheDir || DEFAULT_ASSET_UPLOAD_DIR,
       this.cacheDir
     );
     fs.ensureDirSync(cachePath);
@@ -215,8 +215,9 @@ export class AssetServerPlugin implements NestModule, OnApplicationBootstrap {
     }
 
     const decodedReqPath = decodeURIComponent(req.path);
+
     if (imageParamHash) {
-      return path.join(
+      return path.posix.join(
         this.cacheDir,
         this.addSuffix(decodedReqPath, imageParamHash, imageFormat)
       );

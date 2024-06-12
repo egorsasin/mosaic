@@ -37,7 +37,7 @@
 
 <ng-template #compactView>
   <div class="featured-asset compact">
-    <img *ngIf="featuredAsset" [src]="featuredAsset | assetPreview : 'thumb'" />
+    <img *ngIf="featuredAsset" [src]="featuredAsset.preview" />
 
     <div class="placeholder" *ngIf="!featuredAsset"></div>
   </div>

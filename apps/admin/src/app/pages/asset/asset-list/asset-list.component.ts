@@ -10,7 +10,7 @@ interface Asset {
 }
 
 @Component({
-  selector: 'mosaic-asset-list',
+  selector: 'mos-asset-list',
   templateUrl: './asset-list.component.html',
 })
 export class AssetListComponent

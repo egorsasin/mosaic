@@ -49,6 +49,8 @@ export class ConfigModule
   }
 
   private getInjectableStrategies(): InjectableStrategy[] {
+    const { assetNamingStrategy, assetPreviewStrategy, assetStorageStrategy } =
+      this.configService.assetOptions;
     const { process: paymentProcess } = this.configService.paymentOptions;
     const { process: orderProcess, guestCheckoutStrategy } =
       this.configService.orderOptions;
@@ -59,6 +61,9 @@ export class ConfigModule
       ...paymentProcess,
       ...orderProcess,
       guestCheckoutStrategy,
+      assetNamingStrategy,
+      assetPreviewStrategy,
+      assetStorageStrategy,
     ];
   }
 }

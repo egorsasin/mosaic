@@ -1,10 +1,11 @@
 import { API_PORT } from '@mosaic/common';
-import { MosaicConfig } from '@mosaic/core/config';
+import { DefaultAssetNamingStrategy, MosaicConfig } from '@mosaic/core/config';
 import { GoogleAuthPlugin } from '@mosaic/google-auth';
 import { AssetServerPlugin } from '@mosaic/asset-server';
-import path from 'path';
 
 import { examplePaymentHandler, PaynowPlugin } from './payment';
+import { InvoicePlugin } from './payment/invoice/invoice.plugin';
+import { configureS3AssetStorage } from './s3-asset-storage-strategy';
 
 export const appConfig: MosaicConfig = {
   apiOptions: {
@@ -26,7 +27,19 @@ export const appConfig: MosaicConfig = {
   plugins: [
     AssetServerPlugin.init({
       route: 'assets',
-      assetUploadDir: path.join(__dirname, '../../assets'),
+      previewMaxWidth: 300,
+      previewMaxHeight: 300,
+      namingStrategy: new DefaultAssetNamingStrategy(),
+      storageStrategyFactory: configureS3AssetStorage({
+        credentials: {
+          accessKeyId: process.env.ACCESS_KEY,
+          secretAccessKey: process.env.SECRET_ACCESS_KEY,
+        },
+        bucket: process.env.S3_BUCKET,
+        nativeS3Configuration: {
+          region: 'eu-central-1',
+        },
+      }),
     }),
     GoogleAuthPlugin.init({
       clientId:
@@ -35,6 +48,7 @@ export const appConfig: MosaicConfig = {
     PaynowPlugin.init({
       // This prevents different customers from using the same PaymentIntent
     }),
+    InvoicePlugin.init(),
   ],
   paymentOptions: {
     paymentMethodHandlers: [examplePaymentHandler],

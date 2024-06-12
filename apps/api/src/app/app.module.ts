@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule as NestConfigModule } from '@nestjs/config';
 
 import { ConfigModule } from '@mosaic/core/config';
 import { ApiModule } from '@mosaic/core/api/api.module';
@@ -16,6 +17,7 @@ import { AppService } from './app.service';
     ApiModule,
     ServiceModule,
     PluginModule.forRoot(),
+    NestConfigModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService],

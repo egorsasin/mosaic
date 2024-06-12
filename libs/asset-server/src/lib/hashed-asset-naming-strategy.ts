@@ -12,8 +12,9 @@ export class HashedAssetNamingStrategy extends DefaultAssetNamingStrategy {
       originalFileName,
       conflictFileName
     );
-    return path.join('source', this.getHashedDir(filename), filename);
+    return path.posix.join('source', this.getHashedDir(filename), filename);
   }
+
   public override generatePreviewFileName(
     originalFileName: string,
     conflictFileName?: string
@@ -22,7 +23,7 @@ export class HashedAssetNamingStrategy extends DefaultAssetNamingStrategy {
       originalFileName,
       conflictFileName
     );
-    return path.join('preview', this.getHashedDir(filename), filename);
+    return path.posix.join('preview', this.getHashedDir(filename), filename);
   }
 
   private getHashedDir(filename: string): string {

@@ -1,7 +1,6 @@
 import path from 'path';
 import sharp from 'sharp';
 
-import { RequestContext } from '@mosaic/core/api/common';
 import { AssetPreviewStrategy } from '@mosaic/core/config';
 import { AssetType, getAssetType } from '@mosaic/core/common';
 
@@ -34,7 +33,10 @@ export class SharpAssetPreviewStrategy implements AssetPreviewStrategy {
     };
   }
 
-  async generatePreviewImage(mimeType: string, data: Buffer): Promise<Buffer> {
+  public async generatePreviewImage(
+    mimeType: string,
+    data: Buffer
+  ): Promise<Buffer> {
     const assetType = getAssetType(mimeType);
 
     const { maxWidth, maxHeight } = this.config;

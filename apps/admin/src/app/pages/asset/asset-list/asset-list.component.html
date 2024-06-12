@@ -5,9 +5,9 @@
       class="group cursor-pointer relative"
     >
       <img
-        [src]="$any(item) | assetPreview"
+        [src]="$any(item) | assetPreview : 'small'"
         alt="Image 1"
-        class="w-38 h-38 object-cover rounded-lg transition-transform transform scale-100 group-hover:scale-105"
+        class="w-36 h-36 object-cover rounded-lg transition-transform transform scale-100 group-hover:scale-105"
       />
     </div>
   </div>

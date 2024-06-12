@@ -23,7 +23,7 @@ export interface ImageTransformPreset {
 
 export interface AssetServerOptions {
   route: string;
-  assetUploadDir: string; // TODO: this is strategy-specific and should be moved out of the global options
+  assetCacheDir?: string;
   assetUrlPrefix?:
     | string
     | ((ctx: RequestContext, identifier: string) => string);

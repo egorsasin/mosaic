@@ -3,11 +3,11 @@ import { Request } from 'express';
 import { getAssetUrlPrefixFn } from './common';
 import { AssetServerOptions } from './types';
 import { LocalAssetStorageStrategy } from './local-strategy';
+import { DEFAULT_ASSET_UPLOAD_DIR } from './constants';
 
 export function defaultAssetStorageStrategyFactory(
   options: AssetServerOptions
 ) {
-  const { assetUploadDir } = options;
   const prefixFn = getAssetUrlPrefixFn(options);
   const toAbsoluteUrlFn = (request: Request, identifier: string): string => {
     if (!identifier) {
@@ -21,5 +21,8 @@ export function defaultAssetStorageStrategyFactory(
       ? identifier
       : `${prefix}${normalizedPath}`;
   };
-  return new LocalAssetStorageStrategy(assetUploadDir, toAbsoluteUrlFn);
+  return new LocalAssetStorageStrategy(
+    DEFAULT_ASSET_UPLOAD_DIR,
+    toAbsoluteUrlFn
+  );
 }

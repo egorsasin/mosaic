@@ -8,7 +8,7 @@ export function getAssetUrlPrefixFn(options: AssetServerOptions) {
   const { assetUrlPrefix, route } = options;
 
   if (assetUrlPrefix == null) {
-    return (request: Request, identifier: string) => {
+    return (request: Request) => {
       const protocol = request.headers['x-forwarded-proto'] ?? request.protocol;
       return `${Array.isArray(protocol) ? protocol[0] : protocol}://${
         request.get('host') ?? 'could-not-determine-host'

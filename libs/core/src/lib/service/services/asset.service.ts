@@ -82,7 +82,7 @@ export class AssetService {
   }
 
   public async create({ file }: CreateAssetInput): Promise<CreateAssetResult> {
-    const { createReadStream, filename, mimetype } = await file.promise;
+    const { createReadStream, filename, mimetype } = await file;
 
     return new Promise((resolve, reject) => {
       const stream: ReadStream = createReadStream();
@@ -329,6 +329,7 @@ export class AssetService {
 
   private async getSourceFileName(fileName: string): Promise<string> {
     const { assetOptions } = this.configService;
+
     return this.generateUniqueName(fileName, (name, conflict) =>
       assetOptions.assetNamingStrategy.generateSourceFileName(name, conflict)
     );
