@@ -269,11 +269,12 @@ export class OrderService {
     orderId: number,
     input: AddressInput
   ): Promise<Order> {
-    const order = await this.getOrderOrThrow(orderId);
+    await this.getOrderOrThrow(orderId);
     await this.dataSource
       .getRepository(Order)
       .update({ id: orderId }, { shippingAddress: input });
-    return order;
+
+    return assertFound(this.findOne(orderId));
   }
 
   /**

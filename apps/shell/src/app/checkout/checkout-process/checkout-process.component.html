@@ -1,6 +1,6 @@
 <div *ngIf="order$ | async as order" class="mx-auto max-w-7xl px-4 sm:px-6">
   <div class="md:grid md:grid-cols-2 md:gap-6">
-    <form [formGroup]="form" autocomplete="off">
+    <form [formGroup]="form">
       <div class="pt-6">
         <h2
           class="text-xl font-medium text-gray-900 font-['Oswald'] uppercase border-b w-full pb-2"
@@ -15,7 +15,7 @@
             class="p-4 flex gap-3 bg-white border border-gray-300 shadow-sm rounded-lg text-sm cursor-pointer"
             (click)="setShippingMethod(+shippingMethod.id)"
             [class.payment-metods--active]="
-              shippingMethod.id === $any(order).shippingLine.shippingMethod.id
+              shippingMethod.id === $any(order).shippingLine?.shippingMethod?.id
             "
           >
             <div class="w-full">
@@ -49,14 +49,14 @@
         </div>
 
         <div class="col-span-6 sm:col-span-3">
-          <mos-input formControlName="firstName">
+          <mos-input formControlName="firstName" mosAutofill="given-name">
             Imię
             <span class="text-rose-500 ml-[1px]">*</span>
           </mos-input>
         </div>
 
         <div class="col-span-6 sm:col-span-3">
-          <mos-input formControlName="lastName">
+          <mos-input formControlName="lastName" mosAutofill="family-name">
             Nazwisko
             <span class="text-rose-500 ml-[1px]">*</span>
           </mos-input>
@@ -69,7 +69,7 @@
           </mos-input>
         </div>
 
-        <div class="col-span-6 sm:col-span-3">
+        <div class="col-span-6 sm:col-span-3" mosAutofill="tel">
           <mos-input formControlName="phoneNumber">
             Telefon
             <span class="text-rose-500 ml-[1px]">*</span>
@@ -77,21 +77,21 @@
         </div>
 
         <div class="col-span-3 sm:col-span-2">
-          <mos-input formControlName="postalCode">
+          <mos-input formControlName="postalCode" mosAutofill="postal-code">
             Kod pocztowy
             <span class="text-rose-500 ml-[1px]">*</span>
           </mos-input>
         </div>
 
         <div class="col-span-3 sm:col-span-4">
-          <mos-input formControlName="city">
+          <mos-input formControlName="city" mosAutofill="address-level2">
             Miasto
             <span class="text-rose-500 ml-[1px]">*</span>
           </mos-input>
         </div>
 
         <div class="col-span-6 sm:col-span-6">
-          <mos-input formControlName="streetLine">
+          <mos-input formControlName="streetLine" mosAutofill="street-address">
             Ulica i numer
             <span class="text-rose-500 ml-[1px]">*</span>
           </mos-input>

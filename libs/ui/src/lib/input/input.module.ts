@@ -7,6 +7,9 @@ import { MosActiveZoneDirective } from '../active-zone';
 import { MosDropdownModule } from '../dropdown/dropdown.module';
 
 import { MosInputComponent } from './input.component';
+import { MosAutofilltDirective } from './input-autofill.directive';
+
+const DECLARATIONS = [MosInputComponent, MosAutofilltDirective];
 
 @NgModule({
   imports: [
@@ -16,8 +19,8 @@ import { MosInputComponent } from './input.component';
     MosDropdownModule,
     FormsModule,
   ],
-  declarations: [MosInputComponent],
-  exports: [MosInputComponent],
+  declarations: [...DECLARATIONS],
+  exports: [...DECLARATIONS],
   providers: [],
 })
 export class MosInputModule {}

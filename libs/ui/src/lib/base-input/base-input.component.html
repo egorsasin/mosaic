@@ -1,7 +1,7 @@
 <div class="mos-input w-full font-normal text-sm">
   <input
     class="mos-input__input block w-full pl-3 pr-0 mt-0 bg-transparent appearance-none border-0 focus:ring-0 text-sm outline-none"
-    #input
+    mosNativeInput
     type="text"
     [ngModel]="value"
     [ngModelOptions]="{ standalone: true }"
@@ -12,7 +12,7 @@
 
   <label
     *ngIf="!labelOutside"
-    [class.label-raised]="labelRaised"
+    [class.mos-raised]="labelRaised"
     class="flex items-center justify-center mx-2 px-1 transition-all absolute duration-300 top-3 -z-10 origin-0 text-gray-500"
   >
     <ng-content />

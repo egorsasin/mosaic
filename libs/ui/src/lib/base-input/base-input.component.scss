@@ -34,9 +34,37 @@
     border: none;
   }
 
-  .label-raised {
+  input {
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active {
+      -webkit-background-clip: text;
+      opacity: 0;
+      // -webkit-text-fill-color: transparent;
+      transition: background-color 5000s ease-in-out 0s;
+      box-shadow: inset 0 0 20px 20px transparent;
+    }
+  }
+
+  .mos-raised {
     transform: translateY(-0.7rem) scale(0.8);
     transform-origin: bottom left;
+  }
+}
+
+:host-context(.mos-raised) {
+  input {
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active {
+      //-webkit-background-clip: text;
+      opacity: 1;
+      // -webkit-text-fill-color: transparent;
+      //transition: background-color 5000s ease-in-out 0s;
+      //box-shadow: inset 0 0 20px 20px transparent;
+    }
   }
 }
 

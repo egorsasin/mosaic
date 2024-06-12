@@ -9,6 +9,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+import { MosNativeInputDirective } from './native-input.directive';
 
 function getNativeFocused(documentRef: Document): Element | null {
   if (!documentRef.activeElement?.shadowRoot) {
@@ -31,7 +32,7 @@ function getNativeFocused(documentRef: Document): Element | null {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MosBaseInputComponent {
-  @ViewChild('input', { static: true, read: ElementRef })
+  @ViewChild(MosNativeInputDirective, { static: true, read: ElementRef })
   public inputElement?: ElementRef<HTMLInputElement>;
 
   @HostBinding(`class.mos-disabled`)

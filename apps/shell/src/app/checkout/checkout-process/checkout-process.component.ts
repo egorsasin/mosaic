@@ -215,7 +215,6 @@ export class CheckoutProcessComponent implements OnDestroy {
 
   public completeOrder(order: Order): void {
     console.log('__FORM', this.form);
-
     if (this.form.invalid) {
       return;
     }
