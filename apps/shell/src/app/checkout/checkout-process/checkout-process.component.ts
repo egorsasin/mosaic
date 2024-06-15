@@ -31,6 +31,8 @@ import {
   CreateCustomerInput,
   AddressInput,
   NoActiveOrderError,
+  Order,
+  OrderLine,
 } from '@mosaic/common';
 
 import { DataService } from '../../data';
@@ -43,7 +45,6 @@ import {
   SET_SHIPPING_METHOD,
 } from './checkout-process.graphql';
 
-import { Order, OrderLine } from '../../types';
 import { ActiveOrderService } from '../../active-order';
 import { CREATE_PAYNOW_PAYMENT_INTENT } from './paynow.graphql';
 import { ADJUST_ITEM_QUANTITY, REMOVE_ITEM_FROM_CART } from './cart.graphql';
@@ -214,7 +215,6 @@ export class CheckoutProcessComponent implements OnDestroy {
   }
 
   public completeOrder(order: Order): void {
-    console.log('__FORM', this.form);
     if (this.form.invalid) {
       return;
     }

@@ -1,13 +1,34 @@
+import { Exact } from './common';
 import {
   AlreadyLoggedInError,
   EmailAddressConflictError,
   GuestCheckoutError,
   NoActiveOrderError,
 } from './errors';
+import { Product } from './product';
+import { ShippingMethod } from './shipping-method';
+
+export interface OrderLine {
+  id: number;
+  quantity: number;
+  product: Product;
+  proratedLinePrice: number;
+}
 
 export interface Order {
   id: number;
   code: string;
+  lines: OrderLine[];
+  shippingLine?: ShippingLine;
+  subTotal: number;
+  totalQuantity: number;
+  total: number;
+  shipping: number;
+  status: string;
+}
+
+export interface ShippingLine {
+  shippingMethod: ShippingMethod;
 }
 
 /** Passed as input to the `addPaymentToOrder` mutation. */
@@ -44,3 +65,11 @@ export type SetCustomerForOrderResult =
   | EmailAddressConflictError
   | GuestCheckoutError
   | Order;
+
+export type GetOrderByCodeQuery = {
+  orderByCode: Order;
+};
+
+export type QueryOrderByCodeArgs = Exact<{
+  code: string;
+}>;

@@ -4,3 +4,9 @@ input CreateCustomerInput {
   phoneNumber: String!
   emailAddress: String!
 }
+
+type Customer implements Node {
+  id: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}

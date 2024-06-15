@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 
-import { Order } from '../types';
+import { Order } from '@mosaic/common';
 
 export const setActiveOrder = createAction(
   '[Order] Set Active Order',

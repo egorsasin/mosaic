@@ -11,10 +11,9 @@ import {
 
 import { MosDialogService } from '@mosaic/ui/dialog';
 import { ContextWrapper } from '@mosaic/cdk';
+import { Asset, unique } from '@mosaic/common';
 
-import { Asset } from '../../../common';
 import { MosAssetPickerDialogComponent } from '../asset-picker-dialog';
-import { unique } from '@mosaic/common';
 
 export interface AssetChange {
   assets: Asset[];
@@ -29,7 +28,7 @@ export interface AssetChange {
  * which is addressed by a work-around from here: https://github.com/angular/components/issues/13372#issuecomment-483998378
  */
 @Component({
-  selector: 'mosaic-assets',
+  selector: 'mos-assets',
   templateUrl: './assets.component.html',
   styleUrls: ['./assets.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -2,9 +2,7 @@
   <div class="px-8">
     <div class="flex items-center">
       <div class="flex-auto">
-        <h1 class="text-base leading-6 font-semibold text-gray-900">
-          Orders
-        </h1>
+        <h1 class="text-base leading-6 font-semibold text-gray-900">Orders</h1>
         <p class="mt-2 text-sm text-gray-700">
           A list of all the users in your account including their name, title,
           email and role.
@@ -12,8 +10,10 @@
       </div>
 
       <div class="flex-none sm:ml-16">
-        <a routerLink="/products/create"
-          class="block rounded-md font-semibold text-sm text-white bg-gray-600 px-3 py-2 drop-shadow hover:bg-gray-500">
+        <a
+          routerLink="/products/create"
+          class="block rounded-md font-semibold text-sm text-white bg-gray-600 px-3 py-2 drop-shadow hover:bg-gray-500"
+        >
           Add product
         </a>
       </div>
@@ -22,38 +22,59 @@
     <div class="mt-8 rounded-lg ring-1 ring-gray-300">
       <table class="min-w-full divide-y divide-gray-300">
         <thead>
-          <th scope="col" class="text-sm font-semibold text-gray-700 text-left py-3 pl-6 pr-3">
+          <th
+            scope="col"
+            class="text-sm font-semibold text-gray-700 text-left py-3 pl-6 pr-3"
+          >
             ID
           </th>
-          <th scope="col" class="text-sm font-semibold text-gray-700 text-left py-3 px-3">
+          <th
+            scope="col"
+            class="text-sm font-semibold text-gray-700 text-left py-3 px-3"
+          >
             Code
           </th>
-          <th scope="col" class="text-sm font-semibold text-gray-700 text-left py-3 px-3"></th>
+          <th
+            scope="col"
+            class="text-sm font-semibold text-gray-700 text-left py-3 px-3"
+          >
+            State
+          </th>
         </thead>
 
         <tbody>
-          <tr *ngFor="
+          <tr
+            *ngFor="
               let item of items$ | async;
               let first = first;
               let last = last
-            ">
-            <td class="pl-6 py-4 text-sm  relative">
-              <a [routerLink]="[item.id]">{{ item.id}}</a>
-              <div *ngIf="!first" class="absolute -top-px h-px left-6 right-0 bg-gray-200"></div>
+            "
+          >
+            <td class="pl-6 py-4 text-sm relative">
+              <a [routerLink]="[item.id]">{{ item.id }}</a>
+              <div
+                *ngIf="!first"
+                class="absolute -top-px h-px left-6 right-0 bg-gray-200"
+              ></div>
             </td>
             <td class="px-3 py-4 text-sm font-norml relative text-gray-500">
-              <div *ngIf="!first" class="absolute -top-px h-px left-0 right-0 bg-gray-200"></div>
-              {{ item.code}}
+              <div
+                *ngIf="!first"
+                class="absolute -top-px h-px left-0 right-0 bg-gray-200"
+              ></div>
+              {{ item.code }}
             </td>
             <td class="px-3 py-4 text-sm font-norml relative">
-              <div *ngIf="!first" class="absolute -top-px h-px left-0 right-6 bg-gray-200"></div>
+              {{ item.state }}
             </td>
           </tr>
         </tbody>
       </table>
 
       <!-- PAGINATION -->
-      <div class="flex items-center justify-between border-t border-gray-300 px-6">
+      <div
+        class="flex items-center justify-between border-t border-gray-300 px-6"
+      >
         <div>
           <p class="text-sm text-gray-700">
             Showing

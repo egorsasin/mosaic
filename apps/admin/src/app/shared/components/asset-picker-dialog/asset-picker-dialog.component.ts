@@ -1,20 +1,14 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Inject,
-  Output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 
 import { MOSAIC_CONTEXT } from '@mosaic/cdk';
+import { Asset } from '@mosaic/common';
 
 import { AssetDataService } from '../../../pages/asset/asset.service';
 import { Observable, map, tap } from 'rxjs';
 import { SelectionManager } from './selection-manager';
-import { Asset } from '../../../common';
 
 @Component({
-  selector: 'mosaic-asset-picker-dialog',
+  selector: 'mos-asset-picker-dialog',
   templateUrl: './asset-picker-dialog.component.html',
   styleUrls: ['./asset-picker-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

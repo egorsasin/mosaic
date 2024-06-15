@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { Asset } from '../../common';
+import { Asset } from '@mosaic/common';
 
 @Pipe({
   name: 'assetPreview',

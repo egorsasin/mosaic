@@ -1,5 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
-import { Order } from '../types';
+
+import { Order } from '@mosaic/common';
 
 import * as OrderActions from './order.actions';
 

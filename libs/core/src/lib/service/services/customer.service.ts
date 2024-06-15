@@ -7,8 +7,8 @@ import {
   assertFound,
   normalizeEmailAddress,
 } from '@mosaic/common';
-import { CustomerEvent, EventBus } from '@mosaic/core/event-bus';
 
+import { CustomerEvent, EventBus } from '../../event-bus';
 import { Address, Customer, DATA_SOURCE_PROVIDER } from '../../data';
 import { CreateAddressInput } from '../../types';
 import { RequestContext } from '../../api/common';

@@ -101,9 +101,16 @@ export class OrderService {
 
   async findOneByCode(orderCode: string): Promise<Order | undefined> {
     return this.dataSource.getRepository(Order).findOne({
+      relations: [
+        'customer',
+        'lines',
+        'lines.product',
+        'shippingLine',
+        'shippingLine.shippingMethod',
+      ],
       where: {
         code: orderCode,
-        active: true,
+        active: false,
       },
     });
   }

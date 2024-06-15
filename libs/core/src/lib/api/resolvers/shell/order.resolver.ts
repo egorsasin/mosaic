@@ -11,6 +11,7 @@ import {
   CreateCustomerInput,
   SetCustomerForOrderResult,
   AddressInput,
+  QueryOrderByCodeArgs,
 } from '@mosaic/common';
 
 import { Allow, Ctx } from '../../decorators';
@@ -22,7 +23,6 @@ import {
   MutationAddItemToOrderArgs,
   MutationAdjustOrderLineArgs,
   MutationRemoveOrderLineArgs,
-  QueryOrderByCodeArgs,
   RemoveOrderItemResult,
   UpdateOrderItemsResult,
 } from '../../../types';

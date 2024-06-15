@@ -8,3 +8,8 @@ export type ShippingMethodQuote = {
   name: string;
   price: number;
 };
+
+export type ShippingMethod = {
+  code: string;
+  name: string;
+};

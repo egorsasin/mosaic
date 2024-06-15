@@ -1,13 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
+import { Order } from '@mosaic/common';
+
 import { BaseListComponent, Paginated } from '../../../common/base-list';
 import { OrderDataService } from '../order.service';
-
-export interface Order {
-  id: number;
-  code: string;
-}
 
 @Component({
   selector: 'mos-order-list',

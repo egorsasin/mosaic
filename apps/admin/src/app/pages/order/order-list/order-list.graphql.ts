@@ -4,6 +4,7 @@ const ORDER_FRAGMENT = gql`
   fragment Order on Order {
     id
     code
+    state
   }
 `;
 

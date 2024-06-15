@@ -1,8 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { customAlphabet } = require('nanoid');
 
-const nanoid = customAlphabet('123456789ABCDEFGHJKLMNPQRSTUVWXYZ', 16);
+const nanoidPrefix = customAlphabet('ABCDEFGHJKLMNPQRSTUVWXYZ', 6);
+const nanoidNumber = customAlphabet('1234567890', 10);
 
 export function generatePublicId(): string {
-  return nanoid();
+  return `${nanoidPrefix()}${nanoidNumber()}`;
 }

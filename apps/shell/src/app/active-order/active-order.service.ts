@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { map, Observable, shareReplay } from 'rxjs';
 
-import { GET_ACTIVE_ORDER } from './active-order.definitions';
+import { Order } from '@mosaic/common';
 
-import { GetActiveOrder } from './active-order.types';
 import { DataService } from '../data/data.service';
-import { Order } from '../types';
 import { QueryResult } from '../data/query-result';
+
+import { GET_ACTIVE_ORDER } from './active-order.definitions';
+import { GetActiveOrder } from './active-order.types';
 
 @Injectable({
   providedIn: 'root',

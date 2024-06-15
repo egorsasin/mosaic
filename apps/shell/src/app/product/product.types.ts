@@ -1,11 +1,6 @@
-import {
-  Exact,
-  ListOptions,
-  Maybe,
-  Order,
-  PaginatedList,
-  Product,
-} from '../types';
+import { Order } from '@mosaic/common';
+
+import { Exact, ListOptions, Maybe, PaginatedList, Product } from '../types';
 
 export type ProductList = PaginatedList<Product>;
 export namespace GetProductList {

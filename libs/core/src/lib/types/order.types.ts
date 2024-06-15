@@ -20,10 +20,6 @@ export type MutationRemoveOrderLineArgs = {
   orderLineId: number;
 };
 
-export type QueryOrderByCodeArgs = {
-  code: string;
-};
-
 export type MutationAdjustOrderLineArgs = {
   orderLineId: number;
   quantity: number;

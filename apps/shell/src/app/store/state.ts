@@ -1,4 +1,6 @@
-import { Customer, Order } from '../types';
+import { Order } from '@mosaic/common';
+
+import { Customer } from '../types';
 
 export interface AppState {
   state: {

@@ -1,13 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
+import { Asset } from '@mosaic/common';
+
 import { AssetDataService } from '../asset.service';
 import { BaseListComponent, Paginated } from '../../../common/base-list';
-
-interface Asset {
-  id: number;
-  preview: string;
-}
 
 @Component({
   selector: 'mos-asset-list',

@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Maybe } from 'graphql/jsutils/Maybe';
+import { mergeMap, take } from 'rxjs/operators';
 
 import { createNumberMask, TextMaskConfig } from '@mosaic/mask';
+import { Asset, Product } from '@mosaic/common';
 
-import { Asset, Product } from '../../../common';
 import { BaseDetailComponent } from '../../asset/asset-list/base-detail.component';
-import { mergeMap, take } from 'rxjs/operators';
 import { ProductDataService } from '../product.service';
 
 interface ProductForm {
@@ -23,7 +23,7 @@ interface SelectedAssets {
 }
 
 @Component({
-  selector: 'mosaic-product-item',
+  selector: 'mos-product-item',
   templateUrl: './product-item.component.html',
 })
 export class ProductItemComponent extends BaseDetailComponent<Product> {
