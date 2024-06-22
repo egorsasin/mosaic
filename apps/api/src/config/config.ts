@@ -15,11 +15,13 @@ export const appConfig: MosaicConfig = {
   dbConnectionOptions: {
     logging: false,
     synchronize: true,
+    port: 3307,
     type: 'mysql',
-    host: 'localhost',
-    username: 'poker',
-    password: '2002',
-    database: 'poker',
+    host: process.env.DB_HOST,
+    username: process.env.DB_USER,
+    password: 'wth<th9$9',
+    insecureAuth: true,
+    database: process.env.DB_DATABASE,
   },
   authOptions: {
     requireVerification: true,

@@ -6,6 +6,7 @@ import ClientS3, { S3ClientConfig, S3Client } from '@aws-sdk/client-s3';
 
 import { AssetServerOptions, getAssetUrlPrefixFn } from '@mosaic/asset-server';
 import { AssetStorageStrategy } from '@mosaic/core/config';
+
 import { Request } from 'express';
 
 export interface S3Config {
