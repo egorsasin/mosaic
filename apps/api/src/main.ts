@@ -21,7 +21,7 @@ import {
   getEntitiesFromPlugins,
 } from '@mosaic/core/plugin';
 
-import { appConfig } from './config/mosaic-config';
+import { appConfig } from './config/mosaic.conf';
 
 async function runPluginConfigurations(
   config: RuntimeConfig
