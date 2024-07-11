@@ -48,8 +48,12 @@ export class HintDirective<T>
   private toggle$: Subject<boolean> = new Subject<boolean>();
   private componentRef: ComponentRef<HintComponent<T>> | null = null;
 
-  @Input('mosHint')
-  content: TemplateRef<T> | null = null;
+  @Input({ alias: 'mosHint', required: true })
+  public content: TemplateRef<T> | null = null;
+
+  // eslint-disable-next-line @angular-eslint/no-input-rename
+  @Input({ alias: 'mosHintAppearance' })
+  public appearance?: string;
 
   constructor(
     @Inject(HoveredService) private readonly hovered$: Observable<boolean>,

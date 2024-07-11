@@ -15,13 +15,10 @@ export const appConfig: MosaicConfig = {
   dbConnectionOptions: {
     logging: false,
     synchronize: true,
-    port: 3307,
+    port: 3306,
     type: 'mysql',
-    host: process.env.DB_HOST,
-    username: process.env.DB_USER,
-    password: 'wth<th9$9',
     insecureAuth: true,
-    database: process.env.DB_DATABASE,
+    ...JSON.parse(process.env.DB_CONFIG),
   },
   authOptions: {
     requireVerification: true,
@@ -33,11 +30,11 @@ export const appConfig: MosaicConfig = {
       previewMaxHeight: 300,
       namingStrategy: new DefaultAssetNamingStrategy(),
       storageStrategyFactory: configureS3AssetStorage({
+        bucket: process.env.S3_BUCKET,
         credentials: {
           accessKeyId: process.env.ACCESS_KEY,
           secretAccessKey: process.env.SECRET_ACCESS_KEY,
         },
-        bucket: process.env.S3_BUCKET,
         nativeS3Configuration: {
           region: 'eu-central-1',
         },

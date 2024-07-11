@@ -8,6 +8,7 @@ import {
   Input,
   Output,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { MosNativeInputDirective } from './native-input.directive';
 
@@ -30,6 +31,7 @@ function getNativeFocused(documentRef: Document): Element | null {
   templateUrl: './base-input.component.html',
   styleUrls: ['./base-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class MosBaseInputComponent {
   @ViewChild(MosNativeInputDirective, { static: true, read: ElementRef })

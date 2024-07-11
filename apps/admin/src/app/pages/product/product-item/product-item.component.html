@@ -70,9 +70,9 @@
     </form>
   </div>
 
-  <mosaic-assets
+  <mos-assets
     [assets]="assetChanges.assets || entity?.assets"
     [featuredAsset]="assetChanges.featuredAsset || entity?.featuredAsset"
     (change)="assetChanges = $event"
-  ></mosaic-assets>
+  ></mos-assets>
 </div>

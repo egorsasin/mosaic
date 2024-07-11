@@ -30,13 +30,16 @@ export class HintComponent<T> implements OnDestroy {
   @HostBinding('@hintAnimation')
   public readonly animation = { value: '' } as const;
 
+  @HostBinding('attr.data-appearance')
+  public appearance?: string = this.hintDirective.appearance;
+
   public templateRef: TemplateRef<T> | null = null;
 
   constructor(
     @Inject(HoveredService) hovered$: Observable<boolean>,
     private readonly elementRef: ElementRef,
     private clientRectAccessor: ClientRectAccessor,
-    hintDirective: HintDirective<T>,
+    private hintDirective: HintDirective<T>,
     hintPositionService: HintPositionService
   ) {
     hintPositionService
@@ -45,7 +48,7 @@ export class HintComponent<T> implements OnDestroy {
 
     hovered$
       .pipe(takeUntil(this.destroy$))
-      .subscribe((show: boolean) => hintDirective.toggle(show));
+      .subscribe((show: boolean) => this.hintDirective.toggle(show));
   }
 
   public ngOnDestroy(): void {

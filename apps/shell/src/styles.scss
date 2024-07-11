@@ -3,8 +3,7 @@
 @tailwind utilities;
 
 /* You can add global styles to this file, and also import other style files */
-
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&display=swap');
 
 .mos-dropdown-menu {
   @apply w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none;
