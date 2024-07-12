@@ -12,15 +12,7 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { animate, style, transition, trigger } from '@angular/animations';
-import {
-  Observable,
-  Subject,
-  concatMap,
-  forkJoin,
-  map,
-  mergeMap,
-  take,
-} from 'rxjs';
+import { Observable, Subject, map, mergeMap, take } from 'rxjs';
 
 import { WINDOW } from '@mosaic/cdk';
 import {
@@ -35,7 +27,11 @@ import {
   OrderLine,
 } from '@mosaic/common';
 
-import { DataService } from '../../data';
+import {
+  AdjustItemQuantityMutation,
+  AdjustItemQuantityMutationVariables,
+  DataService,
+} from '../../data';
 import {
   ADD_PAYMENT,
   GET_ELIGIBLE_PAYMENT_METHODS,
@@ -46,7 +42,6 @@ import {
 } from './checkout-process.graphql';
 
 import { ActiveOrderService } from '../../active-order';
-import { CREATE_PAYNOW_PAYMENT_INTENT } from './paynow.graphql';
 import { ADJUST_ITEM_QUANTITY, REMOVE_ITEM_FROM_CART } from './cart.graphql';
 
 export type GetEligiblePaymentMethodsQuery = {
@@ -74,15 +69,6 @@ export type RemoveItemFromCartMutationVariables = Exact<{
 
 export type RemoveItemFromCartMutation = {
   removeOrderLine: Order | GraphQLError;
-};
-
-export type AdjustItemQuantityMutationVariables = Exact<{
-  id: number;
-  quantity: number;
-}>;
-
-export type AdjustItemQuantityMutation = {
-  adjustOrderLine: Order | GraphQLError;
 };
 
 export const FADE_UP_ANIMATION = trigger(`fadeUpAnimation`, [

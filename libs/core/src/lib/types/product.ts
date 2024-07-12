@@ -3,8 +3,3 @@ export type CreateProductInput = {
   slug: string;
   price?: number;
 };
-
-export type QueryProductArgs = {
-  id?: number;
-  slug?: string;
-};

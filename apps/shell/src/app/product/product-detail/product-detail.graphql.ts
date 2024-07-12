@@ -7,32 +7,10 @@ export const GET_PRODUCT_DETAIL = gql`
     product(slug: $slug) {
       id
       name
+      price
       description
-      variants {
-        id
-        name
-        options {
-          code
-          name
-        }
-        price
-        priceWithTax
-        sku
-      }
       featuredAsset {
         ...Asset
-      }
-      assets {
-        ...Asset
-      }
-      collections {
-        id
-        slug
-        breadcrumbs {
-          id
-          name
-          slug
-        }
       }
     }
   }

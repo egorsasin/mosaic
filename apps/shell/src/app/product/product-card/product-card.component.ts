@@ -9,7 +9,6 @@ import { Product } from '../../types';
 import { ProductService } from '../product.service';
 import { Store } from '@ngrx/store';
 import { setActiveOrder } from '../../store';
-import { showSidebarCart } from '../../store/cart/cart.actions';
 
 @Component({
   selector: 'mos-product-card',
@@ -40,7 +39,7 @@ export class ProductCardComponent {
         const { addItemToOrder: order } = data;
 
         this.store.dispatch(setActiveOrder({ order }));
-        this.store.dispatch(showSidebarCart());
+        // this.store.dispatch(showSidebarCart());
       },
       complete: () => {
         this.loading = false;

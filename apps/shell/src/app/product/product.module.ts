@@ -26,7 +26,11 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [ProductListComponent, ProductCardComponent],
+  declarations: [
+    ProductListComponent,
+    ProductCardComponent,
+    ProductDetailComponent,
+  ],
   imports: [
     PaginationComponent,
     MosAssetPreviewPipe,

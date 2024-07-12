@@ -1,9 +1,9 @@
-<div *ngIf="order$ | async as order" class="mx-auto max-w-7xl px-4 sm:px-6">
-  <div class="md:grid md:grid-cols-2 md:gap-6">
+<div *ngIf="order$ | async as order" class="mx-auto max-w-6xl px-4 sm:px-6">
+  <div class="md:grid md:grid-cols-2 md:gap-12">
     <form [formGroup]="form">
       <div class="pt-6">
         <h2
-          class="text-xl font-medium text-gray-900 font-['Oswald'] uppercase border-b w-full pb-2"
+          class="text-base font-semibold text-gray-900 uppercase border-b w-full pb-2"
         >
           Metody dostawy
         </h2>
@@ -12,7 +12,7 @@
           @for (shippingMethod of (shippingMethods$ | async); track
           shippingMethod.id ) {
           <div
-            class="p-4 flex gap-3 bg-white border border-gray-300 shadow-sm rounded-lg text-sm cursor-pointer"
+            class="py-3 px-6 flex gap-3 bg-white border border-slate-200 rounded-sm text-sm cursor-pointer hover:bg-slate-50"
             (click)="setShippingMethod(+shippingMethod.id)"
             [class.payment-metods--active]="
               shippingMethod.id === $any(order).shippingLine?.shippingMethod?.id
@@ -29,7 +29,7 @@
               </div>
               @if (shippingMethod.description) {
               <div
-                class="mt-1 text-gray-500"
+                class="mt-1 text-slate-700"
                 [innerHtml]="shippingMethod.description"
               ></div>
               }
@@ -42,7 +42,7 @@
       <div class="grid grid-cols-6 gap-6">
         <div class="col-span-6 mt-6">
           <h2
-            class="text-xl font-medium text-gray-900 font-['Oswald'] uppercase border-b w-full pb-2"
+            class="text-base font-semibold text-gray-900 uppercase border-b w-full pb-2"
           >
             Dane adresowe
           </h2>
@@ -100,7 +100,7 @@
 
       <div class="py-6">
         <h2
-          class="text-xl font-medium text-gray-900 font-['Oswald'] uppercase border-b w-full pb-2"
+          class="text-xl font-medium text-slate-700 uppercase border-b w-full pb-2"
         >
           Metody płatności
         </h2>
@@ -134,9 +134,9 @@
     </form>
 
     <!-- CART -->
-    <div class="px-4 py-6 sm:px-6">
+    <div class="py-6">
       <h2
-        class="text-xl font-medium text-gray-900 font-['Oswald'] uppercase border-b w-full pb-2"
+        class="text-xl font-medium text-slate-700 uppercase border-b w-full pb-2"
       >
         Podsumowanie zamówienia
       </h2>
@@ -147,7 +147,7 @@
           <div class="flow-root">
             <ul role="list" class="divide-y divide-gray-200">
               @for (item of (items$ | async); track item.id ) {
-              <li class="flex py-4" @fadeUpAnimation>
+              <li class="flex py-3" @fadeUpAnimation>
                 <div
                   class="h-24 w-24 flex-shrink-0 overflow-hidden border-gray-200"
                 >
@@ -163,13 +163,13 @@
                 <div class="ml-4 flex flex-1 flex-col">
                   <div>
                     <div
-                      class="flex justify-between text-sm font-medium text-gray-800 uppercase"
+                      class="flex justify-between text-sm font-semibold text-slate-700 uppercase"
                     >
                       <h3>
                         <a href="#">{{ item.product.name }}</a>
                       </h3>
                     </div>
-                    <p class="text-sm text-gray-500">Waga: 250g</p>
+                    <p class="text-sm text-slate-700">Waga: 250g</p>
                   </div>
                 </div>
 
@@ -179,7 +179,7 @@
                     (quantityChange)="onQuantityChange(item, $event)"
                   ></mos-quantity>
 
-                  <p class="text-sm text-gray-500 flex-1 mt-1">
+                  <p class="text-sm text-slate-700 flex-1 mt-1">
                     Cena: {{ item.product.price / 100 | number : '1.2-2' }} zł
                   </p>
                 </div>
@@ -246,10 +246,10 @@
             <p>{{ $any(order).total / 100 | number : '1.2-2' }} zł</p>
           </div>
 
-          <div class="pt-6">
+          <div class="pt-4">
             <button
               (click)="completeOrder(order)"
-              class="flex items-center justify-center rounded-md border border-transparent bg-gray-900 px-6 py-2 text-base font-medium text-white shadow-sm hover:bg-gray-700"
+              class="rounded-sm border border-slate-700 ring-slate-700 text-sm text-slate-700 px-3 py-1 hover:bg-slate-700 hover:text-white inline-flex items-center gap-x-1 duration-300 transition-all"
             >
               Zamawiam i płacę
             </button>

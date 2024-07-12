@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostBinding,
+  Input,
+  Output,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { MosMaskModule, TextMaskConfig } from '@mosaic/mask';
@@ -15,6 +21,10 @@ import { MosMaskModule, TextMaskConfig } from '@mosaic/mask';
 export class MosQuantitySelectorComponent {
   @Input()
   public value = 1;
+
+  @Input()
+  @HostBinding('class.mos-quantity--editable')
+  public editable = true;
 
   @Output()
   public quantityChange: EventEmitter<number> = new EventEmitter<number>();

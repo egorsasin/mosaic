@@ -23,26 +23,26 @@ export type GetProductDetailQueryVariables = Exact<{
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductDetailComponent {
+  public product$: Observable<Product>;
+
   constructor(private route: ActivatedRoute, private dataService: DataService) {
     const productSlug$: Observable<string> = this.route.paramMap.pipe(
       map((paramMap: ParamMap) => paramMap.get('slug')),
       filter(notNullOrUndefined)
     );
 
-    productSlug$
-      .pipe(
-        switchMap(
-          (slug: string) =>
-            this.dataService.query<
-              GetProductDetailQuery,
-              GetProductDetailQueryVariables
-            >(GET_PRODUCT_DETAIL, {
-              slug,
-            }).stream$
-        ),
-        map(({ product }) => product),
-        filter(notNullOrUndefined)
-      )
-      .subscribe();
+    this.product$ = productSlug$.pipe(
+      switchMap(
+        (slug: string) =>
+          this.dataService.query<
+            GetProductDetailQuery,
+            GetProductDetailQueryVariables
+          >(GET_PRODUCT_DETAIL, {
+            slug,
+          }).stream$
+      ),
+      map(({ product }) => product),
+      filter(notNullOrUndefined)
+    );
   }
 }

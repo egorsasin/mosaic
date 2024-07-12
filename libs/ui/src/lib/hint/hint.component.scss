@@ -9,7 +9,7 @@
   box-sizing: border-box;
   white-space: pre-line;
   word-wrap: break-word;
-  @apply shadow-md bg-amber-100 rounded-sm;
+  @apply shadow-md bg-amber-100 rounded-sm z-50;
 
   &:before {
     content: '';

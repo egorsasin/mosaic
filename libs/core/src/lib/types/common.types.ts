@@ -33,6 +33,11 @@ export type QueryListArgs = {
   options?: Maybe<ListQueryOptions>;
 };
 
+export type QueryProductArgs = {
+  id?: number;
+  slug?: string;
+};
+
 export type PaymentMetadata = {
   [prop: string]: unknown;
 } & {

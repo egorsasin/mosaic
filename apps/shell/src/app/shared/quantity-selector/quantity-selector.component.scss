@@ -1,3 +1,17 @@
 :host {
-  @apply inline-block;
+  @apply inline flex items-center w-fit;
+}
+
+.mos-quantity--action {
+  svg {
+    @apply w-3 h-3;
+  }
+}
+
+:host-context(.mos-quantity--editable) {
+  .mos-quantity--action {
+    svg {
+      @apply w-4 h-4;
+    }
+  }
 }

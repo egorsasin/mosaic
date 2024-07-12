@@ -20,3 +20,7 @@ input::-webkit-inner-spin-button {
 input[type='number'] {
   -moz-appearance: textfield;
 }
+
+mos-hint[data-appearance='mini-cart'] {
+  @apply max-w-80;
+}

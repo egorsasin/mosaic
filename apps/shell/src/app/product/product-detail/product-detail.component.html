@@ -1,1 +1,114 @@
-<div class="mx-auto max-w-6xl p-6">PRODUCT ITEM</div>
+<div class="bg-slate-100 w-full">
+  <div class="mx-auto max-w-6xl p-8">
+    <div *ngIf="product$ | async as product" class="px-6">
+      <div class="grid grid-cols-2">
+        <div class="relative bg-gray-100 min-h-[350px] flex items-center">
+          <div class="w-[300px] h-[300px] mx-auto">
+            <img
+              *ngIf="product.featuredAsset"
+              [src]="product.featuredAsset | assetPreview : 'small'"
+            />
+          </div>
+        </div>
+
+        <div class="h-full text-slate-700 p-12">
+          <h1 class="font-semibold text-xl uppercase mb-4">
+            {{ product.name }}
+          </h1>
+          <div class="text-sm my-3">
+            Process: anaerobic natural<br />
+            Profil smakowy: milk chocolate, caramel, roasted walnut
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div class="text-sm text-slate-700">
+              <span class="font-semibold text-base">
+                {{ product.price / 100 | number : '1.2-2' }} zł
+              </span>
+              - 250 gr
+            </div>
+            <mos-quantity
+              class="block float-right"
+              #quantity="mosQuantity"
+            ></mos-quantity>
+          </div>
+
+          <div
+            class="flex items-center justify-end gap-3 border-t border-slate-600 pt-4 mt-4"
+          >
+            <div class="relative rounded-md">
+              <button
+                class="rounded-sm border border-slate-700 ring-slate-700 text-sm text-slate-700 px-3 py-1 hover:bg-slate-700 hover:text-white inline-flex items-center gap-x-1 duration-300 transition-all"
+              >
+                Dodaj do koszyka
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mx-auto max-w-6xl p-8">
+  <div *ngIf="product$ | async as product" class="px-6">
+    <div class="description w70">
+      <p></p>
+      <p><strong>Specialty blend</strong></p>
+      <p>Flavour notes: sour cherry, blueberry, grapefruit</p>
+      <figure class="table">
+        <table>
+          <colgroup>
+            <col style="width: 33.33%" />
+            <col style="width: 33.33%" />
+            <col style="width: 33.34%" />
+          </colgroup>
+          <tbody>
+            <tr>
+              <td>Ratio:</td>
+              <td>50%</td>
+              <td>50%</td>
+            </tr>
+            <tr>
+              <td>Origin:</td>
+              <td>Ethiopia</td>
+              <td>Colombia</td>
+            </tr>
+            <tr>
+              <td>Region:</td>
+              <td>Kochere - Yirgacheffe</td>
+              <td>Páez - Cauca</td>
+            </tr>
+            <tr>
+              <td>Producer:</td>
+              <td>local farmers</td>
+              <td>ASPROCAFÉ</td>
+            </tr>
+            <tr>
+              <td>Process:</td>
+              <td>anaerobic natural</td>
+              <td>washed</td>
+            </tr>
+            <tr>
+              <td>Variety:</td>
+              <td>JARC varieties, Local landraces</td>
+              <td>Caturra, Castillo, Colombia</td>
+            </tr>
+            <tr>
+              <td>Altitude:&nbsp;</td>
+              <td>1720 m.a.s.l.</td>
+              <td>1600-2000 m.a.s.l.</td>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
+      <p>
+        <br />Roasting profile: espresso (light)<br />Packaging: whole coffee
+        beans
+      </p>
+      <p></p>
+      <p></p>
+      <br /><br />
+    </div>
+  </div>
+</div>

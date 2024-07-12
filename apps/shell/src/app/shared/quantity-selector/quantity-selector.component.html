@@ -1,53 +1,43 @@
-<div class="flex items-center">
-  <button
-    class="self-stretch flex items-center px-1 text-slate-700"
-    [disabled]="value === 1"
-    (click)="add(-1)"
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      width="16"
-      height="16"
-      fill="none"
-    >
-      <path
-        d="M20 12L4 12"
-        stroke="currentColor"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-    </svg>
-  </button>
+<button
+  class="mos-quantity--action self-stretch flex items-center px-1 text-slate-700"
+  [disabled]="value === 1"
+  (click)="add(-1)"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+    <path
+      d="M20 12L4 12"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+</button>
 
-  <input
-    class="w-8 rounded-sm outline-none text-sm text-center bg-transparent focus:outline-none focus:ring-transparent text-slate-600 placeholder:text-slate-600 placeholder:opacity-100 border border-slate-600 p-1"
-    [mosMask]="$any(maskConfig)"
-    [ngModel]="value"
-    (ngModelChange)="valueChanges($event)"
-    placeholder="1"
-  />
+@if (editable) {
+<input
+  class="w-8 rounded-sm outline-none text-sm text-center bg-transparent focus:outline-none focus:ring-transparent text-slate-600 placeholder:text-slate-600 placeholder:opacity-100 border border-slate-600 p-1"
+  [mosMask]="$any(maskConfig)"
+  [ngModel]="value"
+  (ngModelChange)="valueChanges($event)"
+  placeholder="1"
+/>
+} @else {
+<span>{{ value }}</span>
+}
 
-  <button
-    class="self-stretch flex items-center px-1 text-slate-700"
-    [disabled]="value > 8"
-    (click)="add()"
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      width="16"
-      height="16"
-      fill="none"
-    >
-      <path
-        d="M12 4V20M20 12H4"
-        stroke="currentColor"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-    </svg>
-  </button>
-</div>
+<button
+  class="mos-quantity--action self-stretch flex items-center px-1 text-slate-700"
+  [disabled]="value > 8"
+  (click)="add()"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+    <path
+      d="M12 4V20M20 12H4"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+</button>
