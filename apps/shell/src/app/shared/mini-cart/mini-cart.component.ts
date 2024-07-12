@@ -3,12 +3,13 @@ import { Component } from '@angular/core';
 import { OrderLine } from '@mosaic/common';
 
 import { ActiveOrderService } from '../../active-order';
+import { take } from 'rxjs';
 import {
   AdjustItemQuantityMutation,
   AdjustItemQuantityMutationVariables,
   DataService,
 } from '../../data';
-import { take } from 'rxjs';
+import { ADJUST_ITEM_QUANTITY } from '../../checkout/checkout-process/cart.graphql';
 
 @Component({
   selector: 'mos-mini-cart',
