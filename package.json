@@ -8,7 +8,7 @@
     "start:api": "nx serve api",
     "build:api": "nx build api"
   },
-  "private": true,
+  "private": false,
   "dependencies": {
     "@angular/animations": "17.3.6",
     "@angular/cdk": "~16.2.14",

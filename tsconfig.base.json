@@ -20,14 +20,15 @@
       "@mosaic/cdk": ["libs/cdk/src/index.ts"],
       "@mosaic/cdk/*": ["libs/cdk/src/lib/*"],
       "@mosaic/common": ["libs/common/src/index.ts"],
+      "@mosaic/common-ui": ["libs/common-ui/src/index.ts"],
+      "@mosaic/common-ui/*": ["libs/common-ui/src/lib/*"],
       "@mosaic/core": ["libs/core/src/index.ts"],
       "@mosaic/core/*": ["libs/core/src/lib/*"],
+      "@mosaic/email-plugin": ["libs/email-plugin/src/index.ts"],
       "@mosaic/google-auth": ["libs/google-auth/src/index.ts"],
       "@mosaic/mask": ["libs/mask/src/index.ts"],
       "@mosaic/ui": ["libs/ui/src/index.ts"],
-      "@mosaic/ui/*": ["libs/ui/src/lib/*"],
-      "@mosaic/common-ui": ["libs/common-ui/src/index.ts"],
-      "@mosaic/common-ui/*": ["libs/common-ui/src/lib/*"]
+      "@mosaic/ui/*": ["libs/ui/src/lib/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

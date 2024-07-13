@@ -6,6 +6,7 @@ import { AssetServerPlugin } from '@mosaic/asset-server';
 import { examplePaymentHandler, PaynowPlugin } from './payment';
 import { InvoicePlugin } from './payment/invoice/invoice.plugin';
 import { configureS3AssetStorage } from './s3-asset-storage-strategy';
+import { EmailPlugin } from '@mosaic/email-plugin';
 
 export const appConfig: MosaicConfig = {
   apiOptions: {
@@ -48,6 +49,7 @@ export const appConfig: MosaicConfig = {
       // This prevents different customers from using the same PaymentIntent
     }),
     InvoicePlugin.init(),
+    EmailPlugin.init({}),
   ],
   paymentOptions: {
     paymentMethodHandlers: [examplePaymentHandler],
