@@ -18,7 +18,7 @@ export class Injector {
    * Retrieve an instance of the given type from the app's dependency injection container.
    * Wraps the Nestjs `ModuleRef.get()` method.
    */
-  get<T, R = T>(typeOrToken: Type<T> | string | symbol): R {
+  public get<T, R = T>(typeOrToken: Type<T> | string | symbol): R {
     return this.moduleRef.get(typeOrToken, { strict: false });
   }
 
@@ -28,7 +28,10 @@ export class Injector {
    * app's dependency injection container.
    * Wraps the Nestjs `ModuleRef.resolve()` method.
    */
-  resolve<T, R = T>(typeOrToken: Type<T> | string | symbol, contextId?: ContextId): Promise<R> {
+  public resolve<T, R = T>(
+    typeOrToken: Type<T> | string | symbol,
+    contextId?: ContextId
+  ): Promise<R> {
     return this.moduleRef.resolve(typeOrToken, contextId, { strict: false });
   }
 }
