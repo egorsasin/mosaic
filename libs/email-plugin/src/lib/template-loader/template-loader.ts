@@ -1,6 +1,6 @@
 import { Injector, RequestContext } from '@mosaic/core';
 
-import { LoadTemplateInput, Partial } from '../types';
+import { LoadTemplateInput } from '../types';
 
 export interface TemplateLoader {
   loadTemplate(
@@ -9,5 +9,10 @@ export interface TemplateLoader {
     input: LoadTemplateInput
   ): Promise<string>;
 
-  loadPartials?(): Promise<Partial[]>;
+  loadPartials?(): Promise<
+    {
+      name: string;
+      content: string;
+    }[]
+  >;
 }

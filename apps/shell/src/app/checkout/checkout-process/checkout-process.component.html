@@ -3,7 +3,7 @@
     <form [formGroup]="form">
       <div class="pt-6">
         <h2
-          class="text-base font-semibold text-gray-900 uppercase border-b w-full pb-2"
+          class="text-base font-medium text-slate-700 uppercase border-b w-full pb-2 font-['Oswald']"
         >
           Metody dostawy
         </h2>
@@ -39,75 +39,116 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-6 gap-6">
+      <div class="grid grid-cols-6 gap-x-3 gap-y-2 text-slate-700">
         <div class="col-span-6 mt-6">
           <h2
-            class="text-base font-semibold text-gray-900 uppercase border-b w-full pb-2"
+            class="text-base font-medium text-slate-700 uppercase border-b w-full pb-2 font-['Oswald']"
           >
             Dane adresowe
           </h2>
         </div>
 
         <div class="col-span-6 sm:col-span-3">
-          <mos-input formControlName="firstName" mosAutofill="given-name">
+          <label class="text-sm mb-1">
             Imię
             <span class="text-rose-500 ml-[1px]">*</span>
+          </label>
+
+          <mos-input
+            formControlName="firstName"
+            mosAutofill="given-name"
+            [labelOutside]="true"
+          >
           </mos-input>
         </div>
 
         <div class="col-span-6 sm:col-span-3">
-          <mos-input formControlName="lastName" mosAutofill="family-name">
+          <label class="text-sm mb-1">
             Nazwisko
             <span class="text-rose-500 ml-[1px]">*</span>
+          </label>
+
+          <mos-input
+            formControlName="lastName"
+            mosAutofill="family-name"
+            [labelOutside]="true"
+          >
           </mos-input>
         </div>
 
         <div class="col-span-6 sm:col-span-3">
-          <mos-input formControlName="emailAddress">
+          <label class="text-sm mb-1">
             Email
             <span class="text-rose-500 ml-[1px]">*</span>
+          </label>
+
+          <mos-input formControlName="emailAddress" [labelOutside]="true">
           </mos-input>
         </div>
 
         <div class="col-span-6 sm:col-span-3" mosAutofill="tel">
-          <mos-input formControlName="phoneNumber">
+          <label class="text-sm mb-1">
             Telefon
             <span class="text-rose-500 ml-[1px]">*</span>
+          </label>
+
+          <mos-input formControlName="phoneNumber" [labelOutside]="true">
           </mos-input>
         </div>
 
         <div class="col-span-3 sm:col-span-2">
-          <mos-input formControlName="postalCode" mosAutofill="postal-code">
+          <label class="text-sm mb-1">
             Kod pocztowy
             <span class="text-rose-500 ml-[1px]">*</span>
+          </label>
+
+          <mos-input
+            formControlName="postalCode"
+            mosAutofill="postal-code"
+            [labelOutside]="true"
+          >
           </mos-input>
         </div>
 
         <div class="col-span-3 sm:col-span-4">
-          <mos-input formControlName="city" mosAutofill="address-level2">
+          <label class="text-sm mb-1">
             Miasto
             <span class="text-rose-500 ml-[1px]">*</span>
+          </label>
+
+          <mos-input
+            formControlName="city"
+            mosAutofill="address-level2"
+            [labelOutside]="true"
+          >
           </mos-input>
         </div>
 
         <div class="col-span-6 sm:col-span-6">
-          <mos-input formControlName="streetLine" mosAutofill="street-address">
+          <label class="text-sm mb-1">
             Ulica i numer
             <span class="text-rose-500 ml-[1px]">*</span>
+          </label>
+
+          <mos-input
+            formControlName="streetLine"
+            mosAutofill="street-address"
+            [labelOutside]="true"
+          >
           </mos-input>
         </div>
       </div>
 
       <div class="py-6">
         <h2
-          class="text-xl font-medium text-slate-700 uppercase border-b w-full pb-2"
+          class="text-base font-medium text-slate-700 uppercase border-b w-full pb-2 font-['Oswald']"
         >
           Metody płatności
         </h2>
         <div class="grid gap-3 py-3">
           @for (item of (paymentMethods$ | async); track item.id ) {
           <div
-            class="py-4 px-5 flex gap-3 bg-white border border-gray-300 shadow-sm rounded-lg text-sm cursor-pointer"
+            class="py-3 px-6 flex gap-3 bg-white border border-slate-200 rounded-sm text-sm cursor-pointer hover:bg-slate-50"
             [class.payment-metods--active]="item.code === paymentMethod.value"
             (click)="paymentMethod.setValue(item.code)"
           >
@@ -136,7 +177,7 @@
     <!-- CART -->
     <div class="py-6">
       <h2
-        class="text-xl font-medium text-slate-700 uppercase border-b w-full pb-2"
+        class="text-base font-medium text-slate-700 uppercase border-b w-full pb-2 font-['Oswald']"
       >
         Podsumowanie zamówienia
       </h2>
@@ -246,10 +287,10 @@
             <p>{{ $any(order).total / 100 | number : '1.2-2' }} zł</p>
           </div>
 
-          <div class="pt-4">
+          <div class="pt-4 text-right">
             <button
               (click)="completeOrder(order)"
-              class="rounded-sm border border-slate-700 ring-slate-700 text-sm text-slate-700 px-3 py-1 hover:bg-slate-700 hover:text-white inline-flex items-center gap-x-1 duration-300 transition-all"
+              class="rounded-sm border border-slate-700 ring-slate-700 text-slate-700 px-3 py-1 hover:bg-slate-700 hover:text-white inline-flex items-center gap-x-1 duration-300 transition-all"
             >
               Zamawiam i płacę
             </button>

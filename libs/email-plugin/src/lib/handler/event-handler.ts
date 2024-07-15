@@ -12,35 +12,58 @@ import { EmailEventListener } from '../event-listener';
 
 export class EmailEventHandler<
   T extends string = string,
-  Event extends EventWithContext = EventWithContext
+  E extends EventWithContext = EventWithContext
 > {
-  constructor(public listener: EmailEventListener<T>, event: any) {}
+  private setRecipientFn?: (event: E) => string;
+
+  public get type(): T {
+    return this.listener.type;
+  }
+
+  constructor(
+    public readonly listener: EmailEventListener<T>,
+    public readonly event: Type<E>
+  ) {}
+
+  public setRecipient(
+    setRecipientFn: (event: E) => string
+  ): EmailEventHandler<T, E> {
+    this.setRecipientFn = setRecipientFn;
+    return this;
+  }
+
+  public async handle(
+    event: E,
+    globals: { [key: string]: any } = {},
+    injector: Injector
+  ): Promise<IntermediateEmailDetails | undefined> {
+    const { ctx } = event;
+    const recipient = this.setRecipientFn ? this.setRecipientFn(event) : '';
+
+    return {
+      ctx: event.ctx,
+      type: this.type,
+      recipient,
+      from: '{{ fromAddress }}',
+      templateVars: { ...globals },
+      subject: 'Test email',
+      templateFile: 'body.hbs',
+      attachments: [],
+    };
+  }
 }
 
 export class EmailEventHandlerWithAsyncData<
   Data,
   T extends string = string,
-  InputEvent extends EventWithContext = EventWithContext,
-  Event extends EventWithAsyncData<InputEvent, Data> = EventWithAsyncData<
-    InputEvent,
-    Data
-  >
-> extends EmailEventHandler<T, Event> {
+  E extends EventWithContext = EventWithContext,
+  Event extends EventWithAsyncData<E, Data> = EventWithAsyncData<E, Data>
+> extends EmailEventHandler<T, E> {
   constructor(
-    public loadDataFn: LoadDataFn<InputEvent, Data>,
+    public loadDataFn: LoadDataFn<E, Data>,
     listener: EmailEventListener<T>,
-    event: Type<InputEvent>
+    event: Type<E>
   ) {
     super(listener, event);
-  }
-
-  public async handle(
-    event: Event,
-    globals: { [key: string]: any } = {},
-    injector: Injector
-  ): Promise<IntermediateEmailDetails | undefined> {
-    const { ctx } = event;
-
-    return undefined;
   }
 }

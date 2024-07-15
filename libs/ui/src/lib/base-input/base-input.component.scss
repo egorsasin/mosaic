@@ -1,15 +1,13 @@
-:host {
-  display: block;
-  position: relative;
+mos-base-input {
   box-sizing: border-box;
-  @apply ring-1 ring-inset ring-gray-300 rounded-md shadow-sm flex gap-2;
+  @apply ring-0 border border-slate-500 ring-inset ring-slate-300 rounded-md flex gap-2 relative;
 
   &.mos-focused {
-    @apply ring-blue-500 border-blue-500 ring-2;
+    @apply border-blue-500;
   }
 
   &.mos-invalid {
-    @apply ring-red-600;
+    @apply border-red-600;
   }
 
   &::after {
@@ -34,6 +32,10 @@
     border: none;
   }
 
+  label {
+    @apply flex items-center justify-center mx-2 px-1 transition-all absolute duration-300 top-3 -z-10 text-slate-600;
+  }
+
   input {
     &:-webkit-autofill,
     &:-webkit-autofill:hover,
@@ -41,37 +43,32 @@
     &:-webkit-autofill:active {
       -webkit-background-clip: text;
       opacity: 0;
-      // -webkit-text-fill-color: transparent;
       transition: background-color 5000s ease-in-out 0s;
       box-shadow: inset 0 0 20px 20px transparent;
     }
   }
 
-  .mos-raised {
-    transform: translateY(-0.7rem) scale(0.8);
-    transform-origin: bottom left;
-  }
-}
+  &.mos-raised {
+    label {
+      transform: translateY(-0.7rem) scale(0.8);
+      transform-origin: bottom left;
+    }
 
-:host-context(.mos-raised) {
-  input {
-    &:-webkit-autofill,
-    &:-webkit-autofill:hover,
-    &:-webkit-autofill:focus,
-    &:-webkit-autofill:active {
-      //-webkit-background-clip: text;
-      opacity: 1;
-      // -webkit-text-fill-color: transparent;
-      //transition: background-color 5000s ease-in-out 0s;
-      //box-shadow: inset 0 0 20px 20px transparent;
+    input {
+      &:-webkit-autofill,
+      &:-webkit-autofill:hover,
+      &:-webkit-autofill:focus,
+      &:-webkit-autofill:active {
+        opacity: 1;
+      }
     }
   }
-}
 
-:host-context(.mos-label-outside) {
-  .mos-input {
-    &__input {
-      @apply pt-0 pb-0  h-9;
+  &.mos-label-outside {
+    .mos-input {
+      &__input {
+        @apply pt-0 pb-0  h-9;
+      }
     }
   }
 }

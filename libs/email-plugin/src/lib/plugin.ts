@@ -6,6 +6,7 @@ import {
   PluginCommonModule,
   Injector,
   EventBus,
+  MosaicEvent,
 } from '@mosaic/core';
 
 import {
@@ -45,7 +46,9 @@ export class EmailPlugin implements OnApplicationBootstrap {
 
   private async setupEventSubscribers() {
     for (const handler of EmailPlugin.options.handlers) {
-      //
+      this.eventBus.ofType(handler.event).subscribe((event) => {
+        return this.handleEvent(handler, event);
+      });
     }
   }
 
@@ -55,15 +58,15 @@ export class EmailPlugin implements OnApplicationBootstrap {
 
   private async handleEvent(
     handler: EmailEventHandler | EmailEventHandlerWithAsyncData<unknown>,
-    event: EventWithContext
-  ) {
+    event: MosaicEvent
+  ): Promise<void> {
     try {
       const injector = new Injector(this.moduleRef);
-      // await handler.handle(
-      //   event as any,
-      //   EmailPlugin.options.globalTemplateVars,
-      //   injector
-      // );
+      const result = await handler.handle(
+        event as EventWithContext,
+        [], //EmailPlugin.options.globalTemplateVars,
+        injector
+      );
     } catch (e: any) {
       // Do nothing
     }
