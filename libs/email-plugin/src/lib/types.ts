@@ -36,9 +36,16 @@ export interface LoadTemplateInput {
 }
 
 export interface EmailPluginOptions {
-  templatePath?: string;
-  emailSender?: EmailSender;
+  templatePath: string;
   handlers: Array<EmailEventHandler<string, EventWithContext>>;
+  transport:
+    | EmailTransportOptions
+    | ((
+        injector?: Injector,
+        ctx?: RequestContext
+      ) => EmailTransportOptions | Promise<EmailTransportOptions>);
+  emailSender?: EmailSender;
+  templateLoader?: TemplateLoader;
 }
 
 export type InitializedEmailPluginOptions = EmailPluginOptions & {
@@ -75,7 +82,6 @@ export type SerializedRequestContext = {
 };
 
 export type IntermediateEmailDetails = {
-  ctx: SerializedRequestContext;
   type: string;
   from: string;
   recipient: string;

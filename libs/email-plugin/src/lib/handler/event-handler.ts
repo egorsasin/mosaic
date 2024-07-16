@@ -16,6 +16,8 @@ export class EmailEventHandler<
 > {
   private setRecipientFn?: (event: E) => string;
 
+  private filterFns: Array<(event: E) => boolean> = [];
+
   public get type(): T {
     return this.listener.type;
   }
@@ -24,6 +26,12 @@ export class EmailEventHandler<
     public readonly listener: EmailEventListener<T>,
     public readonly event: Type<E>
   ) {}
+
+  public filter(filterFn: (event: E) => boolean): EmailEventHandler<T, E> {
+    this.filterFns.push(filterFn);
+
+    return this;
+  }
 
   public setRecipient(
     setRecipientFn: (event: E) => string
@@ -37,11 +45,15 @@ export class EmailEventHandler<
     globals: { [key: string]: any } = {},
     injector: Injector
   ): Promise<IntermediateEmailDetails | undefined> {
-    const { ctx } = event;
+    for (const filterFn of this.filterFns) {
+      if (!filterFn(event)) {
+        return;
+      }
+    }
+
     const recipient = this.setRecipientFn ? this.setRecipientFn(event) : '';
 
     return {
-      ctx: event.ctx,
       type: this.type,
       recipient,
       from: '{{ fromAddress }}',

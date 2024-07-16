@@ -1,14 +1,27 @@
 import { OrderPlacedEvent } from '@mosaic/core';
 
 import { EmailEventListener } from '../event-listener';
-import { EventWithContext } from '../types';
 import { EmailEventHandler } from './event-handler';
+import { EventWithContext } from '../types';
 
 export const orderConfirmationHandler = new EmailEventListener(
   'order-confirmation'
-).on(OrderPlacedEvent);
+)
+  .on<OrderPlacedEvent>(OrderPlacedEvent)
+  .filter((event: OrderPlacedEvent) => {
+    return true;
+  }) //!!event.order.customer)
+  .setRecipient(
+    (event: OrderPlacedEvent) =>
+      event.order.customer?.emailAddress || 'egorsasin@gmail.com'
+  );
 
 export const defaultEmailHandlers: EmailEventHandler<
   string,
   EventWithContext
->[] = [orderConfirmationHandler];
+>[] = [
+  orderConfirmationHandler as unknown as EmailEventHandler<
+    string,
+    EventWithContext
+  >,
+];

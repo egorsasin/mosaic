@@ -42,8 +42,7 @@ export const appConfig: MosaicConfig = {
       }),
     }),
     GoogleAuthPlugin.init({
-      clientId:
-        '1061023759206-vqvro3vr2m3anmp1sai0npa46sc501dc.apps.googleusercontent.com',
+      clientId: process.env.GOOGLE_CLIENT_ID,
     }),
     PaynowPlugin.init({
       // This prevents different customers from using the same PaymentIntent
@@ -51,6 +50,8 @@ export const appConfig: MosaicConfig = {
     InvoicePlugin.init(),
     EmailPlugin.init({
       handlers: defaultEmailHandlers,
+      templatePath: './email-templates',
+      transport: { type: 'smtp' },
     }),
   ],
   paymentOptions: {

@@ -42,11 +42,19 @@ import { OrderCalculator } from '../helpers/order-calculator/order-calculator';
 import { ShippingCalculator } from '../helpers/shipping-calculator';
 import { EligibleShippingMethod } from '../helpers/shipping-calculator/shipping-calculator';
 import { ConfigService } from '../../config';
-import { EventBus, OrderLineEvent } from '../../event-bus';
+import { EventBus, OrderLineEvent, OrderPlacedEvent } from '../../event-bus';
 
 import { UserService } from './user.service';
 import { PaymentService } from './payment.service';
 import { PaymentMethodService } from './payment-method.service';
+
+const DEFAULT_ORDER_RELATIONS = [
+  'customer',
+  'lines',
+  'lines.product',
+  'shippingLine',
+  'shippingLine.shippingMethod',
+];
 
 @Injectable()
 export class OrderService {
@@ -90,24 +98,13 @@ export class OrderService {
   ): Promise<Order | undefined> {
     return this.dataSource.getRepository(Order).findOne({
       where: { id },
-      relations: relations || [
-        'lines',
-        'lines.product',
-        'shippingLine',
-        'shippingLine.shippingMethod',
-      ],
+      relations: relations || DEFAULT_ORDER_RELATIONS,
     });
   }
 
   async findOneByCode(orderCode: string): Promise<Order | undefined> {
     return this.dataSource.getRepository(Order).findOne({
-      relations: [
-        'customer',
-        'lines',
-        'lines.product',
-        'shippingLine',
-        'shippingLine.shippingMethod',
-      ],
+      relations: DEFAULT_ORDER_RELATIONS,
       where: {
         code: orderCode,
         active: false,
@@ -199,6 +196,16 @@ export class OrderService {
       orderLine,
       newQuantity,
       order
+    );
+
+    // TODO FOR TEST PURPOSES. REMOVE
+    this.eventBus.publish(
+      new OrderPlacedEvent(
+        'Created',
+        'Created',
+        ctx,
+        await this.findOne(orderId)
+      )
     );
 
     return this.findOne(orderId);
