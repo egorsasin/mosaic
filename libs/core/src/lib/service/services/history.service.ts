@@ -61,7 +61,7 @@ export class HistoryService {
       .getRepository(OrderHistoryEntry)
       .save(entry);
 
-    this.eventBus.publish(
+    await this.eventBus.publish(
       new HistoryEntryEvent(ctx, history, 'created', 'order', { type, data })
     );
 

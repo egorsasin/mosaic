@@ -8,12 +8,9 @@ export const orderConfirmationHandler = new EmailEventListener(
   'order-confirmation'
 )
   .on<OrderPlacedEvent>(OrderPlacedEvent)
-  .filter((event: OrderPlacedEvent) => {
-    return true;
-  }) //!!event.order.customer)
+  .filter((event: OrderPlacedEvent) => !!event.order.customer)
   .setRecipient(
-    (event: OrderPlacedEvent) =>
-      event.order.customer?.emailAddress || 'egorsasin@gmail.com'
+    (event: OrderPlacedEvent) => event.order.customer?.emailAddress || ''
   );
 
 export const defaultEmailHandlers: EmailEventHandler<

@@ -29,6 +29,7 @@ export class HandlebarsMjmlGenerator implements EmailGenerator {
     const fromResult = compiledFrom(templateVars, {
       allowProtoPropertiesByDefault: true,
     });
+
     const subjectResult = compiledSubject(templateVars, {
       allowProtoPropertiesByDefault: true,
     });

@@ -3,6 +3,7 @@ import {
   Component,
   Inject,
   OnDestroy,
+  ViewChild,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -12,7 +13,18 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Observable, Subject, map, mergeMap, take } from 'rxjs';
+import {
+  NEVER,
+  Observable,
+  Subject,
+  map,
+  merge,
+  mergeMap,
+  startWith,
+  take,
+  tap,
+  withLatestFrom,
+} from 'rxjs';
 
 import { WINDOW } from '@mosaic/cdk';
 import {
@@ -26,6 +38,7 @@ import {
   Order,
   OrderLine,
 } from '@mosaic/common';
+import { FormActionDirective } from '@mosaic/common-ui';
 
 import {
   AdjustItemQuantityMutation,
@@ -98,6 +111,9 @@ export interface CheckoutForm {
   animations: [FADE_UP_ANIMATION],
 })
 export class CheckoutProcessComponent implements OnDestroy {
+  @ViewChild('formControl')
+  public readonly formAction?: HTMLFormElement;
+
   private shippingMethodsQuery =
     this.dataService.query<GetEligibleShippingMethodsQuery>(
       GET_ELIGIBLE_SHIPPING_METHODS
@@ -164,6 +180,10 @@ export class CheckoutProcessComponent implements OnDestroy {
       validators: Validators.required,
     }),
   });
+  public get formError(){
+    return this.formAction?.sumitted
+  }
+  
 
   public items$ = this.order$.pipe(map((order) => order.lines));
 
@@ -198,6 +218,7 @@ export class CheckoutProcessComponent implements OnDestroy {
     //     takeUntil(this.destroy$)
     //   )
     //   .subscribe((value) => {});
+    setTimeout(() => console.log('__FORM ACTION', this.formAction), 1000);
   }
 
   public completeOrder(order: Order): void {
@@ -322,4 +343,26 @@ export class CheckoutProcessComponent implements OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  // private formStatus(): Observable<boolean> {
+  //   const submit$ =
+  //     this.formAction?.submit$.pipe(tap(() => console.log('___SUBMIT'))) ||
+  //     NEVER;
+  //   const reset$ = this.formAction?.reset$ || NEVER;
+
+  //   console.log('__SUBMIT', submit$);
+
+  //   const status$: Observable<boolean> = this.form.statusChanges.pipe(
+  //     startWith(this.form.status),
+  //     map((status) => status === 'INVALID')
+  //   );
+
+  //   return merge(
+  //     submit$.pipe(map(() => true)),
+  //     reset$.pipe(map(() => false))
+  //   ).pipe(
+  //     withLatestFrom(status$),
+  //     map(([submit, status]) => submit && status)
+  //   );
+  // }
 }

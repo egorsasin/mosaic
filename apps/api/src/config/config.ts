@@ -51,7 +51,16 @@ export const appConfig: MosaicConfig = {
     EmailPlugin.init({
       handlers: defaultEmailHandlers,
       templatePath: './email-templates',
-      transport: { type: 'smtp' },
+      globalTemplateVars: { fromAddress: 'noreply@coffeekids.pl' },
+      transport: {
+        type: 'smtp',
+        host: 'serwer2472782.home.pl',
+        port: 587,
+        auth: {
+          user: 'noreply@coffeekids.pl',
+          pass: 'vfuytPbz2016$',
+        },
+      },
     }),
   ],
   paymentOptions: {

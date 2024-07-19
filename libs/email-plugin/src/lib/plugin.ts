@@ -71,7 +71,7 @@ export class EmailPlugin implements OnApplicationBootstrap {
       const injector = new Injector(this.moduleRef);
       const result = await handler.handle(
         event as EventWithContext,
-        [], //EmailPlugin.options.globalTemplateVars,
+        EmailPlugin.options.globalTemplateVars,
         injector
       );
 
