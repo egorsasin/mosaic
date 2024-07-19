@@ -52,15 +52,7 @@ export const appConfig: MosaicConfig = {
       handlers: defaultEmailHandlers,
       templatePath: './email-templates',
       globalTemplateVars: { fromAddress: 'noreply@coffeekids.pl' },
-      transport: {
-        type: 'smtp',
-        host: 'serwer2472782.home.pl',
-        port: 587,
-        auth: {
-          user: 'noreply@coffeekids.pl',
-          pass: 'vfuytPbz2016$',
-        },
-      },
+      transport: JSON.parse(process.env.EMAIL_TRANSPORT_CONFIG),
     }),
   ],
   paymentOptions: {
