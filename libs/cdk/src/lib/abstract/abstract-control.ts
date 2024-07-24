@@ -11,14 +11,24 @@ export abstract class MosAbstractControl<T> implements ControlValueAccessor {
   protected onTouched = EMPTY_FUNCTION;
 
   private previousValue?: T | null;
+  private invalidInternal = false;
+
   protected readonly fallbackValue = this.getFallbackValue();
 
   @HostBinding('class.mos-invalid')
   public get computedInvalid(): boolean {
+    const invalid = this.touched && this.invalid;
+
+    if (invalid !== this.invalidInternal) {
+      this.invalidInternal = invalid;
+      this.changeDetectorRef.markForCheck();
+    }
+
     return this.touched && this.invalid;
   }
 
   public get invalid(): boolean {
+    this.changeDetectorRef.markForCheck();
     return this.safeNgControlData<boolean>(({ invalid }) => invalid, false);
   }
 

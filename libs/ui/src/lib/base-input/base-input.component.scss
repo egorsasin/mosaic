@@ -7,7 +7,7 @@ mos-base-input {
   }
 
   &.mos-invalid {
-    @apply border-red-600;
+    @apply border-rose-500;
   }
 
   &::after {

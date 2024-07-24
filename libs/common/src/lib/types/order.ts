@@ -20,6 +20,8 @@ export interface Order {
   code: string;
   lines: OrderLine[];
   shippingLine?: ShippingLine;
+  customer?: any;
+  shippingAddress?: any;
   subTotal: number;
   totalQuantity: number;
   total: number;

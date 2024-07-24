@@ -14,9 +14,11 @@ import {
   routedComponents,
 } from './checkout-routing.module';
 import { MosQuantitySelectorComponent } from '../shared';
+import { OrderLineComponent } from './order-line';
+import { CheckoutService } from './checkout.service';
 
 @NgModule({
-  declarations: [...routedComponents],
+  declarations: [...routedComponents, OrderLineComponent],
   imports: [
     CommonModule,
     CheckoutRoutingModule,
@@ -30,5 +32,6 @@ import { MosQuantitySelectorComponent } from '../shared';
     MosQuantitySelectorComponent,
     ControlErrorModule,
   ],
+  providers: [CheckoutService],
 })
 export class CheckoutModule {}
