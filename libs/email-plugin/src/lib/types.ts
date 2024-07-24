@@ -24,6 +24,11 @@ export type EventWithAsyncData<Event extends EventWithContext, R> = Event & {
   data: R;
 };
 
+export type SetTemplateVarsFn<E> = (
+  event: E,
+  globals: { [key: string]: unknown }
+) => { [key: string]: unknown };
+
 export type LoadDataFn<Event extends EventWithContext, R> = (context: {
   event: Event;
   injector: Injector;
@@ -46,6 +51,7 @@ export interface EmailPluginOptions {
       ) => EmailTransportOptions | Promise<EmailTransportOptions>);
   emailSender?: EmailSender;
   templateLoader?: TemplateLoader;
+  globalTemplateVars?: { [key: string]: unknown };
 }
 
 export type InitializedEmailPluginOptions = EmailPluginOptions & {
@@ -85,7 +91,7 @@ export type IntermediateEmailDetails = {
   type: string;
   from: string;
   recipient: string;
-  templateVars: unknown;
+  templateVars: Record<string, unknown>;
   subject: string;
   templateFile: string;
   attachments: SerializedAttachment[];

@@ -42,7 +42,12 @@ import { OrderCalculator } from '../helpers/order-calculator/order-calculator';
 import { ShippingCalculator } from '../helpers/shipping-calculator';
 import { EligibleShippingMethod } from '../helpers/shipping-calculator/shipping-calculator';
 import { ConfigService } from '../../config';
-import { EventBus, OrderLineEvent, OrderPlacedEvent } from '../../event-bus';
+import {
+  EventBus,
+  OrderLineEvent,
+  OrderPlacedEvent,
+  OrderStateTransitionEvent,
+} from '../../event-bus';
 
 import { UserService } from './user.service';
 import { PaymentService } from './payment.service';
@@ -196,16 +201,6 @@ export class OrderService {
       orderLine,
       newQuantity,
       order
-    );
-
-    // TODO FOR TEST PURPOSES. REMOVE
-    this.eventBus.publish(
-      new OrderPlacedEvent(
-        'Created',
-        'Created',
-        ctx,
-        await this.findOne(orderId)
-      )
     );
 
     return this.findOne(orderId);
@@ -427,7 +422,10 @@ export class OrderService {
     order.lines = order.lines.filter(({ id }: OrderLine) => id !== orderLineId);
 
     await this.dataSource.getRepository(OrderLine).remove(orderLine);
-    this.eventBus.publish(new OrderLineEvent(ctx, order, orderLine, 'deleted'));
+    await this.eventBus.publish(
+      new OrderLineEvent(ctx, order, orderLine, 'deleted')
+    );
+
     return order;
   }
 
@@ -455,10 +453,9 @@ export class OrderService {
 
     await finalize();
     await this.dataSource.getRepository(Order).save(order, { reload: false });
-
-    // this.eventBus.publish(
-    //   new OrderStateTransitionEvent(fromState, state, ctx, order)
-    // );
+    await this.eventBus.publish(
+      new OrderStateTransitionEvent(fromState, state, ctx, order)
+    );
 
     return order;
   }

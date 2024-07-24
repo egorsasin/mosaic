@@ -51,7 +51,16 @@ export const appConfig: MosaicConfig = {
     EmailPlugin.init({
       handlers: defaultEmailHandlers,
       templatePath: './email-templates',
-      transport: { type: 'smtp' },
+      globalTemplateVars: { fromAddress: process.env.EMAIL_USER },
+      transport: {
+        type: 'smtp',
+        host: process.env.EMAIL_HOST,
+        port: 587,
+        auth: {
+          user: process.env.EMAIL_USER,
+          ...JSON.parse(process.env.EMAIL_AUTH),
+        },
+      },
     }),
   ],
   paymentOptions: {

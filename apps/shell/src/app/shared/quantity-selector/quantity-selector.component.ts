@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { MosMaskModule, TextMaskConfig } from '@mosaic/mask';
+import { createNumberMask, MosMaskModule, TextMaskConfig } from '@mosaic/mask';
 
 @Component({
   selector: 'mos-quantity',
@@ -30,16 +30,24 @@ export class MosQuantitySelectorComponent {
   public quantityChange: EventEmitter<number> = new EventEmitter<number>();
 
   public maskConfig: TextMaskConfig = {
-    mask: [/[1-9]/],
+    mask: createNumberMask({
+      prefix: '',
+      allowNegative: false,
+      integerLimit: 999,
+    }),
   };
 
-  public valueChanges(value: number): void {
-    this.value = value;
-    this.quantityChange.emit(value);
+  public valueChanges(): void {
+    this.emitChanges(this.value);
   }
 
   public add(value = 1): void {
-    this.value = this.value + value;
-    this.quantityChange.emit(this.value);
+    this.emitChanges(this.value + value);
+  }
+
+  private emitChanges(value: number | string) {
+    const intValue = parseInt(value.toString());
+
+    this.quantityChange.emit(intValue);
   }
 }

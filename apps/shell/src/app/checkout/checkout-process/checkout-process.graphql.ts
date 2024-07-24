@@ -31,18 +31,6 @@ export const GET_ELIGIBLE_PAYMENT_METHODS = gql`
   }
 `;
 
-export const GET_ELIGIBLE_SHIPPING_METHODS = gql`
-  query GetEligibleShippingMethods {
-    eligibleShippingMethods {
-      id
-      name
-      description
-      price
-      metadata
-    }
-  }
-`;
-
 export const SET_SHIPPING_METHOD = gql`
   mutation SetShippingMethod($input: ShippingInput!) {
     setOrderShippingMethod(input: $input) {

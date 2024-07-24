@@ -54,8 +54,9 @@ export class EmailProcessor {
         data.from,
         data.subject,
         bodySource,
-        {}
+        data.templateVars
       );
+
       emailDetails = {
         ...generated,
         recipient: data.recipient,
@@ -64,12 +65,11 @@ export class EmailProcessor {
         bcc: data.bcc,
         replyTo: data.replyTo,
       };
-      // const transportSettings = await this.getTransportSettings(ctx);
-      // await this.emailSender.send(emailDetails, transportSettings);
+      const transportSettings = await this.getTransportSettings(ctx);
+
+      await this.emailSender.send(emailDetails, transportSettings);
       //   await this.eventBus.publish(new EmailSendEvent(ctx, emailDetails, true));
-      //   return true;
     } catch (err: unknown) {
-      console.log('__ERROR', err);
       //   if (err instanceof Error) {
       //     Logger.error(err.message, loggerCtx, err.stack);
       //   } else {

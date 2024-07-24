@@ -12,6 +12,6 @@ export interface EmailGenerator<
     from: string,
     subject: string,
     body: string,
-    templateVars: { [key: string]: any }
+    templateVars: { [key: string]: unknown }
   ): Pick<EmailDetails, 'from' | 'subject' | 'body'>;
 }

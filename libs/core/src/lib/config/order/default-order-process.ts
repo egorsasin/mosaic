@@ -1,3 +1,4 @@
+import { OrderPlacedEvent } from '../../event-bus';
 import { OrderState } from '../../types';
 import { OrderProcess } from './order-process';
 
@@ -11,6 +12,7 @@ declare module '../../types/order-state' {
 
 export function configureDefaultOrderProcess() {
   let configService: import('../config.service').ConfigService;
+  let eventBus: import('../../event-bus/index').EventBus;
 
   const orderProcess: OrderProcess<OrderState> = {
     transitions: {
@@ -52,6 +54,10 @@ export function configureDefaultOrderProcess() {
       if (shouldSetAsPlaced) {
         order.active = false;
         order.orderPlacedAt = new Date();
+
+        await eventBus.publish(
+          new OrderPlacedEvent(fromState, toState, ctx, order)
+        );
       }
     },
   };

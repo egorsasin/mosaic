@@ -17,6 +17,7 @@ type Customer implements Node {
   updatedAt: DateTime!
   firstName: String!
   lastName: String!
+  emailAddress: String!
   addresses: [Address!]
   user: User
 }

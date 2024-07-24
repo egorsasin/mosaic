@@ -7,6 +7,7 @@ import {
   EventWithContext,
   IntermediateEmailDetails,
   LoadDataFn,
+  SetTemplateVarsFn,
 } from '../types';
 import { EmailEventListener } from '../event-listener';
 
@@ -15,6 +16,7 @@ export class EmailEventHandler<
   E extends EventWithContext = EventWithContext
 > {
   private setRecipientFn?: (event: E) => string;
+  private setTemplateVarsFn?: SetTemplateVarsFn<E>;
 
   private filterFns: Array<(event: E) => boolean> = [];
 
@@ -37,12 +39,21 @@ export class EmailEventHandler<
     setRecipientFn: (event: E) => string
   ): EmailEventHandler<T, E> {
     this.setRecipientFn = setRecipientFn;
+
+    return this;
+  }
+
+  public setTemplateVars(
+    templateVarsFn: SetTemplateVarsFn<E>
+  ): EmailEventHandler<T, E> {
+    this.setTemplateVarsFn = templateVarsFn;
+
     return this;
   }
 
   public async handle(
     event: E,
-    globals: { [key: string]: any } = {},
+    globals: { [key: string]: unknown } = {},
     injector: Injector
   ): Promise<IntermediateEmailDetails | undefined> {
     for (const filterFn of this.filterFns) {
@@ -52,12 +63,15 @@ export class EmailEventHandler<
     }
 
     const recipient = this.setRecipientFn ? this.setRecipientFn(event) : '';
+    const templateVars = this.setTemplateVarsFn
+      ? this.setTemplateVarsFn(event, globals)
+      : {};
 
     return {
       type: this.type,
       recipient,
       from: '{{ fromAddress }}',
-      templateVars: { ...globals },
+      templateVars: { ...globals, ...templateVars },
       subject: 'Test email',
       templateFile: 'body.hbs',
       attachments: [],

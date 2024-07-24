@@ -9,19 +9,47 @@ const number = 'number';
 const digitRegExp = /\d/;
 const caretTrap = '[]';
 
-export function createNumberMask({
-  prefix = dollarSign,
-  suffix = emptyString,
-  includeThousandsSeparator = true,
-  thousandsSeparatorSymbol = comma,
-  allowDecimal = false,
-  decimalSymbol = period,
-  decimalLimit = 2,
-  requireDecimal = false,
-  allowNegative = false,
-  allowLeadingZeroes = false,
-  integerLimit = null,
-} = {}) {
+export interface NumberMaskConfig {
+  integerLimit?: number;
+  prefix?: string;
+  suffix?: string;
+  includeThousandsSeparator?: boolean;
+  thousandsSeparatorSymbol?: string;
+  allowDecimal?: boolean;
+  decimalSymbol?: string;
+  decimalLimit?: number;
+  requireDecimal?: boolean;
+  allowNegative?: boolean;
+  allowLeadingZeroes?: boolean;
+}
+
+const NUMBER_MASK_DEFAULT_CONFIG = {
+  prefix: dollarSign,
+  suffix: emptyString,
+  includeThousandsSeparator: true,
+  thousandsSeparatorSymbol: comma,
+  allowDecimal: false,
+  decimalSymbol: period,
+  decimalLimit: 2,
+  requireDecimal: false,
+  allowNegative: false,
+  allowLeadingZeroes: false,
+};
+
+export function createNumberMask(config: NumberMaskConfig) {
+  const {
+    prefix,
+    suffix,
+    includeThousandsSeparator,
+    thousandsSeparatorSymbol,
+    allowDecimal,
+    decimalSymbol,
+    decimalLimit,
+    requireDecimal,
+    allowNegative,
+    allowLeadingZeroes,
+    integerLimit,
+  } = { ...NUMBER_MASK_DEFAULT_CONFIG, ...config };
   const prefixLength = (prefix && prefix.length) || 0;
   const suffixLength = (suffix && suffix.length) || 0;
   const thousandsSeparatorSymbolLength =
@@ -79,7 +107,7 @@ export function createNumberMask({
       }
     }
 
-    if (integerLimit && typeof integerLimit === number) {
+    if (integerLimit) {
       const thousandsSeparatorRegex =
         thousandsSeparatorSymbol === '.'
           ? '[.]'
@@ -98,14 +126,16 @@ export function createNumberMask({
     integer = integer.replace(nonDigitsRegExp, emptyString);
 
     if (!allowLeadingZeroes) {
-      integer = integer.replace(/^0+(0$|[^0])/, '$1');
+      integer = allowDecimal
+        ? integer.replace(/^0+(0$|[^0])/, '$1')
+        : integer.replace(/^0+/, '');
     }
+
+    console.log(integer);
 
     integer = includeThousandsSeparator
       ? addThousandsSeparator(integer, thousandsSeparatorSymbol)
       : integer;
-
-    console.log();
 
     mask = convertToMask(integer);
 

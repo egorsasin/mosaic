@@ -5,3 +5,5 @@ export abstract class MosaicEvent {
     this.createdAt = new Date();
   }
 }
+
+
