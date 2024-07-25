@@ -8,6 +8,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { OverlayHostComponent } from '@mosaic/ui/overlay-host';
 import { MosDialogHostModule } from '@mosaic/cdk';
 import { MosDialogModule } from '@mosaic/ui/dialog';
+import { MosAlertModule } from '@mosaic/ui/alert';
 
 import { environment } from '../environments/environment';
 
@@ -43,6 +44,7 @@ import { SidebarModule } from './shared/sidebar';
     }),
     // Standalone components
     OverlayHostComponent,
+    MosAlertModule,
     MosDialogHostModule,
     MosDialogModule,
     SidebarModule,

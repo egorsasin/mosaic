@@ -9,7 +9,7 @@ import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { WINDOW } from '../../common';
-import { MosDialog } from '../../types';
+import { MosPopover } from '../../types';
 
 import { MOS_PARENT_ANIMATION } from './animation';
 import { MosDialogHostService } from './dialog-host.service';
@@ -38,7 +38,7 @@ const isFakeHistoryState = (
   changeDetection: ChangeDetectionStrategy.Default,
   animations: [MOS_PARENT_ANIMATION],
 })
-export class MosDialogHostComponent<T extends MosDialog<unknown, unknown>> {
+export class MosDialogHostComponent<T extends MosPopover<unknown, unknown>> {
   readonly dialogs$ = this.dialogsByType.pipe(
     map((dialogs) =>
       new Array<T>()

@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { MosDialog } from '../../types';
+import { MosPopover } from '../../types';
 
 @Injectable()
 export class MosDialogHostService<T, K = void> extends Observable<
   ReadonlyArray<any>
 > {
   private readonly dialogs$ = new BehaviorSubject<
-    ReadonlyArray<MosDialog<T, unknown>>
+    ReadonlyArray<MosPopover<T, unknown>>
   >([]);
 
   constructor() {

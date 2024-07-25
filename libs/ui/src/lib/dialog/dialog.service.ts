@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 
 import { ContextWrapper } from '@mosaic/cdk/common';
-import { AbstractMosDialogService } from '@mosaic/cdk/abstract';
+import { AbstractMosPopoverService } from '@mosaic/cdk/abstract';
 
 import { MosDialogComponent } from './dialog.component';
 import { MosDialogOptions } from './dialog.types';
@@ -12,7 +12,7 @@ const DIALOG = new ContextWrapper(MosDialogComponent);
 @Injectable({
   providedIn: `root`,
 })
-export class MosDialogService extends AbstractMosDialogService<unknown> {
+export class MosDialogService extends AbstractMosPopoverService<unknown> {
   protected readonly component = DIALOG;
   protected readonly defaultOptions: MosDialogOptions<unknown> = {
     ...inject(MOS_DIALOG_OPTIONS),

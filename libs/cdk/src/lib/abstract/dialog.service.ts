@@ -1,27 +1,21 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { MosDialog } from '../types';
+import { MosPopover } from '../types';
 import { ContextWrapper } from '../common';
-import { MosDialogHostService } from '../components';
 
 @Injectable()
-export abstract class AbstractMosDialogService<T, K = void> extends Observable<
-  ReadonlyArray<MosDialog<T, any>>
+export abstract class AbstractMosPopoverService<T, K = void> extends Observable<
+  ReadonlyArray<MosPopover<T, unknown>>
 > {
-  protected abstract readonly component: ContextWrapper<unknown>;
+  protected abstract readonly component: ContextWrapper<T>;
 
   protected abstract readonly defaultOptions: T;
 
-  protected readonly dialogs$ = new BehaviorSubject<
-    ReadonlyArray<MosDialog<T, unknown>>
-  >([]);
-
-  private dialogHostService: MosDialogHostService<any, any>;
-
-  constructor() {
-    super((observer) => this.dialogs$.subscribe(observer));
-    this.dialogHostService = inject(MosDialogHostService);
+  constructor(
+    protected items$: BehaviorSubject<ReadonlyArray<MosPopover<T, unknown>>>
+  ) {
+    super((observer) => this.items$.subscribe(observer));
   }
 
   public open<G = void>(
@@ -34,7 +28,7 @@ export abstract class AbstractMosDialogService<T, K = void> extends Observable<
         observer.complete();
       };
 
-      const item: any = {
+      const item: MosPopover<T, K extends void ? G : K> = {
         ...this.defaultOptions,
         ...options,
         content,
@@ -44,11 +38,19 @@ export abstract class AbstractMosDialogService<T, K = void> extends Observable<
         createdAt: Date.now(),
       };
 
-      this.dialogHostService.add(item);
+      this.add(item as MosPopover<T, unknown>);
 
       return () => {
-        this.dialogHostService.remove(item);
+        this.remove(item as MosPopover<T, unknown>);
       };
     });
+  }
+
+  protected add(dialog: MosPopover<T, unknown>): void {
+    this.items$.next([...this.items$.value, dialog]);
+  }
+
+  protected remove(element: MosPopover<T, unknown>): void {
+    this.items$.next(this.items$.value.filter((item) => item !== element));
   }
 }

@@ -12,6 +12,7 @@ import { createUploadLink } from 'apollo-upload-client';
 import { OverlayHostComponent } from '@mosaic/ui/overlay-host';
 import { MosDialogHostModule } from '@mosaic/cdk';
 import { MosDialogModule } from '@mosaic/ui/dialog';
+import { MosAlertModule } from '@mosaic/ui/alert';
 
 import { AppComponent } from './app.component';
 import { BaseDataService } from './base-data.service';
@@ -62,6 +63,7 @@ export class FetchAdapter {
     OverlayHostComponent,
     MosDialogHostModule,
     MosDialogModule,
+    MosAlertModule,
     AppRoutingModule,
   ],
   providers: [

@@ -6,16 +6,16 @@ export interface MosContextWithImplicit<T> {
   $implicit: T;
 }
 
-export interface MosAriaDialogContext {
+export interface MosAriaPopoverContext {
   readonly component: ContextWrapper<unknown>;
   readonly id?: string;
   readonly createdAt: number;
 }
 
-export interface MosBaseDialogContext<T>
+export interface MosPopoverContext<T>
   extends MosContextWithImplicit<Observer<T>>,
-    MosAriaDialogContext {
+    MosAriaPopoverContext {
   readonly completeWith: (value: T) => void;
 }
 
-export type MosDialog<T, V> = T & MosBaseDialogContext<V>;
+export type MosPopover<T, V> = T & MosPopoverContext<V>;
