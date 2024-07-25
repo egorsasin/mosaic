@@ -6,8 +6,8 @@
   height: 0;
 }
 
-.mosaic-overlay,
-.mosaic-dialog {
+.mos-overlay,
+.mos-dialog-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -23,9 +23,13 @@
 .mosaic-dialog {
   bottom: auto;
   height: 100%;
+
+  &:last-of-type {
+    z-index: 1;
+  }
 }
 
-.mosaic-overlay {
+.mos-dialog-overlay {
   height: 100%;
   pointer-events: none;
   touch-action: none;
@@ -41,8 +45,4 @@
     opacity: 1;
     letter-spacing: 1px;
   }
-}
-
-.mosaic-dialog:last-of-type {
-  z-index: 1;
 }
