@@ -15,17 +15,19 @@ const ALERT = new ContextWrapper(MosAlertComponent);
 export class MosAlertService extends AbstractMosPopoverService<MosAlertComponent> {
   protected component: ContextWrapper<MosAlertComponent> = ALERT;
 
-  protected readonly defaultOptions: MosAlertOptions<unknown> = {
-    ...inject(MOS_ALERT_OPTIONS),
-    data: undefined,
-  };
+  // protected readonly defaultOptions: MosAlertOptions<unknown> = {
+  //   ...inject(MOS_ALERT_OPTIONS),
+  //   data: undefined,
+  // };
 
   constructor(
     @Inject(MOS_ALERTS)
     alerts: BehaviorSubject<
       ReadonlyArray<MosPopover<MosAlertComponent, unknown>>
-    >
+    >,
+    @Inject(MOS_ALERT_OPTIONS)
+    options: MosAlertOptions
   ) {
-    super(alerts);
+    super(alerts, options as any);
   }
 }

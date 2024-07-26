@@ -8,18 +8,19 @@ import { ContextWrapper } from '../common';
 export abstract class AbstractMosPopoverService<T, K = void> extends Observable<
   ReadonlyArray<MosPopover<T, unknown>>
 > {
-  protected abstract readonly component: ContextWrapper<T>;
+  protected abstract readonly component: any; //ContextWrapper<T>;
 
-  protected abstract readonly defaultOptions: T;
+  // protected abstract readonly defaultOptions: T;
 
   constructor(
-    protected items$: BehaviorSubject<ReadonlyArray<MosPopover<T, unknown>>>
+    protected items$: BehaviorSubject<ReadonlyArray<MosPopover<T, unknown>>>,
+    protected defaultOptions: T = {} as T
   ) {
     super((observer) => this.items$.subscribe(observer));
   }
 
   public open<G = void>(
-    content: ContextWrapper<T>,
+    content: ContextWrapper<T> | string,
     options: Partial<T> = {}
   ): Observable<K extends void ? G : K> {
     return new Observable((observer) => {
@@ -46,8 +47,8 @@ export abstract class AbstractMosPopoverService<T, K = void> extends Observable<
     });
   }
 
-  protected add(dialog: MosPopover<T, unknown>): void {
-    this.items$.next([...this.items$.value, dialog]);
+  protected add(item: MosPopover<T, unknown>): void {
+    this.items$.next([...this.items$.value, item]);
   }
 
   protected remove(element: MosPopover<T, unknown>): void {

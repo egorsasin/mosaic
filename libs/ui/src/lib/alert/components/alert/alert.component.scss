@@ -1,0 +1,7 @@
+:host {
+  @apply block ml-auto mt-4 mb-0 mr-4 w-72 bg-rose-50 rounded-sm p-4 shadow-md text-sm text-slate-700 overflow-hidden;
+
+  &:not(:first-child) {
+    @apply mt-2;
+  }
+}

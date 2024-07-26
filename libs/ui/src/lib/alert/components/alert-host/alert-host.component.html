@@ -1,3 +1,7 @@
-<div *ngFor="let item of alerts$ | async">
-  <ng-container [ngComponentOutlet]="item.component.component" />
-</div>
+@for (item of (alerts$ | async); track item ) {
+<ng-container
+  [ngComponentOutlet]="item.component.component"
+  [ngComponentOutletInjector]="item | mosContext"
+>
+</ng-container>
+}
