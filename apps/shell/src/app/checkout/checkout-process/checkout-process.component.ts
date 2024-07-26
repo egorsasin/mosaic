@@ -239,7 +239,9 @@ export class CheckoutProcessComponent implements OnDestroy {
     markAllAsTouched(this.checkoutForm);
     this.submitted = true;
 
-    this.alert.open('Basic <strong>HTML</strong>').subscribe();
+    this.alert
+      .open('Basic <strong>HTML</strong>', { label: 'Alarm' })
+      .subscribe();
 
     if (this.checkoutForm.invalid) {
       return;

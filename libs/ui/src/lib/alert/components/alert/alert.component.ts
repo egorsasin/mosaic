@@ -12,14 +12,22 @@ import { animate, style, transition, trigger } from '@angular/animations';
 
 import { MOSAIC_CONTEXT, MosPopover } from '@mosaic/cdk';
 
+import { MosAlertOptions } from '../../alert.types';
+
 export const heightCollapseAnimation = trigger('tuiHeightCollapse', [
   transition(':enter', [
-    style({ height: 0 }),
-    animate('200ms ease-in', style({ height: '*' })),
+    style({ transform: 'translateX(100%)' }),
+    animate(
+      '200ms ease-in',
+      style({ opacity: '*', transform: 'translateX(0)' })
+    ),
   ]),
   transition(':leave', [
-    style({ height: '*' }),
-    animate('200ms ease-in', style({ height: 0 })),
+    style({ transform: 'translateX(0)' }),
+    animate(
+      '200ms ease-in',
+      style({ opacity: '*', transform: 'translateX(100%)' })
+    ),
   ]),
 ]);
 
@@ -31,8 +39,7 @@ export const heightCollapseAnimation = trigger('tuiHeightCollapse', [
   animations: [heightCollapseAnimation],
 })
 export class MosAlertComponent implements OnInit, OnDestroy {
-  protected item =
-    inject<MosPopover<MosAlertComponent, unknown>>(MOSAIC_CONTEXT);
+  protected item = inject<MosPopover<MosAlertOptions, unknown>>(MOSAIC_CONTEXT);
   protected readonly autoClose: any = this.item.autoClose;
   protected destroy$: Subject<void> = new Subject<void>();
   protected nativeElement = this.elementRef.nativeElement;
@@ -43,8 +50,6 @@ export class MosAlertComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.initAutoClose();
-
-    console.log('__ONINIT');
   }
 
   public ngOnDestroy(): void {

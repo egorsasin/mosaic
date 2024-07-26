@@ -9,6 +9,7 @@ import { OverlayHostComponent } from '@mosaic/ui/overlay-host';
 import { MosDialogHostModule } from '@mosaic/cdk';
 import { MosDialogModule } from '@mosaic/ui/dialog';
 import { MosAlertModule } from '@mosaic/ui/alert';
+import { MOS_ICON_PATH } from '@mosaic/ui/svg-icon';
 
 import { environment } from '../environments/environment';
 
@@ -52,6 +53,7 @@ import { SidebarModule } from './shared/sidebar';
   providers: [
     CustomerService,
     { provide: HTTP_INTERCEPTORS, useClass: DefaultInterceptor, multi: true },
+    { provide: MOS_ICON_PATH, useValue: '/assets/icons/main.svg' },
   ],
   bootstrap: [AppComponent],
 })

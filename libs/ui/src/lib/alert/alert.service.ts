@@ -12,7 +12,7 @@ import { BehaviorSubject } from 'rxjs';
 const ALERT = new ContextWrapper(MosAlertComponent);
 
 @Injectable()
-export class MosAlertService extends AbstractMosPopoverService<MosAlertComponent> {
+export class MosAlertService extends AbstractMosPopoverService<MosAlertOptions> {
   protected component: ContextWrapper<MosAlertComponent> = ALERT;
 
   // protected readonly defaultOptions: MosAlertOptions<unknown> = {
@@ -28,6 +28,6 @@ export class MosAlertService extends AbstractMosPopoverService<MosAlertComponent
     @Inject(MOS_ALERT_OPTIONS)
     options: MosAlertOptions
   ) {
-    super(alerts, options as any);
+    super(alerts as any, options as any);
   }
 }

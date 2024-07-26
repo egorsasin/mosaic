@@ -1,14 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { MosAlertHostComponent } from './components';
+import { MosIconComponent } from '../svg-icon';
+import { MosAlertComponent, MosAlertHostComponent } from './components';
 import { MosAlertService } from './alert.service';
 import { MosContextPipe } from './context.pipe';
 
-const DECLARATIONS = [MosAlertHostComponent];
+const DECLARATIONS = [MosAlertHostComponent, MosAlertComponent];
 
 @NgModule({
-  imports: [CommonModule],
+  imports: [CommonModule, MosIconComponent],
   declarations: [...DECLARATIONS, MosContextPipe],
   exports: [...DECLARATIONS],
   providers: [MosAlertService],
