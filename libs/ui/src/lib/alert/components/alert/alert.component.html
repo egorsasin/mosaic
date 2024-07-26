@@ -1,0 +1,15 @@
+<div class="flex gap-3 overflow-hidden">
+  <mos-icon class="w-6 h-6 text-rose-500" icon="cancel-circle"></mos-icon>
+
+  <div class="mos-content flex-1">
+    <label *ngIf="item.label" class="block font-medium">
+      {{ item.label }}
+    </label>
+
+    <div *ngIf="$any(item).content as text" [innerHTML]="text"></div>
+  </div>
+
+  <button class="mos-alert--close self-start cursor-pointer" (click)="close()">
+    <mos-icon class="w-4 h-4" icon="cancel"></mos-icon>
+  </button>
+</div>

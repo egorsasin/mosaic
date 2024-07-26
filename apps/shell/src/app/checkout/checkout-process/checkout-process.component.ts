@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
+  inject,
   Inject,
   OnDestroy,
 } from '@angular/core';
@@ -21,19 +21,14 @@ import {
   Exact,
   MutationArgs,
   PaymentMethodQuote,
-  ShippingMethodQuote,
   CreateCustomerInput,
   AddressInput,
   NoActiveOrderError,
   Order,
-  OrderLine,
 } from '@mosaic/common';
+import { MosAlertService } from '@mosaic/ui/alert';
 
-import {
-  AdjustItemQuantityMutation,
-  AdjustItemQuantityMutationVariables,
-  DataService,
-} from '../../data';
+import { DataService } from '../../data';
 import {
   ADD_PAYMENT,
   GET_ELIGIBLE_PAYMENT_METHODS,
@@ -197,6 +192,7 @@ export class CheckoutProcessComponent implements OnDestroy {
   public items$ = this.order$.pipe(map((order) => order.lines));
 
   private destroy$: Subject<void> = new Subject<void>();
+  private alert = inject(MosAlertService);
 
   constructor(
     @Inject(WINDOW) private window: Window,
@@ -242,6 +238,10 @@ export class CheckoutProcessComponent implements OnDestroy {
   public completeOrder(order: Order): void {
     markAllAsTouched(this.checkoutForm);
     this.submitted = true;
+
+    this.alert
+      .open('Basic <strong>HTML</strong>', { label: 'Alarm' })
+      .subscribe();
 
     if (this.checkoutForm.invalid) {
       return;

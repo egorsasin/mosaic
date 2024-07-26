@@ -96,6 +96,7 @@ export class HintDirective<T>
       const hintInstance = this.componentRef.instance;
 
       hintInstance.templateRef = this.content;
+      hintInstance.changeDetectorRef.markForCheck();
     } else if (!show && this.componentRef) {
       this.overlayHostService.remove(this.componentRef);
       this.componentRef = null;

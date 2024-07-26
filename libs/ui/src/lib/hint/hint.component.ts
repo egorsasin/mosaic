@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   HostBinding,
@@ -20,7 +21,7 @@ import { HoveredService } from './hovered.service';
   selector: 'mos-hint',
   template: '<ng-container *ngTemplateOutlet="templateRef"></ng-container>',
   styleUrls: ['./hint.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   viewProviders: [HoveredService, HintPositionService],
   animations: [hintAnimation],
 })
@@ -36,19 +37,20 @@ export class HintComponent<T> implements OnDestroy {
   public templateRef: TemplateRef<T> | null = null;
 
   constructor(
-    @Inject(HoveredService) hovered$: Observable<boolean>,
+    public readonly changeDetectorRef: ChangeDetectorRef,
     private readonly elementRef: ElementRef,
     private clientRectAccessor: ClientRectAccessor,
     private hintDirective: HintDirective<T>,
-    hintPositionService: HintPositionService
+    hintPositionService: HintPositionService,
+    @Inject(HoveredService) hovered$: Observable<boolean>
   ) {
     hintPositionService
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: MosPoint) => this.updatePosition(value));
 
-    hovered$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((show: boolean) => this.hintDirective.toggle(show));
+    hovered$.pipe(takeUntil(this.destroy$)).subscribe((show: boolean) => {
+      this.hintDirective.toggle(show);
+    });
   }
 
   public ngOnDestroy(): void {

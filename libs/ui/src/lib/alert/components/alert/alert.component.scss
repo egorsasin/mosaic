@@ -1,0 +1,14 @@
+:host {
+  pointer-events: auto;
+  @apply block ml-auto mt-6 mb-0 mr-8 w-72 bg-rose-50 rounded-sm py-3 px-4 shadow-md text-sm text-slate-700 overflow-hidden;
+
+  &:not(:first-child) {
+    @apply mt-3;
+  }
+
+  .mos-alert {
+    &--close {
+      --mos-icon-size: 16px;
+    }
+  }
+}

@@ -1,0 +1,7 @@
+@for (item of (alerts$ | async); track item ) {
+<ng-container
+  [ngComponentOutlet]="item.component.component"
+  [ngComponentOutletInjector]="item | mosContext"
+>
+</ng-container>
+}
