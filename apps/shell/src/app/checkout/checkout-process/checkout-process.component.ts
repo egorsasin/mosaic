@@ -26,7 +26,6 @@ import {
   NoActiveOrderError,
   Order,
 } from '@mosaic/common';
-import { MosAlertService } from '@mosaic/ui/alert';
 
 import { DataService } from '../../data';
 import {
@@ -192,7 +191,6 @@ export class CheckoutProcessComponent implements OnDestroy {
   public items$ = this.order$.pipe(map((order) => order.lines));
 
   private destroy$: Subject<void> = new Subject<void>();
-  private alert = inject(MosAlertService);
 
   constructor(
     @Inject(WINDOW) private window: Window,
@@ -238,10 +236,6 @@ export class CheckoutProcessComponent implements OnDestroy {
   public completeOrder(order: Order): void {
     markAllAsTouched(this.checkoutForm);
     this.submitted = true;
-
-    this.alert
-      .open('Basic <strong>HTML</strong>', { label: 'Alarm' })
-      .subscribe();
 
     if (this.checkoutForm.invalid) {
       return;

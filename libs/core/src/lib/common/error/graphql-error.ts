@@ -101,7 +101,6 @@ export const errorOperationTypeResolvers = {
 export const storeFrontErrorTypeResolvers = {
   UpdateOrderItemsResult: {
     __resolveType(value: GraphQLValue) {
-      console.log('__VALUE', isGraphQLError(value), value, value.__typename);
       return isGraphQLError(value) ? value.__typename : 'Order';
     },
   },

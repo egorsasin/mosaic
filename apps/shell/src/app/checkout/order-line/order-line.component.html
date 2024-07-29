@@ -20,10 +20,7 @@
 </div>
 
 <div>
-  <mos-quantity
-    [value]="item.quantity"
-    (quantityChange)="onQuantityChange(item, $event)"
-  ></mos-quantity>
+  <mos-quantity #quantity="mosQuantity" [value]="item.quantity"></mos-quantity>
 
   <p class="text-sm text-slate-700 flex-1 mt-1">
     Cena: {{ item.product.price / 100 | number : '1.2-2' }} zł

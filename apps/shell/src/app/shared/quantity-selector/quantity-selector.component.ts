@@ -37,7 +37,11 @@ export class MosQuantitySelectorComponent {
     }),
   };
 
-  public valueChanges(): void {
+  public valueChanges(value: string): void {
+    this.emitChanges(value);
+  }
+
+  public onBlur(): void {
     this.emitChanges(this.value);
   }
 

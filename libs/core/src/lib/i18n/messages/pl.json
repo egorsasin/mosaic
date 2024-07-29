@@ -1,0 +1,5 @@
+{
+  "errorResult": {
+    "ORDER_LIMIT_ERROR": "Ten product nie jest dostępny w takiej ilości. Maksymalna ilość produktu { maxItems }"
+  }
+}

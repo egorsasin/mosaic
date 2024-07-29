@@ -8,9 +8,12 @@ import { map, Observable, switchMap } from 'rxjs';
 
 import { ErrorResult } from '../../common';
 import { parseContext } from '../common';
+import { I18nService } from '../../i18n';
 
 @Injectable()
 export class MosErrorResultInterceptor implements NestInterceptor {
+  constructor(private i18nService: I18nService) {}
+
   public intercept(
     context: ExecutionContext,
     next: CallHandler<unknown>
@@ -34,7 +37,7 @@ export class MosErrorResultInterceptor implements NestInterceptor {
 
   private translateResult(req: any, result: unknown) {
     if (result instanceof ErrorResult) {
-      //this.i18nService.translateErrorResult(req, result as any);
+      this.i18nService.translateErrorResult(req, result as any);
     }
   }
 }

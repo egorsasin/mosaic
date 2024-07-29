@@ -17,11 +17,12 @@
 
 @if (editable) {
 <input
+  #input
   class="w-8 rounded-sm outline-none text-sm text-center bg-transparent focus:outline-none focus:ring-transparent text-slate-600 placeholder:text-slate-600 placeholder:opacity-100 border border-slate-600 p-1"
   [mosMask]="$any(maskConfig)"
-  [(ngModel)]="value"
-  (keyup.enter)="valueChanges()"
-  (blur)="valueChanges()"
+  [ngModel]="value"
+  (keyup.enter)="valueChanges(input.value)"
+  (blur)="input.value = value.toString()"
   maxlength="1"
   size="1"
   placeholder="1"
