@@ -16,7 +16,8 @@ import { graphqlUploadExpress } from 'graphql-upload-ts';
 
 import { notNullOrUndefined } from '@mosaic/common';
 
-import { ConfigModule, ConfigService } from '../config';
+import { ConfigModule } from '../config/config.module';
+import { ConfigService } from '../config/config.service';
 import { ServiceModule } from '../service/service.module';
 import { getPluginAPIExtensions } from '../plugin';
 

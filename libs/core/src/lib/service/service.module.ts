@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { ConfigModule } from '../config';
+import { ConfigModule } from '../config/config.module';
 import { DataModule } from '../data/data.module';
 import { EventBusModule } from '../event-bus';
 
