@@ -53,10 +53,10 @@ input CreateAddressInput {
 type OrderAddress {
   company: String
   vatNumber: String
-  firstName: String!
-  lastName: String!
-  phoneNumber: String!
-  city: String!
-  postalCode: String!
-  streetLine: String!
+  firstName: String
+  lastName: String
+  phoneNumber: String
+  city: String
+  postalCode: String
+  streetLine: String
 }

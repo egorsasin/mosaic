@@ -68,6 +68,7 @@ export interface MosaicConfig {
   apiOptions: ApiOptions;
   assetOptions?: AssetOptions;
   authOptions?: AuthOptions;
+  orderOptions?: OrderOptions;
   dbConnectionOptions?: DataSourceOptions;
   plugins?: DynamicModule[] | Type<unknown>[];
   paymentOptions: PaymentOptions;

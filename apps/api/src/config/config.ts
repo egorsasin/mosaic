@@ -24,6 +24,9 @@ export const appConfig: MosaicConfig = {
   authOptions: {
     requireVerification: true,
   },
+  orderOptions: {
+    orderLineItemsLimit: 5,
+  },
   plugins: [
     AssetServerPlugin.init({
       route: 'assets',
