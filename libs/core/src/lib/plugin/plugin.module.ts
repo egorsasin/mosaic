@@ -1,7 +1,5 @@
 import { DynamicModule, Module } from '@nestjs/common';
-
-import { ConfigModule } from '../config/config.module';
-import { getConfig } from '../config/config-helpers';
+import { ConfigModule, getConfig } from '../config';
 
 @Module({
   imports: [ConfigModule],

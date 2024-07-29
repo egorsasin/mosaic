@@ -8,4 +8,5 @@ export * from './order';
 export * from './asset';
 export * from './shipping-method';
 
+export { ConfigModule } from './config.module';
 export { ConfigService } from './config.service';

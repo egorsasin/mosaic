@@ -1,6 +1,4 @@
-export { MosCoreModule } from './lib/core.module';
-
-export * from './lib/common';
+export { ServiceModule } from './lib/service/service.module';
 
 export * from './lib/data';
 export * from './lib/plugin';
