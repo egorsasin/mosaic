@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -23,38 +23,29 @@ import { CustomerService } from './services';
 import { CartModule } from './store/cart';
 import { SidebarModule } from './shared/sidebar';
 
-@NgModule({
-  declarations: [AppComponent, ...ROUTED_COMPONENTS],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    CartModule,
-    BrowserAnimationsModule,
-    DataModule,
-    HttpClientModule,
-    StoreModule.forRoot(
-      { activeOrder: orderReducer, activeCustomer: customerReducer },
-      {}
-    ),
-    EffectsModule.forRoot([CustomerEffects]),
-    StoreDevtoolsModule.instrument({
-      maxAge: 25,
-      logOnly: environment.production,
-      autoPause: true,
-      connectInZone: true,
-    }),
-    // Standalone components
-    OverlayHostComponent,
-    MosAlertModule,
-    MosDialogHostModule,
-    MosDialogModule,
-    SidebarModule,
-  ],
-  providers: [
-    CustomerService,
-    { provide: HTTP_INTERCEPTORS, useClass: DefaultInterceptor, multi: true },
-    { provide: MOS_ICON_PATH, useValue: '/assets/icons/main.svg' },
-  ],
-  bootstrap: [AppComponent],
-})
+@NgModule({ declarations: [AppComponent, ...ROUTED_COMPONENTS],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        AppRoutingModule,
+        CartModule,
+        BrowserAnimationsModule,
+        DataModule,
+        StoreModule.forRoot({ activeOrder: orderReducer, activeCustomer: customerReducer }, {}),
+        EffectsModule.forRoot([CustomerEffects]),
+        StoreDevtoolsModule.instrument({
+            maxAge: 25,
+            logOnly: environment.production,
+            autoPause: true,
+            connectInZone: true,
+        }),
+        // Standalone components
+        OverlayHostComponent,
+        MosAlertModule,
+        MosDialogHostModule,
+        MosDialogModule,
+        SidebarModule], providers: [
+        CustomerService,
+        { provide: HTTP_INTERCEPTORS, useClass: DefaultInterceptor, multi: true },
+        { provide: MOS_ICON_PATH, useValue: '/assets/icons/main.svg' },
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule {}
