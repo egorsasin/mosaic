@@ -2,11 +2,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AuthGuard } from '../../guards';
-import { MainComponent } from '../main/main.component';
 
 import { LayoutComponent } from './layout.component';
 
-export const ROUTED_COMPONENTS = [LayoutComponent, MainComponent];
+export const ROUTED_COMPONENTS = [LayoutComponent];
 
 const routes: Routes = [
   {

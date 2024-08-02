@@ -1,4 +1,3 @@
-import { CarouselModule } from 'ngx-owl-carousel-o';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -34,7 +33,6 @@ const routes: Routes = [
   imports: [
     PaginationComponent,
     MosAssetPreviewPipe,
-    CarouselModule,
     FormsModule,
     CommonModule,
     MosQuantitySelectorComponent,
