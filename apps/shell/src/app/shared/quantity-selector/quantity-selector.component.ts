@@ -1,3 +1,4 @@
+import { animate, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import {
   Component,
@@ -7,27 +8,38 @@ import {
   Output,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MosAbstractControl } from '@mosaic/cdk';
 
 import { createNumberMask, MosMaskModule, TextMaskConfig } from '@mosaic/mask';
+
+export const fadeInOutAnimations = [
+  trigger('fade', [
+    transition(':enter', [style({ opacity: 0 }), animate('300ms ease-in-out')]),
+    transition(':leave', [animate('300ms ease-in-out', style({ opacity: 0 }))]),
+  ]),
+];
 
 @Component({
   selector: 'mos-quantity',
   templateUrl: './quantity-selector.component.html',
   styleUrls: ['./quantity-selector.component.scss'],
   standalone: true,
+  animations: [fadeInOutAnimations],
   imports: [CommonModule, FormsModule, MosMaskModule],
   exportAs: 'mosQuantity',
 })
-export class MosQuantitySelectorComponent {
+export class MosQuantitySelectorComponent extends MosAbstractControl<number> {
+  protected override getFallbackValue(): number {
+    return 1;
+  }
+
   @Input()
-  public value = 1;
+  @HostBinding('class.mos-quantity--loading')
+  public loading = false;
 
   @Input()
   @HostBinding('class.mos-quantity--editable')
   public editable = true;
-
-  @Output()
-  public quantityChange: EventEmitter<number> = new EventEmitter<number>();
 
   public maskConfig: TextMaskConfig = {
     mask: createNumberMask({
@@ -38,20 +50,10 @@ export class MosQuantitySelectorComponent {
   };
 
   public valueChanges(value: string): void {
-    this.emitChanges(value);
-  }
-
-  public onBlur(): void {
-    this.emitChanges(this.value);
+    this.updateValue(parseInt(value, 10));
   }
 
   public add(value = 1): void {
-    this.emitChanges(this.value + value);
-  }
-
-  private emitChanges(value: number | string) {
-    const intValue = parseInt(value.toString());
-
-    this.quantityChange.emit(intValue);
+    this.updateValue(this.value + value);
   }
 }

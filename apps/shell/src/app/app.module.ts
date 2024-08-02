@@ -2,8 +2,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { StoreModule } from '@ngrx/store';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { OverlayHostComponent } from '@mosaic/ui/overlay-host';
 import { MosDialogHostModule } from '@mosaic/cdk';
@@ -11,17 +9,14 @@ import { MosDialogModule } from '@mosaic/ui/dialog';
 import { MosAlertModule } from '@mosaic/ui/alert';
 import { MOS_ICON_PATH } from '@mosaic/ui/svg-icon';
 
-import { environment } from '../environments/environment';
-
 import { AppRoutingModule, ROUTED_COMPONENTS } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DataModule } from './data/data.module';
 import { DefaultInterceptor } from './default.interceptor';
-import { orderReducer, customerReducer, CustomerEffects } from './store';
-import { EffectsModule } from '@ngrx/effects';
 import { CustomerService } from './services';
 import { CartModule } from './store/cart';
 import { SidebarModule } from './shared/sidebar';
+import { MosStoreModule } from './store/store.module';
 
 @NgModule({
   declarations: [AppComponent, ...ROUTED_COMPONENTS],
@@ -32,17 +27,7 @@ import { SidebarModule } from './shared/sidebar';
     BrowserAnimationsModule,
     DataModule,
     HttpClientModule,
-    StoreModule.forRoot(
-      { activeOrder: orderReducer, activeCustomer: customerReducer },
-      {}
-    ),
-    EffectsModule.forRoot([CustomerEffects]),
-    StoreDevtoolsModule.instrument({
-      maxAge: 25,
-      logOnly: environment.production,
-      autoPause: true,
-      connectInZone: true,
-    }),
+    MosStoreModule,
     // Standalone components
     OverlayHostComponent,
     MosAlertModule,

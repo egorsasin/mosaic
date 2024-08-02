@@ -1,7 +1,7 @@
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 
 import { MosAssetPreviewPipe } from '@mosaic/common-ui';
@@ -32,6 +32,7 @@ const routes: Routes = [
     ProductDetailComponent,
   ],
   imports: [
+    ReactiveFormsModule,
     PaginationComponent,
     MosAssetPreviewPipe,
     CarouselModule,

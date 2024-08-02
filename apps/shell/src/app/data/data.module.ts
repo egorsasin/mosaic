@@ -19,7 +19,7 @@ const uri = 'http://localhost:3000/graphql/'; // <-- TODO add the URL of the Gra
 export function createApollo(
   httpLink: HttpLink,
   localStorageService: LocalStorageService
-): ApolloClientOptions<any> {
+): ApolloClientOptions<unknown> {
   const cache = new InMemoryCache();
 
   cache.writeQuery({

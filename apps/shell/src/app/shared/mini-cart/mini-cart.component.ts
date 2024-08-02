@@ -19,25 +19,5 @@ import { ADJUST_ITEM_QUANTITY } from '../../checkout/checkout-process/cart.graph
 export class MiniCartComponent {
   public order$ = this.activeOrderService.activeOrder$;
 
-  constructor(
-    private readonly activeOrderService: ActiveOrderService,
-    private readonly dataService: DataService
-  ) {}
-
-  public removeProduct(): void {
-    //
-  }
-
-  public onQuantityChange({ product }: OrderLine, quantity: number): void {
-    this.dataService
-      .mutate<AdjustItemQuantityMutation, AdjustItemQuantityMutationVariables>(
-        ADJUST_ITEM_QUANTITY,
-        {
-          id: product.id,
-          quantity,
-        }
-      )
-      .pipe(take(1))
-      .subscribe();
-  }
+  constructor(private readonly activeOrderService: ActiveOrderService) {}
 }

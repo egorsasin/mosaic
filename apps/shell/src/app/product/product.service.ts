@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { DataService } from '../data/data.service';
 import { ListOptions } from '../types';
@@ -19,7 +20,7 @@ export class ProductService {
     });
   }
 
-  public addToCart(productId: number, quantity: number) {
+  public addToCart(productId: number, quantity: number): Observable<any> {
     return this.dataService.mutate<AddToCart.Mutation, AddToCart.Variables>(
       ADD_TO_CART,
       {

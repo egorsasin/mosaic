@@ -1,62 +1,43 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   inject,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
-  SimpleChange,
   SimpleChanges,
 } from '@angular/core';
-import { GraphQLError } from 'graphql';
-import { exhaustMap, mergeMap, of, Subject, take, takeUntil, tap } from 'rxjs';
 import { FormControl } from '@angular/forms';
+import { exhaustMap, mergeMap, of, Subject } from 'rxjs';
 
-import { Exact, Order, OrderLine } from '@mosaic/common';
+import { OrderLine } from '@mosaic/common';
 import { MosAlertService } from '@mosaic/ui/alert';
 
 import {
   AdjustItemQuantityMutation,
   AdjustItemQuantityMutationVariables,
   DataService,
-} from '../../data';
-import { ADJUST_ITEM_QUANTITY, REMOVE_ITEM_FROM_CART } from '../order.graphql';
-
-import { CheckoutService } from '../checkout.service';
-
-export type RemoveItemFromCartMutationVariables = Exact<{
-  id: number;
-}>;
-
-export type RemoveItemFromCartMutation = {
-  removeOrderLine: Order | GraphQLError;
-};
+} from '../../../data';
+import { ADJUST_ITEM_QUANTITY } from '../../../checkout/order.graphql';
 
 @Component({
-  selector: 'mos-order-line',
-  templateUrl: './order-line.component.html',
-  styles: [':host { display: flex; width: 100% }'],
+  selector: 'mos-cart-line',
+  templateUrl: './cart-line.component.html',
+  styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OrderLineComponent implements OnInit, OnChanges, OnDestroy {
-  @Input({ required: true }) item!: OrderLine;
+export class CartLineComponent implements OnInit, OnChanges, OnDestroy {
+  @Input({ required: true })
+  public item!: OrderLine;
 
   public quantity: FormControl<number> = new FormControl<number>(1, {
     nonNullable: true,
   });
 
-  public loading = false;
-
   private alert = inject(MosAlertService);
+  private dataService = inject(DataService);
   private destroy$: Subject<void> = new Subject<void>();
-
-  constructor(
-    private dataService: DataService,
-    private checkoutService: CheckoutService,
-    private changeDetectorRef: ChangeDetectorRef
-  ) {}
 
   public ngOnChanges({ item }: SimpleChanges): void {
     if (item && item.currentValue?.quantity !== item.previousValue?.quantity) {
@@ -67,9 +48,6 @@ export class OrderLineComponent implements OnInit, OnChanges, OnDestroy {
   public ngOnInit(): void {
     this.quantity.valueChanges
       .pipe(
-        tap(() => {
-          this.loading = true;
-        }),
         exhaustMap((quantity: number) =>
           this.dataService.mutate<
             AdjustItemQuantityMutation,
@@ -80,9 +58,6 @@ export class OrderLineComponent implements OnInit, OnChanges, OnDestroy {
           })
         ),
         mergeMap(({ adjustOrderLine }) => {
-          this.loading = false;
-          this.changeDetectorRef.markForCheck();
-
           const { errorCode, message } = adjustOrderLine as any;
 
           if (errorCode) {
@@ -91,13 +66,12 @@ export class OrderLineComponent implements OnInit, OnChanges, OnDestroy {
           }
 
           return of(true);
-        }),
-        takeUntil(this.destroy$)
+        })
       )
       .subscribe((result: boolean | void) => {
-        if (result) {
-          this.checkoutService.refetchShippingMethods();
-        }
+        // if (result) {
+        //   this.checkoutService.refetchShippingMethods();
+        // }
       });
   }
 
@@ -106,15 +80,7 @@ export class OrderLineComponent implements OnInit, OnChanges, OnDestroy {
     this.destroy$.complete();
   }
 
-  public removeItem(id: number) {
-    this.dataService
-      .mutate<RemoveItemFromCartMutation, RemoveItemFromCartMutationVariables>(
-        REMOVE_ITEM_FROM_CART,
-        {
-          id,
-        }
-      )
-      .pipe(take(1))
-      .subscribe(() => this.checkoutService.refetchShippingMethods());
+  public removeProduct(): void {
+    //
   }
 }
