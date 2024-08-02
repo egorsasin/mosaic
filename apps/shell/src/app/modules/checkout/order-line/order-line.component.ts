@@ -7,7 +7,6 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
-  SimpleChange,
   SimpleChanges,
 } from '@angular/core';
 import { GraphQLError } from 'graphql';
@@ -21,10 +20,9 @@ import {
   AdjustItemQuantityMutation,
   AdjustItemQuantityMutationVariables,
   DataService,
-} from '../../data';
-import { ADJUST_ITEM_QUANTITY, REMOVE_ITEM_FROM_CART } from '../order.graphql';
-
+} from '../../../data';
 import { CheckoutService } from '../checkout.service';
+import { ADJUST_ITEM_QUANTITY, REMOVE_ITEM_FROM_CART } from '../../../common';
 
 export type RemoveItemFromCartMutationVariables = Exact<{
   id: number;

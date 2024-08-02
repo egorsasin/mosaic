@@ -16,7 +16,6 @@ import {
   tap,
 } from 'rxjs/operators';
 
-import { GET_ORDER_BY_CODE } from './checkout-confirmation.graphql';
 import { Order } from '@mosaic/common';
 
 @Component({

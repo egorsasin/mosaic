@@ -4,7 +4,7 @@ import {
   CART_FRAGMENT,
   ERROR_RESULT_FRAGMENT,
   ORDER_ADDRESS_FRAGMENT,
-} from '../../common/definitions';
+} from '../fragments';
 
 export const SET_CUSTOMER_FOR_ORDER = gql`
   mutation SetCustomerForOrder($input: CreateCustomerInput!) {

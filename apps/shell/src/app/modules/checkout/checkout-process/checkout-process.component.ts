@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  inject,
   Inject,
   OnDestroy,
 } from '@angular/core';
@@ -27,16 +26,16 @@ import {
   Order,
 } from '@mosaic/common';
 
-import { DataService } from '../../data';
+import { DataService } from '../../../data';
 import {
   ADD_PAYMENT,
   GET_ELIGIBLE_PAYMENT_METHODS,
   SET_CUSTOMER_FOR_ORDER,
   SET_SHIPPING_ADDRESS,
   SET_SHIPPING_METHOD,
-} from './checkout-process.graphql';
+} from '../../../common';
 
-import { ActiveOrderService } from '../../active-order';
+import { ActiveOrderService } from '../../../active-order';
 import { CheckoutService } from '../checkout.service';
 
 export type GetEligiblePaymentMethodsQuery = {

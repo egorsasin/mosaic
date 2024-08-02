@@ -19,7 +19,7 @@ import {
   AdjustItemQuantityMutationVariables,
   DataService,
 } from '../../../data';
-import { ADJUST_ITEM_QUANTITY } from '../../../checkout/order.graphql';
+import { ADJUST_ITEM_QUANTITY } from '../../../common';
 
 @Component({
   selector: 'mos-cart-line',

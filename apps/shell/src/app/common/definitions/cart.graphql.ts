@@ -1,5 +1,6 @@
 import { gql } from 'apollo-angular';
-import { CART_FRAGMENT, ERROR_RESULT_FRAGMENT } from '../common/definitions';
+
+import { CART_FRAGMENT, ERROR_RESULT_FRAGMENT } from '../fragments';
 
 export const ADJUST_ITEM_QUANTITY = gql`
   mutation AdjustItemQuantity($id: Int!, $quantity: Int!) {
@@ -33,4 +34,15 @@ export const GET_ELIGIBLE_SHIPPING_METHODS = gql`
       metadata
     }
   }
+`;
+
+export const ADD_TO_CART = gql`
+  mutation AddToCart($productId: Int!, $quantity: Int!) {
+    addItemToOrder(productId: $productId, quantity: $quantity) {
+      ...Cart
+      ...ErrorResult
+    }
+  }
+  ${CART_FRAGMENT}
+  ${ERROR_RESULT_FRAGMENT}
 `;

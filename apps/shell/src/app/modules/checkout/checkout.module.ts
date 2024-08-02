@@ -13,7 +13,7 @@ import {
   CheckoutRoutingModule,
   routedComponents,
 } from './checkout-routing.module';
-import { MosQuantitySelectorComponent } from '../shared';
+import { MosQuantitySelectorComponent } from '../../shared';
 import { OrderLineComponent } from './order-line';
 import { CheckoutService } from './checkout.service';
 

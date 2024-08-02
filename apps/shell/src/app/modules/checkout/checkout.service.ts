@@ -3,8 +3,8 @@ import { map } from 'rxjs';
 
 import { ShippingMethodQuote } from '@mosaic/common';
 
-import { DataService } from '../data';
-import { GET_ELIGIBLE_SHIPPING_METHODS } from './order.graphql';
+import { DataService } from '../../data';
+import { GET_ELIGIBLE_SHIPPING_METHODS } from '../../common';
 
 export type GetEligibleShippingMethodsQuery = {
   eligibleShippingMethods: ShippingMethodQuote[];

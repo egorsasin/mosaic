@@ -4,7 +4,8 @@ import { Observable } from 'rxjs';
 import { DataService } from '../data/data.service';
 import { ListOptions } from '../types';
 
-import { ADD_TO_CART, GET_PRODUCT_LIST } from './product.definitions';
+import { GET_PRODUCT_LIST } from './product.definitions';
+import { ADD_TO_CART } from '../common';
 import { AddToCart, GetProductList } from './product.types';
 
 @Injectable()

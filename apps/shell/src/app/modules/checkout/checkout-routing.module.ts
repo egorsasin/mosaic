@@ -16,8 +16,8 @@ import {
 
 import { CheckoutProcessComponent } from './checkout-process/checkout-process.component';
 import { CheckoutConfirmationComponent } from './checkout-confirmation';
-import { DataService } from '../data';
-import { GET_ORDER_BY_CODE } from './checkout-confirmation/checkout-confirmation.graphql';
+import { DataService } from '../../data';
+import { GET_ORDER_BY_CODE } from '../../common';
 
 export const routedComponents = [
   CheckoutProcessComponent,
