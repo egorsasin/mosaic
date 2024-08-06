@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { ConfigModule } from '../../config';
+import { ConfigModule } from '../../config/config.module';
 import { ServiceModule } from '../../service/service.module';
 import { createDynamicGraphQlModulesForPlugins } from '../../plugin/plugin-api.module';
 

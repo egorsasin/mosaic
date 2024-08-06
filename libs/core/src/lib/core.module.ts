@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule, Type } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 
 import { DataModule } from './data/data.module';
 import { ApiModule } from './api/api.module';

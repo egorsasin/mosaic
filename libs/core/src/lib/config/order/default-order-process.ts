@@ -1,4 +1,4 @@
-import { EventBus, OrderPlacedEvent } from '../../event-bus';
+import { OrderPlacedEvent } from '../../event-bus';
 import { OrderState } from '../../types';
 import { OrderProcess } from './order-process';
 
