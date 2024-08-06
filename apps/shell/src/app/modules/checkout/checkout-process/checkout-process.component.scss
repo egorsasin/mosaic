@@ -1,3 +1,7 @@
 .payment-metods--active {
   @apply ring-1 ring-slate-700/60 ring-offset-2;
 }
+
+.mos-submitted.ng-invalid {
+  @apply border-rose-500;
+}

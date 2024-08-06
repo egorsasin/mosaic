@@ -23,6 +23,8 @@ import {
 } from '../../../data';
 import { CheckoutService } from '../checkout.service';
 import { ADJUST_ITEM_QUANTITY, REMOVE_ITEM_FROM_CART } from '../../../common';
+import { Store } from '@ngrx/store';
+import { refetchShippingMethods } from '../store';
 
 export type RemoveItemFromCartMutationVariables = Exact<{
   id: number;
@@ -53,7 +55,8 @@ export class OrderLineComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     private dataService: DataService,
     private checkoutService: CheckoutService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private store: Store
   ) {}
 
   public ngOnChanges({ item }: SimpleChanges): void {
@@ -94,7 +97,7 @@ export class OrderLineComponent implements OnInit, OnChanges, OnDestroy {
       )
       .subscribe((result: boolean | void) => {
         if (result) {
-          this.checkoutService.refetchShippingMethods();
+          this.store.dispatch(refetchShippingMethods());
         }
       });
   }
@@ -113,6 +116,6 @@ export class OrderLineComponent implements OnInit, OnChanges, OnDestroy {
         }
       )
       .pipe(take(1))
-      .subscribe(() => this.checkoutService.refetchShippingMethods());
+      .subscribe(() => this.store.dispatch(refetchShippingMethods()));
   }
 }

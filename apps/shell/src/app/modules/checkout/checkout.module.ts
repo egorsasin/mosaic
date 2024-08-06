@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { EffectsModule } from '@ngrx/effects';
 
 import { MosLetDirective } from '@mosaic/cdk';
 import { MosMaskModule } from '@mosaic/mask';
@@ -16,6 +17,7 @@ import {
 import { MosQuantitySelectorComponent } from '../../shared';
 import { OrderLineComponent } from './order-line';
 import { CheckoutService } from './checkout.service';
+import * as checkoutEffects from './store/checkout.effects';
 
 @NgModule({
   declarations: [...routedComponents, OrderLineComponent],
@@ -31,6 +33,7 @@ import { CheckoutService } from './checkout.service';
     MosInputPasswordModule,
     MosQuantitySelectorComponent,
     ControlErrorModule,
+    EffectsModule.forFeature([checkoutEffects]),
   ],
   providers: [CheckoutService],
 })

@@ -1,7 +1,14 @@
+networks:
+  default:
+    name: mosaic-tier
+    external: true
+
 services:
-  backend-app:
+  api:
     container_name: backend-app
     restart: always
+    env_file:
+      - ./prod.env
     ports:
       - '8080:3000'
     build:

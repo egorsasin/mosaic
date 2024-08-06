@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { exhaustMap, mergeMap, of, Subject } from 'rxjs';
+import { Store } from '@ngrx/store';
 
 import { OrderLine } from '@mosaic/common';
 import { MosAlertService } from '@mosaic/ui/alert';
@@ -20,6 +21,7 @@ import {
   DataService,
 } from '../../../data';
 import { ADJUST_ITEM_QUANTITY } from '../../../common';
+import { refetchShippingMethods } from '../../../modules/checkout';
 
 @Component({
   selector: 'mos-cart-line',
@@ -37,6 +39,7 @@ export class CartLineComponent implements OnInit, OnChanges, OnDestroy {
 
   private alert = inject(MosAlertService);
   private dataService = inject(DataService);
+  private readonly store = inject(Store);
   private destroy$: Subject<void> = new Subject<void>();
 
   public ngOnChanges({ item }: SimpleChanges): void {
@@ -69,9 +72,9 @@ export class CartLineComponent implements OnInit, OnChanges, OnDestroy {
         })
       )
       .subscribe((result: boolean | void) => {
-        // if (result) {
-        //   this.checkoutService.refetchShippingMethods();
-        // }
+        if (result) {
+          this.store.dispatch(refetchShippingMethods());
+        }
       });
   }
 

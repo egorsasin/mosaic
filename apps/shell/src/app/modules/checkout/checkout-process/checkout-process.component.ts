@@ -3,6 +3,7 @@ import {
   Component,
   Inject,
   OnDestroy,
+  signal,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -12,7 +13,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { animate, style, transition, trigger } from '@angular/animations';
 import { Observable, Subject, map, mergeMap, take } from 'rxjs';
 
 import { WINDOW } from '@mosaic/cdk';
@@ -37,6 +37,8 @@ import {
 
 import { ActiveOrderService } from '../../../active-order';
 import { CheckoutService } from '../checkout.service';
+import { FADE_IN_OUT_ANIMATION, FADE_UP_ANIMATION } from './animations';
+import { PHONEMASK_CONFIG } from './constants';
 
 export type GetEligiblePaymentMethodsQuery = {
   eligiblePaymentMethods: PaymentMethodQuote[];
@@ -65,23 +67,6 @@ export type SetOrderShippingMethodMutation = {
   setOrderShippingMethod: Order | GraphQLError;
 };
 
-export const FADE_UP_ANIMATION = trigger(`fadeUpAnimation`, [
-  transition(':leave', [
-    animate(
-      '200ms ease-in',
-      style({ opacity: 0, transform: 'translateY(-100%)' })
-    ),
-  ]),
-]);
-
-export const FADE_IN_OUT_ANIMATION = trigger(`fadeInOutAnimation`, [
-  transition(':leave', [animate('200ms ease-in', style({ opacity: 0 }))]),
-  transition(':enter', [
-    style({ opacity: 0 }),
-    animate('200ms ease-in', style({ opacity: 1 })),
-  ]),
-]);
-
 export function markAllAsTouched(formGroup: FormGroup | AbstractControl) {
   if (formGroup instanceof FormGroup) {
     Object.values(formGroup.controls).forEach((control) => {
@@ -95,6 +80,7 @@ export function markAllAsTouched(formGroup: FormGroup | AbstractControl) {
 }
 
 export interface CheckoutForm {
+  acceptAgreement: FormControl<boolean>;
   shippingMethod: FormControl<any | null>;
   paymentMethod: FormControl<string>;
   shippingAddress: FormGroup<DeliveryForm>;
@@ -119,36 +105,9 @@ export interface DeliveryForm {
 export class CheckoutProcessComponent implements OnDestroy {
   public order$: Observable<Order> = this.activeOrderService.activeOrder$;
   public shippingMethods$ = this.checkoutService.shippingMethods$;
-  public submitted = false;
+  public readonly submitted = signal(false);
 
-  public phoneMaskConfig = {
-    mask: [
-      '+',
-      '4',
-      '8',
-      ' ',
-      /[1-9]/,
-      /\d/,
-      /\d/,
-      '-',
-      /\d/,
-      /\d/,
-      /\d/,
-      '-',
-      /\d/,
-      /\d/,
-      /\d/,
-    ],
-    guide: false,
-  };
-
-  public paymentMethod: FormControl<string | null> = new FormControl<
-    string | null
-  >(null);
-
-  public shippingMethod: FormControl<string | null> = new FormControl<
-    string | null
-  >(null);
+  public phoneMaskConfig = PHONEMASK_CONFIG;
 
   public paymentMethods$: Observable<PaymentMethodQuote[]> = this.dataService
     .query<GetEligiblePaymentMethodsQuery>(GET_ELIGIBLE_PAYMENT_METHODS)
@@ -156,6 +115,10 @@ export class CheckoutProcessComponent implements OnDestroy {
 
   public checkoutForm: FormGroup<CheckoutForm> =
     this.formBuilder.group<CheckoutForm>({
+      acceptAgreement: new FormControl<boolean>(false, {
+        nonNullable: true,
+        validators: [Validators.requiredTrue],
+      }),
       shippingMethod: this.formBuilder.control<any | null>(null, {
         validators: Validators.required,
       }),
@@ -188,6 +151,10 @@ export class CheckoutProcessComponent implements OnDestroy {
     });
 
   public items$ = this.order$.pipe(map((order) => order.lines));
+
+  public get paymentMethod(): FormControl {
+    return this.checkoutForm.controls.paymentMethod;
+  }
 
   private destroy$: Subject<void> = new Subject<void>();
 
@@ -234,7 +201,7 @@ export class CheckoutProcessComponent implements OnDestroy {
 
   public completeOrder(order: Order): void {
     markAllAsTouched(this.checkoutForm);
-    this.submitted = true;
+    this.submitted.set(true);
 
     if (this.checkoutForm.invalid) {
       return;
@@ -285,7 +252,7 @@ export class CheckoutProcessComponent implements OnDestroy {
     return this.dataService
       .mutate<any, any>(ADD_PAYMENT, {
         input: {
-          method: this.paymentMethod.value,
+          method: this.checkoutForm.value.paymentMethod,
           metadata: {},
         },
       })

@@ -1,6 +1,6 @@
 <div *ngIf="order$ | async as order" class="mx-auto max-w-6xl px-4 sm:px-6">
-  <div class="md:grid md:grid-cols-2 md:gap-12">
-    <div [formGroup]="checkoutForm">
+  <div class="md:grid md:grid-cols-2 md:gap-12" [formGroup]="checkoutForm">
+    <div>
       <div class="pt-6">
         <h2
           class="text-base font-medium text-slate-700 uppercase border-b w-full pb-2 font-['Oswald']"
@@ -8,7 +8,7 @@
           Metody dostawy
         </h2>
 
-        @if(submitted && checkoutForm.controls.shippingMethod.invalid) {
+        @if(submitted() && checkoutForm.controls.shippingMethod.invalid) {
         <div @fadeInOutAnimation class="text-rose-500 text-sm mt-2">
           Prosimy wybrać metodę dostawy
         </div>
@@ -161,8 +161,11 @@
         >
           Metody płatności
         </h2>
-        @if(submitted && checkoutForm.controls.paymentMethod.invalid) {
-        <div @fadeInOutAnimation class="text-rose-500 text-sm mt-2">
+        @if(submitted() && checkoutForm.controls.paymentMethod.invalid) {
+        <div
+          @fadeInOutAnimation
+          class="text-rose-500 text-sm mt-2 mos-form-error"
+        >
           Prosimy wybrać metodę płatności
         </div>
         }
@@ -248,19 +251,14 @@
           </div>
 
           <div class="pt-3 flex items-center gap-2 flex-wrap">
-            @if(submitted && checkoutForm.invalid) {
-            <div @fadeInOutAnimation class="text-sm text-rose-500 w-full mb-1">
-              Wystąpił błąd w formularzu procesu zakupowego, proszę wprowadzić
-              poprawki
-            </div>
-            }
-
             <div class="flex-1 text-sm flex items-center text-slate-600">
               <input
                 class="text-slate-700 cursor-pointer focus:ring-0"
+                [class.mos-submitted]="submitted()"
                 type="checkbox"
                 mosSwitch
-                name="name"
+                formControlName="acceptAgreement"
+                name="agreement"
               />
               <span class="ml-2">
                 Akceptuję warunki
@@ -275,6 +273,13 @@
             >
               Zamawiam i płacę
             </button>
+
+            @if(submitted() && checkoutForm.invalid) {
+            <div @fadeInOutAnimation class="text-sm text-rose-500 w-full mb-1">
+              Wystąpił błąd w formularzu procesu zakupowego, proszę wprowadzić
+              poprawki
+            </div>
+            }
           </div>
         </div>
       </div>

@@ -3,6 +3,7 @@ import { DefaultAssetNamingStrategy, MosaicConfig } from '@mosaic/core/config';
 import { GoogleAuthPlugin } from '@mosaic/google-auth';
 import { AssetServerPlugin } from '@mosaic/asset-server';
 import { defaultEmailHandlers, EmailPlugin } from '@mosaic/email-plugin';
+import path from 'path';
 
 import { examplePaymentHandler, PaynowPlugin } from './payment';
 import { InvoicePlugin } from './payment/invoice/invoice.plugin';
@@ -53,7 +54,7 @@ export const appConfig: MosaicConfig = {
     InvoicePlugin.init(),
     EmailPlugin.init({
       handlers: defaultEmailHandlers,
-      templatePath: './email-templates',
+      templatePath: path.join(process.cwd(), './email-templates'),
       globalTemplateVars: { fromAddress: process.env.EMAIL_USER },
       transport: {
         type: 'smtp',

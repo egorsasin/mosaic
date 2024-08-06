@@ -1,12 +1,6 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  HostBinding,
-  Input,
-  Output,
-} from '@angular/core';
+import { Component, HostBinding, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MosAbstractControl } from '@mosaic/cdk';
 
