@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
 
-import { ActiveOrderService } from '../../active-order';
+import { selectActiveOrder } from '../../store';
 
 @Component({
   selector: 'mos-mini-cart',
@@ -8,7 +9,7 @@ import { ActiveOrderService } from '../../active-order';
   styleUrls: ['./mini-cart.component.scss'],
 })
 export class MiniCartComponent {
-  public order$ = this.activeOrderService.activeOrder$;
+  public order$ = this.store.select(selectActiveOrder);
 
-  constructor(private readonly activeOrderService: ActiveOrderService) {}
+  constructor(private readonly store: Store) {}
 }

@@ -8,6 +8,7 @@ import { orderReducer } from './order.reducer';
 import { customerReducer } from './customer.reducer';
 import { CustomerEffects } from './customer.effects';
 import * as notificationEffects from './notifications/notifications.effects';
+import * as orderEffects from './order.effects';
 
 @NgModule({
   declarations: [],
@@ -16,7 +17,7 @@ import * as notificationEffects from './notifications/notifications.effects';
       { activeOrder: orderReducer, activeCustomer: customerReducer },
       {}
     ),
-    EffectsModule.forRoot([CustomerEffects, notificationEffects]),
+    EffectsModule.forRoot([CustomerEffects, notificationEffects, orderEffects]),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production,

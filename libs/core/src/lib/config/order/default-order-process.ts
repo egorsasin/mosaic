@@ -1,4 +1,4 @@
-import { OrderPlacedEvent } from '../../event-bus';
+import { EventBus, OrderPlacedEvent } from '../../event-bus';
 import { OrderState } from '../../types';
 import { OrderProcess } from './order-process';
 
@@ -12,7 +12,7 @@ declare module '../../types/order-state' {
 
 export function configureDefaultOrderProcess() {
   let configService: import('../config.service').ConfigService;
-  let eventBus: import('../../event-bus/index').EventBus;
+  let eventBus: import('../../event-bus/event-bus').EventBus;
 
   const orderProcess: OrderProcess<OrderState> = {
     transitions: {
@@ -37,8 +37,12 @@ export function configureDefaultOrderProcess() {
       const ConfigService = await import('../config.service').then(
         (m) => m.ConfigService
       );
+      const EventBus = await import('../../event-bus/event-bus').then(
+        (m) => m.EventBus
+      );
 
       configService = injector.get(ConfigService);
+      eventBus = injector.get(EventBus);
     },
 
     async onTransitionEnd(fromState, toState, data) {

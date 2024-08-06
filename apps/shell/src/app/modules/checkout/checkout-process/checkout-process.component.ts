@@ -35,10 +35,11 @@ import {
   SET_SHIPPING_METHOD,
 } from '../../../common';
 
-import { ActiveOrderService } from '../../../active-order';
 import { CheckoutService } from '../checkout.service';
 import { FADE_IN_OUT_ANIMATION, FADE_UP_ANIMATION } from './animations';
 import { PHONEMASK_CONFIG } from './constants';
+import { selectActiveOrder } from '../../../store';
+import { Store } from '@ngrx/store';
 
 export type GetEligiblePaymentMethodsQuery = {
   eligiblePaymentMethods: PaymentMethodQuote[];
@@ -103,7 +104,7 @@ export interface DeliveryForm {
   animations: [FADE_UP_ANIMATION, FADE_IN_OUT_ANIMATION],
 })
 export class CheckoutProcessComponent implements OnDestroy {
-  public order$: Observable<Order> = this.activeOrderService.activeOrder$;
+  public order$: Observable<Order> = this.store.select(selectActiveOrder);
   public shippingMethods$ = this.checkoutService.shippingMethods$;
   public readonly submitted = signal(false);
 
@@ -161,7 +162,7 @@ export class CheckoutProcessComponent implements OnDestroy {
   constructor(
     @Inject(WINDOW) private window: Window,
     private dataService: DataService,
-    private activeOrderService: ActiveOrderService,
+    private store: Store,
     private formBuilder: FormBuilder,
     private router: Router,
     private activatedRoute: ActivatedRoute,

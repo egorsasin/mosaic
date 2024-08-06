@@ -1,6 +1,6 @@
 import { SelectQueryBuilder } from 'typeorm';
 
-export const CALCULATED_PROPERTIES = '__calculatedProperties__';
+export const CALCULATED_PROPERTIES = '__mosCalculatedProperties__';
 
 export interface CalculatedColumnQueryInstruction {
   relations?: string[];
