@@ -1,6 +1,10 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { OverlayHostComponent } from '@mosaic/ui/overlay-host';
@@ -17,7 +21,6 @@ import { CustomerService } from './services';
 import { CartModule } from './store/cart';
 import { SidebarModule } from './shared/sidebar';
 import { MosStoreModule } from './store/store.module';
-
 @NgModule({
   declarations: [AppComponent, ...ROUTED_COMPONENTS],
   imports: [
@@ -26,7 +29,6 @@ import { MosStoreModule } from './store/store.module';
     CartModule,
     BrowserAnimationsModule,
     DataModule,
-    HttpClientModule,
     MosStoreModule,
     // Standalone components
     OverlayHostComponent,
@@ -39,6 +41,7 @@ import { MosStoreModule } from './store/store.module';
     CustomerService,
     { provide: HTTP_INTERCEPTORS, useClass: DefaultInterceptor, multi: true },
     { provide: MOS_ICON_PATH, useValue: '/assets/icons/main.svg' },
+    provideHttpClient(withInterceptorsFromDi()),
   ],
   bootstrap: [AppComponent],
 })

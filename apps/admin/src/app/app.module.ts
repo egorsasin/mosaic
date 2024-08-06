@@ -5,7 +5,7 @@ import { APOLLO_OPTIONS, ApolloModule } from 'apollo-angular';
 import { ApolloLink, InMemoryCache } from '@apollo/client/core';
 import { setContext } from '@apollo/client/link/context';
 import { HttpLink } from 'apollo-angular/http';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { createUploadLink } from 'apollo-upload-client';
 
@@ -52,46 +52,39 @@ export class FetchAdapter {
   };
 }
 
-@NgModule({
-  declarations: [AppComponent],
-  imports: [
-    ApolloModule,
-    BrowserModule,
-    MosDynamicControlModule,
-    HttpClientModule,
-    RouterModule.forRoot([]),
-    OverlayHostComponent,
-    MosDialogHostModule,
-    MosDialogModule,
-    MosAlertModule,
-    AppRoutingModule,
-  ],
-  providers: [
-    FetchAdapter,
-    {
-      provide: APOLLO_OPTIONS,
-      useFactory() {
-        return {
-          cache: new InMemoryCache(),
-          link: ApolloLink.from([
-            setContext(() => {
-              {
-                const headers: Record<string, string> = {};
-                headers['Apollo-Require-Preflight'] = 'true';
-
-                return { headers };
-              }
-            }),
-            createUploadLink({
-              uri: `http://localhost:3000/admin`,
-            }),
-          ]),
-        };
-      },
-      deps: [HttpLink, FetchAdapter],
-    },
-    BaseDataService,
-  ],
-  bootstrap: [AppComponent],
-})
+@NgModule({ declarations: [AppComponent],
+    bootstrap: [AppComponent], imports: [ApolloModule,
+        BrowserModule,
+        MosDynamicControlModule,
+        RouterModule.forRoot([]),
+        OverlayHostComponent,
+        MosDialogHostModule,
+        MosDialogModule,
+        MosAlertModule,
+        AppRoutingModule], providers: [
+        FetchAdapter,
+        {
+            provide: APOLLO_OPTIONS,
+            useFactory() {
+                return {
+                    cache: new InMemoryCache(),
+                    link: ApolloLink.from([
+                        setContext(() => {
+                            {
+                                const headers: Record<string, string> = {};
+                                headers['Apollo-Require-Preflight'] = 'true';
+                                return { headers };
+                            }
+                        }),
+                        createUploadLink({
+                            uri: `http://localhost:3000/admin`,
+                        }),
+                    ]),
+                };
+            },
+            deps: [HttpLink, FetchAdapter],
+        },
+        BaseDataService,
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule {}
