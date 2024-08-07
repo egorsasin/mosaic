@@ -4,7 +4,7 @@ import { Customer } from '../types';
 
 export interface AppState {
   state: {
-    activeOrder?: Order;
+    activeOrder: Order | null;
     activeCustomer?: Customer;
   };
 }

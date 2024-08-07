@@ -4,11 +4,14 @@ import {
   Component,
   Input,
 } from '@angular/core';
+import { filter, map } from 'rxjs';
+import { Store } from '@ngrx/store';
 
+import { OrderLine } from '@mosaic/common';
+
+import { selectActiveOrder, setActiveOrder } from '../../store';
 import { Product } from '../../types';
 import { ProductService } from '../product.service';
-import { Store } from '@ngrx/store';
-import { setActiveOrder } from '../../store';
 
 @Component({
   selector: 'mos-product-card',
@@ -18,6 +21,19 @@ import { setActiveOrder } from '../../store';
 })
 export class ProductCardComponent {
   @Input() public product?: Product;
+
+  public quantityInCart$ = this.store.select(selectActiveOrder).pipe(
+    filter((order) => Boolean(order)),
+    map(({ lines }) => {
+      const currentProduct = lines?.find(
+        ({ product }: OrderLine) => product.id === this.product?.id
+      );
+
+      console.log('__ORDER', lines);
+
+      return currentProduct?.quantity || 0;
+    })
+  );
 
   public loading = false;
   public quantity = '1';

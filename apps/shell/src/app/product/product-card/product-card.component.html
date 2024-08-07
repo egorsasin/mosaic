@@ -35,7 +35,7 @@
 
     <div class="flex items-center justify-between">
       <div class="text-sm text-slate-700">
-        <span class="font-semibold"
+        <span class="font-semibold text-base"
           >{{ product.price / 100 | number : '1.2-2' }} zł</span
         >
         - 250 gr
@@ -49,6 +49,11 @@
     <div
       class="flex items-center justify-end gap-3 border-t border-slate-600 pt-4 mt-4"
     >
+      @if(quantityInCart$ | async; as quantity) {
+      <div class="text-sm text-slate-600">
+        Masz <span class="font-medium">{{ quantity }}</span> w koszyku
+      </div>
+      }
       <div class="relative rounded-md">
         <button
           class="rounded-sm border border-slate-700 ring-slate-700 text-sm text-slate-700 px-3 py-1 hover:bg-slate-700 hover:text-white inline-flex items-center gap-x-1 duration-300 transition-all"
