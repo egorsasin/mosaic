@@ -7,12 +7,15 @@ import { MosLetDirective } from '@mosaic/cdk';
 
 import { MiniCartComponent } from './mini-cart.component';
 import { MosQuantitySelectorComponent } from '../quantity-selector';
+import { CartLineComponent } from './cart-line';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [MiniCartComponent],
+  declarations: [MiniCartComponent, CartLineComponent],
   exports: [MiniCartComponent],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     MosAssetPreviewPipe,
     RouterModule,
     MosLetDirective,

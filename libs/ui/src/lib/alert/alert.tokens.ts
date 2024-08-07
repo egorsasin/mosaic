@@ -17,7 +17,7 @@ export const MOS_ALERT_DEFAULT_OPTIONS: Omit<
   MosAlertOptions,
   'icon' | 'status'
 > = {
-  autoClose: 3000,
+  autoClose: 5000,
   label: '',
   closeable: true,
   data: undefined,

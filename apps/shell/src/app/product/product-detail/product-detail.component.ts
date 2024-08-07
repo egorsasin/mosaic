@@ -7,6 +7,7 @@ import { Exact, notNullOrUndefined, Product } from '@mosaic/common';
 import { DataService } from '../../data';
 
 import { GET_PRODUCT_DETAIL } from './product-detail.graphql';
+import { FormControl } from '@angular/forms';
 
 export type GetProductDetailQuery = {
   product: Product;
@@ -24,6 +25,10 @@ export type GetProductDetailQueryVariables = Exact<{
 })
 export class ProductDetailComponent {
   public product$: Observable<Product>;
+
+  public quantity: FormControl<number> = new FormControl<number>(1, {
+    nonNullable: true,
+  });
 
   constructor(private route: ActivatedRoute, private dataService: DataService) {
     const productSlug$: Observable<string> = this.route.paramMap.pipe(

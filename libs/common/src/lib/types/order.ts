@@ -16,6 +16,7 @@ export interface OrderLine {
 }
 
 export interface Order {
+  __typename: 'Order';
   id: number;
   code: string;
   lines: OrderLine[];

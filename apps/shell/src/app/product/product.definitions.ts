@@ -1,7 +1,5 @@
 import { gql } from 'apollo-angular';
 
-import { CART_FRAGMENT, ERROR_RESULT_FRAGMENT } from '../common/definitions';
-
 export const ASSET_FRAGMENT = gql`
   fragment Asset on Asset {
     id
@@ -29,15 +27,4 @@ export const GET_PRODUCT_LIST = gql`
     }
   }
   ${ASSET_FRAGMENT}
-`;
-
-export const ADD_TO_CART = gql`
-  mutation AddToCart($productId: Int!, $quantity: Int!) {
-    addItemToOrder(productId: $productId, quantity: $quantity) {
-      ...Cart
-      ...ErrorResult
-    }
-  }
-  ${CART_FRAGMENT}
-  ${ERROR_RESULT_FRAGMENT}
 `;

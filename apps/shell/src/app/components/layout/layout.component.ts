@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { showSidebarCart } from '../../store/cart/cart.actions';
 import { ActiveOrderService } from '../../active-order';
-import { map } from 'rxjs';
+import { selectActiveOrder } from '../../store';
 
 @Component({
   selector: 'mos-layout',
@@ -11,12 +11,9 @@ import { map } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LayoutComponent {
-  constructor(
-    private store: Store,
-    private activeOrderService: ActiveOrderService
-  ) {}
+  constructor(private store: Store) {}
 
-  public order$ = this.activeOrderService.activeOrder$;
+  public order$ = this.store.select(selectActiveOrder);
 
   // Открыть корзину в сайдбаре
   public showCart(): void {

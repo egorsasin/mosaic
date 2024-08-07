@@ -1,0 +1,20 @@
+export const PHONEMASK_CONFIG = {
+  mask: [
+    '+',
+    '4',
+    '8',
+    ' ',
+    /[1-9]/,
+    /\d/,
+    /\d/,
+    '-',
+    /\d/,
+    /\d/,
+    /\d/,
+    '-',
+    /\d/,
+    /\d/,
+    /\d/,
+  ],
+  guide: false,
+};

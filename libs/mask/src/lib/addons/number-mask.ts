@@ -131,8 +131,6 @@ export function createNumberMask(config: NumberMaskConfig) {
         : integer.replace(/^0+/, '');
     }
 
-    console.log(integer);
-
     integer = includeThousandsSeparator
       ? addThousandsSeparator(integer, thousandsSeparatorSymbol)
       : integer;

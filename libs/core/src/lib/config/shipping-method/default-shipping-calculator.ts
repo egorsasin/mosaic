@@ -5,24 +5,25 @@ export const defaultShippingCalculator = new ShippingCalculator({
   description: 'Default Flat-Rate Shipping Calculator',
   args: {
     rate: {
-      type: 'int',
+      type: 'float',
       defaultValue: 0,
       ui: { component: 'currency-form-input' },
       label: 'Shipping price',
     },
     amount: {
-      type: 'int',
+      type: 'float',
       defaultValue: 0,
       ui: { component: 'currency-form-input' },
       label: 'Max order prics',
     },
   },
   calculate: (ctx, order, args) => {
-    const { rate = 0, amount = null } = args;
+    const { rate = 0, amount = 0 } = args;
 
     let price: number;
+
     if (amount) {
-      price = order.subTotal >= amount ? 0 : rate;
+      price = !order.subTotal || order.subTotal >= amount ? 0 : rate;
     } else {
       price = rate;
     }

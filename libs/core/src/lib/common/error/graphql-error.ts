@@ -30,6 +30,7 @@ export class NegativeQuantityError extends ErrorResult {
 }
 
 export class OrderLimitError extends ErrorResult {
+  readonly __typename = 'OrderLimitError';
   readonly errorCode = 'ORDER_LIMIT_ERROR';
   public readonly message = 'ORDER_LIMIT_ERROR';
   public readonly maxItems: number;
@@ -61,6 +62,7 @@ const errorTypeNames = new Set([
   'NativeAuthStrategyError',
   'PasswordValidationError',
   'EmailAddressConflictError',
+  'OrderLimitError',
   'PasswordValidationError',
   'NegativeQuantityError',
   'NoActiveOrderError',

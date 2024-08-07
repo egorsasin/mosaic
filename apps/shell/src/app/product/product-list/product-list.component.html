@@ -1,10 +1,11 @@
 <div class="grid grid-cols-3 gap-6 mx-auto max-w-6xl p-6">
-  <mos-product-card
-    [product]="product"
-    *ngFor="let product of items$ | async"
-  ></mos-product-card>
+  @for (product of (items$ | async); track product.id ) {
+  <mos-product-card [product]="product"></mos-product-card>
+  }
 </div>
+
 <mos-pagination
+  *ngIf="false"
   [pageIndex]="currentPage$ | async"
   [length]="totalItems$ | async"
   (onPageChange)="onPageChange($event)"
