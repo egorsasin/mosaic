@@ -5,8 +5,8 @@ import { Order } from '@mosaic/common';
 
 import { DataService } from '../data/data.service';
 import { QueryResult } from '../data/query-result';
+import { GET_ACTIVE_ORDER } from '../common';
 
-import { GET_ACTIVE_ORDER } from './active-order.definitions';
 import { GetActiveOrder } from './active-order.types';
 
 @Injectable({

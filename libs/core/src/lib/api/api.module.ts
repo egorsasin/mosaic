@@ -8,7 +8,7 @@ import {
   NestModule,
   RequestMethod,
 } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { GraphQLModule, GraphQLTypesLoader } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
@@ -16,9 +16,11 @@ import { graphqlUploadExpress } from 'graphql-upload-ts';
 
 import { notNullOrUndefined } from '@mosaic/common';
 
-import { ConfigModule, ConfigService } from '../config';
+import { ConfigModule } from '../config/config.module';
+import { ConfigService } from '../config/config.service';
 import { ServiceModule } from '../service/service.module';
 import { getPluginAPIExtensions } from '../plugin';
+import { I18nModule } from '../i18n/i18n.module';
 
 import { ResolverModule, AdminResolverModule } from './resolvers';
 import {
@@ -29,7 +31,10 @@ import {
 } from './config';
 import { AuthGuard } from './guards';
 import { Request, Response, NextFunction } from 'express';
-import { AssetInterceptorPlugin } from './middleware';
+import {
+  AssetInterceptorPlugin,
+  MosErrorResultInterceptor,
+} from './middleware';
 import { ApiType } from './types';
 
 @Injectable()
@@ -112,6 +117,7 @@ function configuregGraphQLModule(options: GraphQLApiOptions) {
     ServiceModule,
     AdminResolverModule,
     ResolverModule,
+    I18nModule,
     configuregGraphQLModule({
       apiPath: 'graphql',
       typePaths: ['common', 'shell'],
@@ -131,6 +137,10 @@ function configuregGraphQLModule(options: GraphQLApiOptions) {
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: MosErrorResultInterceptor,
     },
   ],
 })

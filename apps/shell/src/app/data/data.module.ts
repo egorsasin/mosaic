@@ -10,16 +10,17 @@ import {
 import { setContext } from '@apollo/client/link/context';
 
 import { LocalStorageService } from '../services/local-storage.service';
+import { environment } from './../../environments/environment';
 
 import { DataService } from './data.service';
 import { clientResolvers, GET_USER_STATUS } from './client';
 
-const uri = 'http://localhost:3000/graphql/'; // <-- TODO add the URL of the GraphQL server from config
+const uri = environment.API_URL;
 
 export function createApollo(
   httpLink: HttpLink,
   localStorageService: LocalStorageService
-): ApolloClientOptions<any> {
+): ApolloClientOptions<unknown> {
   const cache = new InMemoryCache();
 
   cache.writeQuery({

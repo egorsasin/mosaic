@@ -76,6 +76,7 @@ export class BaseListComponent<ResultType, ItemType, VariableType = any>
     const fetchPage = (currentPage: number) => {
       const { take } = this.defaults;
       const skip = currentPage * take;
+
       listQuery.ref.refetch(this.onPageChangeFn({ skip, take }));
     };
 

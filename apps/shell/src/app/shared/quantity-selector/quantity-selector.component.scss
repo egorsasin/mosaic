@@ -15,3 +15,12 @@
     }
   }
 }
+
+:host-context(.mos-quantity--loading) {
+  .mos-quantity {
+    &--input,
+    &--action {
+      @apply text-slate-400;
+    }
+  }
+}

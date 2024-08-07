@@ -5,23 +5,23 @@ import { MosPopover } from '../types';
 import { ContextWrapper } from '../common';
 
 @Injectable()
-export abstract class AbstractMosPopoverService<T, K = void> extends Observable<
-  ReadonlyArray<MosPopover<T, unknown>>
+export abstract class AbstractMosPopoverService<S, K = void> extends Observable<
+  ReadonlyArray<MosPopover<S, unknown>>
 > {
   protected abstract readonly component: any; //ContextWrapper<T>;
 
   // protected abstract readonly defaultOptions: T;
 
   constructor(
-    protected items$: BehaviorSubject<ReadonlyArray<MosPopover<T, unknown>>>,
-    protected defaultOptions: T = {} as T
+    protected items$: BehaviorSubject<ReadonlyArray<MosPopover<S, unknown>>>,
+    protected defaultOptions: S = {} as S
   ) {
     super((observer) => this.items$.subscribe(observer));
   }
 
   public open<G = void>(
-    content: ContextWrapper<T> | string,
-    options: Partial<T> = {}
+    content: ContextWrapper<S> | string,
+    options: Partial<S> = {}
   ): Observable<K extends void ? G : K> {
     return new Observable((observer) => {
       const completeWith = (result: K extends void ? G : K): void => {
@@ -29,7 +29,7 @@ export abstract class AbstractMosPopoverService<T, K = void> extends Observable<
         observer.complete();
       };
 
-      const item: MosPopover<T, K extends void ? G : K> = {
+      const item: MosPopover<S, K extends void ? G : K> = {
         ...this.defaultOptions,
         ...options,
         content,
@@ -39,19 +39,19 @@ export abstract class AbstractMosPopoverService<T, K = void> extends Observable<
         createdAt: Date.now(),
       };
 
-      this.add(item as MosPopover<T, unknown>);
+      this.add(item as MosPopover<S, unknown>);
 
       return () => {
-        this.remove(item as MosPopover<T, unknown>);
+        this.remove(item as MosPopover<S, unknown>);
       };
     });
   }
 
-  protected add(item: MosPopover<T, unknown>): void {
+  protected add(item: MosPopover<S, unknown>): void {
     this.items$.next([...this.items$.value, item]);
   }
 
-  protected remove(element: MosPopover<T, unknown>): void {
+  protected remove(element: MosPopover<S, unknown>): void {
     this.items$.next(this.items$.value.filter((item) => item !== element));
   }
 }

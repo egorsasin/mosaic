@@ -78,13 +78,14 @@ function coerceValueToType<T extends ConfigArgs>(
       );
     }
   }
+
   switch (type) {
     case 'string':
       return value as ConfigArgValues<T>[keyof T];
     case 'int':
-      return Number.parseInt(value || '', 10) as ConfigArgValues<T>[keyof T];
+      return Number.parseInt(value || '0', 10) as ConfigArgValues<T>[keyof T];
     case 'float':
-      return Number.parseFloat(value || '') as ConfigArgValues<T>[keyof T];
+      return Number.parseFloat(value || '0') as ConfigArgValues<T>[keyof T];
     case 'datetime':
       return Date.parse(value || '') as ConfigArgValues<T>[keyof T];
     case 'boolean':

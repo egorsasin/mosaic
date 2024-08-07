@@ -1,15 +1,7 @@
 import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
 
-import { OrderLine } from '@mosaic/common';
-
-import { ActiveOrderService } from '../../active-order';
-import { take } from 'rxjs';
-import {
-  AdjustItemQuantityMutation,
-  AdjustItemQuantityMutationVariables,
-  DataService,
-} from '../../data';
-import { ADJUST_ITEM_QUANTITY } from '../../checkout/checkout-process/cart.graphql';
+import { selectActiveOrder } from '../../store';
 
 @Component({
   selector: 'mos-mini-cart',
@@ -17,27 +9,7 @@ import { ADJUST_ITEM_QUANTITY } from '../../checkout/checkout-process/cart.graph
   styleUrls: ['./mini-cart.component.scss'],
 })
 export class MiniCartComponent {
-  public order$ = this.activeOrderService.activeOrder$;
+  public order$ = this.store.select(selectActiveOrder);
 
-  constructor(
-    private readonly activeOrderService: ActiveOrderService,
-    private readonly dataService: DataService
-  ) {}
-
-  public removeProduct(): void {
-    //
-  }
-
-  public onQuantityChange({ product }: OrderLine, quantity: number): void {
-    this.dataService
-      .mutate<AdjustItemQuantityMutation, AdjustItemQuantityMutationVariables>(
-        ADJUST_ITEM_QUANTITY,
-        {
-          id: product.id,
-          quantity,
-        }
-      )
-      .pipe(take(1))
-      .subscribe();
-  }
+  constructor(private readonly store: Store) {}
 }

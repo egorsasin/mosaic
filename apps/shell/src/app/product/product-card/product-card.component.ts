@@ -9,9 +9,15 @@ import { Store } from '@ngrx/store';
 
 import { OrderLine } from '@mosaic/common';
 
-import { selectActiveOrder, setActiveOrder } from '../../store';
 import { Product } from '../../types';
 import { ProductService } from '../product.service';
+import {
+  selectActiveOrder,
+  setActiveOrder,
+  showNotification,
+} from '../../store';
+import { FormControl } from '@angular/forms';
+import { Order } from '@mosaic/common';
 
 @Component({
   selector: 'mos-product-card',
@@ -29,14 +35,15 @@ export class ProductCardComponent {
         ({ product }: OrderLine) => product.id === this.product?.id
       );
 
-      console.log('__ORDER', lines);
-
       return currentProduct?.quantity || 0;
     })
   );
 
+  public quantity: FormControl<number> = new FormControl<number>(1, {
+    nonNullable: true,
+  });
+
   public loading = false;
-  public quantity = '1';
 
   constructor(
     private store: Store,
@@ -44,23 +51,28 @@ export class ProductCardComponent {
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
-  public addToCart(value: number): void {
+  public addToCart(): void {
     if (!this.product) {
       return;
     }
 
     this.loading = true;
-    this.productService.addToCart(this.product?.id, +value).subscribe({
-      next: (data) => {
-        const { addItemToOrder: order } = data;
-
-        this.store.dispatch(setActiveOrder({ order }));
-        // this.store.dispatch(showSidebarCart());
-      },
-      complete: () => {
-        this.loading = false;
-        this.changeDetectorRef.markForCheck();
-      },
-    });
+    this.productService
+      .addToCart(this.product?.id, this.quantity.value)
+      .pipe(map(({ addItemToOrder }) => addItemToOrder))
+      .subscribe({
+        next: (order: Order) => {
+          this.store.dispatch(
+            order.__typename === 'Order'
+              ? setActiveOrder({ order })
+              : showNotification({ message: (order as any).message })
+          );
+        },
+        complete: () => {
+          this.loading = false;
+          this.quantity.setValue(1);
+          this.changeDetectorRef.markForCheck();
+        },
+      });
   }
 }
