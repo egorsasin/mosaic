@@ -73,6 +73,7 @@ export class ActiveOrderService {
         order = await this.orderService.getActiveOrderForUser(ctx.activeUserId);
       }
     }
+
     return order;
   }
 }

@@ -1,20 +1,21 @@
-<ng-container *ngIf="dialogs$ | async as dialogs">
-  <section
-    *ngFor="let item of dialogs"
-    role="dialog"
-    aria-modal="true"
-    class="mos-dialog"
-  >
-    <ng-container
-      *mosComponentOutlet="item.component; context: item"
-    ></ng-container>
-  </section>
+@if(dialogs$ | async; as dialogs) {
+<section
+  *ngFor="let item of dialogs"
+  @mosHost
+  role="dialog"
+  aria-modal="true"
+  class="mos-dialog"
+>
+  <ng-container
+    *mosComponentOutlet="item.component; context: item"
+  ></ng-container>
+</section>
 
-  <div
-    *ngIf="isDialogClosesOnBack$ | async as isDialogClosesOnBack"
-    class="mos-dialog-overlay"
-    [class.mosaic-overlay_visible]="dialogs.length"
-    (window:popstate)="closeLast(dialogs, !!isDialogClosesOnBack)"
-    (transitionend)="onDialog($event, !!dialogs.length, !!isDialogClosesOnBack)"
-  ></div>
-</ng-container>
+<div
+  *ngIf="isDialogClosesOnBack$ | async as isDialogClosesOnBack"
+  class="mos-dialog-overlay"
+  [class.mos-dialog-overlay--visible]="dialogs.length"
+  (window:popstate)="closeLast(dialogs, !!isDialogClosesOnBack)"
+  (transitionend)="onDialog($event, !!dialogs.length, !!isDialogClosesOnBack)"
+></div>
+}

@@ -49,7 +49,8 @@ export class Order extends MosaicEntity {
   @ManyToOne(() => Customer, (customer) => customer.orders)
   customer?: Customer;
 
-  @Column('simple-json') shippingAddress: OrderAddress;
+  @Column('simple-json', { nullable: true, default: null })
+  shippingAddress: OrderAddress | null;
 
   @OneToMany(() => OrderLine, (line) => line.order)
   public lines: OrderLine[];

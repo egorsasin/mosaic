@@ -5,3 +5,4 @@ export * from './lib/common';
 export * from './lib/directives';
 export * from './lib/utils';
 export * from './lib/abstract';
+export * from './lib/pipes';

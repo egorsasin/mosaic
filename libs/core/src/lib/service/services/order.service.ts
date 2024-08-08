@@ -504,7 +504,7 @@ export class OrderService {
       state: this.orderStateMachine.getInitialState(),
       lines: [],
       code: generatePublicId(),
-      shippingAddress: {},
+      //shippingAddress: null,
       //subTotal: 0,
     });
   }

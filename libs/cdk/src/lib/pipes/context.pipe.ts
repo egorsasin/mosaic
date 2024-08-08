@@ -1,8 +1,10 @@
 import { inject, Injector, Pipe, PipeTransform } from '@angular/core';
-import { MOSAIC_CONTEXT } from '@mosaic/cdk';
+
+import { MOSAIC_CONTEXT } from '../components';
 
 @Pipe({
   name: 'mosContext',
+  standalone: true,
 })
 export class MosContextPipe<T> implements PipeTransform {
   private injector = inject(Injector);

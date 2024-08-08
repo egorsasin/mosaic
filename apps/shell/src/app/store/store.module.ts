@@ -9,10 +9,12 @@ import { customerReducer } from './customer.reducer';
 import { CustomerEffects } from './customer.effects';
 import * as notificationEffects from './notifications/notifications.effects';
 import * as orderEffects from './order.effects';
+import { CartStoreModule } from './cart';
 
 @NgModule({
   declarations: [],
   imports: [
+    CartStoreModule,
     StoreModule.forRoot(
       { activeOrder: orderReducer, activeCustomer: customerReducer },
       {}

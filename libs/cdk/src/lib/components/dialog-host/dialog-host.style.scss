@@ -6,8 +6,8 @@
   height: 0;
 }
 
-.mos-overlay,
-.mos-dialog-overlay {
+.mos-dialog-overlay,
+.mos-dialog {
   position: fixed;
   top: 0;
   left: 0;
@@ -20,7 +20,7 @@
   overflow: overlay;
 }
 
-.mosaic-dialog {
+.mos-dialog {
   bottom: auto;
   height: 100%;
 
@@ -38,10 +38,10 @@
 
   /* change of useless property 'letter-spacing' to ensure that transitionend event will fire */
   transition: opacity var(--tui-duration), letter-spacing 0.01s;
-  background: rgba(0, 0, 0, 0.75);
+  @apply bg-slate-950/5;
   backdrop-filter: var(--tui-backdrop, none);
 
-  &_visible {
+  &--visible {
     opacity: 1;
     letter-spacing: 1px;
   }

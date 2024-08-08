@@ -1,5 +1,6 @@
 export * from './order.actions';
 export * from './state';
+export { CartActions } from './cart';
 export * from './order.selectors';
 export { orderReducer } from './order.reducer';
 
