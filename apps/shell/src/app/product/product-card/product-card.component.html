@@ -1,6 +1,6 @@
 <div
   *ngIf="product"
-  class="hover:drop-shadow-xl duration-300 hover:bg-white transition-all"
+  class="hover:drop-shadow-xl duration-300 hover:bg-white transition-all text-slate-700"
 >
   <div class="relative bg-gray-100 min-h-[350px] flex items-center">
     <div *ngIf="false" class="absolute w-full h-full p-3">
@@ -33,8 +33,8 @@
     </div>
 
     <div class="flex items-center justify-between">
-      <div class="text-sm text-slate-700">
-        <span class="font-semibold text-base"
+      <div class="text-sm">
+        <span class="font-semibold"
           >{{ product.price / 100 | number : '1.2-2' }} zł</span
         >
         - 250 gr
@@ -46,7 +46,7 @@
     </div>
 
     <div
-      class="flex items-center justify-end gap-3 border-t border-slate-600 pt-4 mt-4"
+      class="flex items-center justify-end gap-3 border-t border-slate-600 pt-3 mt-3"
     >
       @if(quantityInCart$ | async; as quantity) {
       <div class="text-sm text-slate-600">

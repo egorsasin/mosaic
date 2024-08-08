@@ -35,3 +35,7 @@ mos-hint[data-appearance='mini-cart'] {
     }
   }
 }
+
+mos-dialog[data-appearance='mos-success-top'] {
+  @apply my-12 mx-auto bg-green-100;
+}

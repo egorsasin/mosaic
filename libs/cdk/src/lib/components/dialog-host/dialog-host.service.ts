@@ -1,25 +1,17 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { MosPopover } from '../../types';
+import { MOS_DIALOGS } from './dialog-host.tokens';
 
 @Injectable()
 export class MosDialogHostService<T, K = void> extends Observable<
   ReadonlyArray<any>
 > {
-  private readonly dialogs$ = new BehaviorSubject<
-    ReadonlyArray<MosPopover<T, unknown>>
-  >([]);
-
-  constructor() {
-    super((observer) => this.dialogs$.subscribe(observer));
-  }
-
-  public add(dialog: any) {
-    this.dialogs$.next([...this.dialogs$.value, dialog]);
-  }
-
-  public remove(dialog: any) {
-    this.dialogs$.next(this.dialogs$.value.filter((item) => item !== dialog));
+  constructor(
+    @Inject(MOS_DIALOGS)
+    dialogs$: BehaviorSubject<ReadonlyArray<MosPopover<unknown, unknown>>>
+  ) {
+    super((observer) => dialogs$.subscribe(observer));
   }
 }

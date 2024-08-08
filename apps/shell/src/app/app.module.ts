@@ -18,7 +18,6 @@ import { AppComponent } from './app.component';
 import { DataModule } from './data/data.module';
 import { DefaultInterceptor } from './default.interceptor';
 import { CustomerService } from './services';
-import { CartModule } from './store/cart';
 import { SidebarModule } from './shared/sidebar';
 import { MosStoreModule } from './store/store.module';
 @NgModule({
@@ -26,7 +25,6 @@ import { MosStoreModule } from './store/store.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    CartModule,
     BrowserAnimationsModule,
     DataModule,
     MosStoreModule,

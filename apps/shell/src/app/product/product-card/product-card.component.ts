@@ -15,9 +15,11 @@ import {
   selectActiveOrder,
   setActiveOrder,
   showNotification,
+  CartActions,
 } from '../../store';
 import { FormControl } from '@angular/forms';
 import { Order } from '@mosaic/common';
+import { MosDialogService } from '@mosaic/ui/dialog';
 
 @Component({
   selector: 'mos-product-card',
@@ -48,7 +50,8 @@ export class ProductCardComponent {
   constructor(
     private store: Store,
     private productService: ProductService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private dialogService: MosDialogService
   ) {}
 
   public addToCart(): void {
@@ -62,12 +65,16 @@ export class ProductCardComponent {
       .pipe(map(({ addItemToOrder }) => addItemToOrder))
       .subscribe({
         next: (order: Order) => {
-          this.store.dispatch(
-            order.__typename === 'Order'
-              ? setActiveOrder({ order })
-              : showNotification({ message: (order as any).message })
-          );
+          if (order.__typename === 'Order') {
+            this.store.dispatch(setActiveOrder({ order }));
+            this.store.dispatch(CartActions.addToCartNotification());
+          } else {
+            this.store.dispatch(
+              showNotification({ message: (order as any).message })
+            );
+          }
         },
+
         complete: () => {
           this.loading = false;
           this.quantity.setValue(1);

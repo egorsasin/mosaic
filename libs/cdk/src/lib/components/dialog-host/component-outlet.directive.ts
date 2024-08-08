@@ -1,14 +1,15 @@
 import {
   ComponentRef,
   Directive,
+  EmbeddedViewRef,
   INJECTOR,
   Inject,
   InjectionToken,
   Injector,
   Input,
   OnChanges,
-  OnDestroy,
   StaticProvider,
+  TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
 
@@ -20,10 +21,10 @@ export const MOSAIC_CONTEXT = new InjectionToken('Mosaic component context');
   selector: '[mosComponentOutlet]',
   standalone: true,
 })
-export class MosComponentOutletDirective<T, V> implements OnChanges, OnDestroy {
-  private componentRef?: ComponentRef<T>;
+export class MosComponentOutletDirective<T, V> implements OnChanges {
+  private componentRef?: ComponentRef<T> | EmbeddedViewRef<V>;
 
-  @Input('mosComponentOutlet') wrapper?: ContextWrapper<T>;
+  @Input('mosComponentOutlet') wrapper?: ContextWrapper<T> | TemplateRef<V>;
 
   @Input('mosComponentOutletContext') context?: V;
 
@@ -39,19 +40,23 @@ export class MosComponentOutletDirective<T, V> implements OnChanges, OnDestroy {
 
     this.viewContainerRef.clear();
 
-    const parent = this.wrapper?.createInjector(this.injector) || this.injector;
-    const providers: StaticProvider[] = [
-      { provide: MOSAIC_CONTEXT, useValue: this.context },
-    ];
-    const injector = Injector.create({ parent, providers });
+    if (this.wrapper instanceof ContextWrapper) {
+      const parent =
+        this.wrapper.createInjector(this.injector) || this.injector;
+      const providers: StaticProvider[] = [
+        { provide: MOSAIC_CONTEXT, useValue: this.context },
+      ];
+      const injector = Injector.create({ parent, providers });
 
-    this.componentRef = this.viewContainerRef.createComponent(
-      this.wrapper.component,
-      { injector }
-    );
-  }
-
-  public ngOnDestroy(): void {
-    this.componentRef?.destroy();
+      this.componentRef = this.viewContainerRef.createComponent(
+        this.wrapper.component,
+        { injector }
+      );
+    } else if (this.componentRef instanceof TemplateRef) {
+      this.componentRef = this.viewContainerRef.createEmbeddedView<V>(
+        this.wrapper,
+        this.context
+      );
+    }
   }
 }
