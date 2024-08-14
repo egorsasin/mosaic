@@ -50,6 +50,7 @@ export class PaymentStateMachine {
       payment,
     });
     payment.state = state;
+
     return result;
   }
 

@@ -1,18 +1,20 @@
 import Handlebars from 'handlebars';
 import mjml2html from 'mjml';
+import dateFormat from 'dateformat';
 
 import { InitializedEmailPluginOptions } from '../types';
 
 import { EmailGenerator } from './email-generator';
 
 export class HandlebarsMjmlGenerator implements EmailGenerator {
-  async onInit(options: InitializedEmailPluginOptions) {
+  public async onInit(options: InitializedEmailPluginOptions) {
     if (options.templateLoader.loadPartials) {
       const partials = await options.templateLoader.loadPartials();
       partials.forEach(({ name, content }) =>
         Handlebars.registerPartial(name, content)
       );
     }
+
     this.registerHelpers();
   }
 
@@ -42,40 +44,30 @@ export class HandlebarsMjmlGenerator implements EmailGenerator {
   }
 
   private registerHelpers() {
-    // Handlebars.registerHelper(
-    //   'formatDate',
-    //   (date: Date | undefined, format: string | object) => {
-    //     if (!date) {
-    //       return date;
-    //     }
-    //     if (typeof format !== 'string') {
-    //       format = 'default';
-    //     }
-    //     console.log(dateFormat);
-    //     return ''; //dateFormat(date, format);
-    //   }
-    // );
-    // Handlebars.registerHelper(
-    //   'formatMoney',
-    //   (amount?: number, currencyCode?: string, locale?: string) => {
-    //     if (amount == null) {
-    //       return amount;
-    //     }
-    //     // Last parameter is a generic "options" object which is not used here.
-    //     // If it's supplied, it means the helper function did not receive the additional, optional parameters.
-    //     // See https://handlebarsjs.com/api-reference/helpers.html#the-options-parameter
-    //     if (!currencyCode || typeof currencyCode === 'object') {
-    //       return (amount / 100).toFixed(2);
-    //     }
-    //     // Same reasoning for `locale` as for `currencyCode` here.
-    //     return new Intl.NumberFormat(
-    //       typeof locale === 'object' ? undefined : locale,
-    //       {
-    //         style: 'currency',
-    //         currency: currencyCode,
-    //       }
-    //     ).format(amount / 100);
-    //   }
-    // );
+    Handlebars.registerHelper(
+      'formatDate',
+      (date: Date | undefined, format: string | object) => {
+        if (!date) {
+          return date;
+        }
+
+        if (typeof format !== 'string') {
+          format = 'default';
+        }
+
+        return dateFormat(date, format);
+      }
+    );
+
+    Handlebars.registerHelper('formatMoney', (amount?: number) => {
+      if (!amount) {
+        return amount;
+      }
+
+      const num = (amount / 100).toFixed(2);
+      const re = '\\d(?=(\\d{3})+' + '\\D' + ')';
+
+      return num.replace('.', ',').replace(new RegExp(re, 'g'), '$&' + ' ');
+    });
   }
 }

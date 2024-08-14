@@ -1,6 +1,6 @@
 import { gql } from 'apollo-angular';
 
-import { CART_FRAGMENT } from '../fragments';
+import { CART_FRAGMENT, ORDER_ADDRESS_FRAGMENT } from '../fragments';
 
 export const GET_ACTIVE_ORDER = gql`
   query GetActiveOrder {
@@ -30,17 +30,23 @@ export const GET_ORDER_BY_CODE = gql`
     orderByCode(code: $code) {
       ...Cart
       updatedAt
-      customer {
-        id
-        firstName
-        lastName
-        user {
+
+      ... on Order {
+        shippingAddress {
+          ...OrderAddress
+        }
+        payments {
+          method
+        }
+        customer {
           id
-          identifier
-          verified
+          firstName
+          lastName
+          emailAddress
         }
       }
     }
   }
   ${CART_FRAGMENT}
+  ${ORDER_ADDRESS_FRAGMENT}
 `;

@@ -45,7 +45,6 @@ import { ConfigService } from '../../config';
 import {
   EventBus,
   OrderLineEvent,
-  OrderPlacedEvent,
   OrderStateTransitionEvent,
 } from '../../event-bus';
 
@@ -57,6 +56,8 @@ const DEFAULT_ORDER_RELATIONS = [
   'customer',
   'lines',
   'lines.product',
+  'lines.product.featuredAsset',
+  'payments',
   'shippingLine',
   'shippingLine.shippingMethod',
 ];
@@ -86,6 +87,7 @@ export class OrderService {
         relations: [
           'lines',
           'shippingLine',
+          'payments',
           'payments',
           'lines.product',
           'shippingLine.shippingMethod',
@@ -353,7 +355,7 @@ export class OrderService {
     } else if (payment.state === 'Declined') {
       return new PaymentDeclinedError(payment.errorMessage);
     }
-    return order;
+    return this.findOne(order.id);
   }
 
   /**
@@ -453,6 +455,7 @@ export class OrderService {
 
     await finalize();
     await this.dataSource.getRepository(Order).save(order, { reload: false });
+
     await this.eventBus.publish(
       new OrderStateTransitionEvent(fromState, state, ctx, order)
     );

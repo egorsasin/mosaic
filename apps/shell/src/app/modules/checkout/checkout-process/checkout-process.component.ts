@@ -38,7 +38,7 @@ import {
 import { CheckoutService } from '../checkout.service';
 import { FADE_IN_OUT_ANIMATION, FADE_UP_ANIMATION } from './animations';
 import { PHONEMASK_CONFIG } from './constants';
-import { selectActiveOrder } from '../../../store';
+import { selectActiveOrder, setActiveOrder } from '../../../store';
 import { Store } from '@ngrx/store';
 
 export type GetEligiblePaymentMethodsQuery = {
@@ -54,7 +54,11 @@ export enum ErrorCode {
   ORDER_PAYMENT_STATE_ERROR = 'ORDER_PAYMENT_STATE_ERROR',
 }
 
-type GraphQLError = { errorCode: ErrorCode; message: string };
+type GraphQLError = {
+  __typename: string;
+  errorCode: ErrorCode;
+  message: string;
+};
 
 export type RemoveItemFromCartMutationVariables = Exact<{
   id: number;
@@ -94,6 +98,10 @@ export interface DeliveryForm {
   city: FormControl<string>;
   postalCode: FormControl<string>;
   streetLine: FormControl<string>;
+}
+
+function isOrder(item: Order | GraphQLError): item is Order {
+  return item.__typename === 'Order';
 }
 
 @Component({
@@ -263,14 +271,10 @@ export class CheckoutProcessComponent implements OnDestroy {
             if (
               ['PaymentSettled', 'PaymentAuthorized'].includes(result?.state)
             ) {
-              //  await new Promise<void>((resolve) =>
-              //    setTimeout(() => {
-              //      this.stateService.setState('activeOrderId', null);
-              //      resolve();
-              //    }, 500)
-              //  );
-              this.router.navigate(['../confirmation', result.code], {
+              this.store.dispatch(setActiveOrder({ order: null }));
+              this.router.navigate(['/order', result.code], {
                 relativeTo: this.activatedRoute,
+                state: { isCheckout: true },
               });
             }
           //         break;
@@ -296,10 +300,17 @@ export class CheckoutProcessComponent implements OnDestroy {
       })
       .pipe(take(1))
       .subscribe(({ setOrderShippingMethod }) => {
-        const shippingLine = (setOrderShippingMethod as Order).shippingLine;
-        this.checkoutForm.controls.shippingMethod.setValue(
-          shippingLine?.shippingMethod as any
-        );
+        if (isOrder(setOrderShippingMethod)) {
+          const shippingLine = (setOrderShippingMethod as Order).shippingLine;
+
+          this.store.dispatch(
+            setActiveOrder({ order: setOrderShippingMethod })
+          );
+
+          this.checkoutForm.controls.shippingMethod.setValue(
+            shippingLine?.shippingMethod as any
+          );
+        }
       });
   }
 

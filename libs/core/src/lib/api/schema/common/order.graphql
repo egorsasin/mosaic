@@ -32,6 +32,7 @@ type Order implements Node {
   shippingLine: ShippingLine
   shippingAddress: OrderAddress
   customer: Customer
+  payments: [Payment!]
 }
 
 type OrderList implements PaginatedList {

@@ -7,12 +7,17 @@ import { createDynamicGraphQlModulesForPlugins } from '../../plugin/plugin-api.m
 import { AuthResolver } from './auth.resolver';
 import { AddressResolver } from './address.resolver';
 import { CustomerResolver } from './customer.resolver';
-import { ProductEntityResolver } from './entity';
+import * as EntityResolvers from './entity';
 
 import * as AdminResolvers from './admin';
 import * as StorefrontResolvers from './shell';
 
-const ENTITY_RESOLVERS = [ProductEntityResolver];
+const ENTITY_RESOLVERS = [
+  EntityResolvers.ProductEntityResolver,
+  EntityResolvers.OrderEntityResolver,
+  EntityResolvers.PaymentEntityResolver,
+  EntityResolvers.PaymentMethodEntityResolver,
+];
 
 const SHOP_RESOLVERS = [
   AuthResolver,

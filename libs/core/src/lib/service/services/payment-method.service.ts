@@ -33,6 +33,12 @@ export class PaymentMethodService {
       .findOne({ where: { id } });
   }
 
+  public findOneByCode(code: string): Promise<PaymentMethod | undefined> {
+    return this.dataSource
+      .getRepository(PaymentMethod)
+      .findOne({ where: { code } });
+  }
+
   public async findAll(
     options?: ListQueryOptions
   ): Promise<PaginatedList<PaymentMethod>> {

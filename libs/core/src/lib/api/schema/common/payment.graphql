@@ -1,0 +1,11 @@
+type Payment implements Node {
+  id: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  method: String
+  amount: Money!
+  state: String!
+  transactionId: String
+  errorMessage: String
+  metadata: JSON
+}

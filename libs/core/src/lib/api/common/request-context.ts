@@ -24,6 +24,14 @@ export class RequestContext {
     this._authorizedAsOwnerOnly = authorizedAsOwnerOnly;
   }
 
+  /**
+   * @description
+   * The raw Express request object.
+   */
+  public get req(): Request | undefined {
+    return this._req;
+  }
+
   public get activeUserId(): number | undefined {
     return this._session.user?.id;
   }

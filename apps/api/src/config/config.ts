@@ -55,7 +55,10 @@ export const appConfig: MosaicConfig = {
     EmailPlugin.init({
       handlers: defaultEmailHandlers,
       templatePath: path.join(process.cwd(), './email-templates'),
-      globalTemplateVars: { fromAddress: process.env.EMAIL_USER },
+      globalTemplateVars: {
+        fromAddress: process.env.EMAIL_USER,
+        storefrontUrl: 'http://localhost:4200/',
+      },
       transport: {
         type: 'smtp',
         host: process.env.EMAIL_HOST,

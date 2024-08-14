@@ -1,4 +1,6 @@
-<div class="grid grid-cols-3 gap-6 mx-auto max-w-6xl p-6">
+<div
+  class="grid grid-cols-2 lg:grid-cols-3 gap-6 mx-auto max-w-4xl xl:max-w-6xl p-6"
+>
   @for (product of (items$ | async); track product.id ) {
   <mos-product-card [product]="product"></mos-product-card>
   }

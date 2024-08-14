@@ -1,11 +1,193 @@
-{{> header title="Order Receipt" }}
+<mjml>
+  <mj-head>
+    <mj-title>{{title}}</mj-title>
+    <mj-attributes>
+      <mj-all font-family='Roboto, sans-serif' />
+    </mj-attributes>
 
-<mj-section css-class='bg-off-white'>
-  <mj-column>
-    <mj-text>
-      Thank you for your order!
-    </mj-text>
-  </mj-column>
-</mj-section>
+  </mj-head>
+  <mj-body background-color='#f1f5f9'>
+    <mj-section>
+      <mj-column background-color='#fff'>
+        <mj-text font-size='24px' font-weight='700'>
+          <div style='padding-top: 1.5rem;'>COFFE KIDS</div>
+        </mj-text>
 
-{{> footer }}
+        <mj-table font-size='14px'>
+          <tr>
+            <td style='padding-bottom: 1rem; color: #475569'>
+              <div style='font-size: 1rem; margin-bottom: 0.5rem;'>Dzień dobry,
+                {{order.customer.firstName}}.</div>
+              <p>Dostaliśmy Twoje zamówienie. Możesz w każdej chwili sprawdzić,
+                na jakim etapie się znajduje. Zrobisz to na stronie z jego
+                <a href='{{storefrontUrl}}order/{{order.code}}' style='color: #0c4a6e'>podsumowaniem</a>.</p>
+            </td>
+          </tr>
+
+          <tr style='text-transform: uppercase; font-size: 1rem;'>
+            <td
+              style='padding: 0 0 0.5rem 0; border-bottom: 1px solid #cbd5e1;'
+            >
+              <span style='font-weight: 500; color: #0f172a;'>Szczegóły
+                zamówienia</span>
+            </td>
+          </tr>
+
+          <tr class='order-row'>
+            <td style='padding: 0.5rem 0 1.2rem 0; color: #475569'>
+              Numer zamówienia:
+              <a
+                style='margin-left: 0.25rem;  color: #0c4a6e'
+                href='{{storefrontUrl}}order/{{order.code}}'
+              >{{order.id}}</a>
+            </td>
+          </tr>
+
+          <tr style='text-transform: uppercase; font-size: 1rem;'>
+            <td
+              style='padding: 0 0 0.5rem 0; border-bottom: 1px solid #cbd5e1;'
+            >
+              <span style='font-weight: 500'>Metoda dostawy</span>
+            </td>
+          </tr>
+
+          <tr>
+            <td style='padding: 0.5rem 0 1rem 0; color: #475569;'>
+              {{shippingLine.shippingMethod.name }}
+            </td>
+          </tr>
+
+          <tr style='text-transform: uppercase; font-size: 1rem;'>
+            <td
+              style='padding: 0 0 0.5rem 0; border-bottom: 1px solid #cbd5e1;'
+            >
+              <span style='font-weight: 500; color: #0f172a;'>Dane adresowe</span>
+            </td>
+          </tr>
+
+          <tr>
+            <td
+              style='line-height: 1.2rem; padding: 1rem 0 1.2rem 0; color: #475569;'
+            >
+              <ul
+                class='address'
+                style='list-style: none; padding: 0; margin: 0;'
+              >
+                {{#with order.shippingAddress}}
+                  <li style='font-weight: 500; margin: 0'>
+                    {{../order.customer.firstName}}
+                    {{../order.customer.lastName}}
+                  </li>
+
+                  {{#if phoneNumber}}
+                    <li style='margin: 0'>
+                      {{phoneNumber}}
+                    </li>
+                  {{/if}}
+                  {{#if streetLine}}
+                    <li style='margin: 0'>
+                      {{streetLine}}
+                    </li>
+                  {{/if}}
+                  {{#if postalCode}}
+                    <li style='margin: 0'>
+                      {{postalCode}}
+                      {{city}}
+                    </li>
+                  {{/if}}
+                {{/with}}
+              </ul>
+            </td>
+
+          </tr>
+
+          <tr style='text-transform: uppercase; font-size: 1rem;'>
+            <td
+              style='padding: 0 0 0.5rem 0; border-bottom: 1px solid #cbd5e1;'
+            >
+              <span style='font-weight: 500; color: #0f172a;'>Płatność</span>
+            </td>
+          </tr>
+
+          {{#each order.payments}}
+          <tr>
+            <td style='padding: 0.5rem 0 1rem 0; color: #475569;'>
+              {{method}}
+            </td>
+          </tr>
+          {{/each}}
+
+          <tr style='text-transform: uppercase; font-size: 1rem;'>
+            <td
+              style='padding: 0 0 0.5rem 0; border-bottom: 1px solid #cbd5e1;'
+            >
+              <span style='font-weight: 500; color: #0f172a;'>Podsumowanie
+                zamówienia</span>
+            </td>
+          </tr>
+
+          <tr class='order-row'>
+            <td style='color: #475569;'>
+              <table style='width:100%; font-size: 13px;'>
+                {{#each order.lines}}
+                  <tr style='border-bottom: 1px solid #cbd5e1; color: #475569;'>
+                    <td width='100px' style='padding: 0.5rem 0;'>
+                      <img
+                        style='width:96px'
+                        src='{{product.featuredAsset.preview}}?preset=thumb'
+                        alt='{{product.name}}"'
+                      />
+                    </td>
+                    <td align='left'>
+                      <div>
+                        <a
+                          href='{{../storefrontUrl}}product/{{product.slug}}'
+                          style='text-transform: uppercase; color: #0c4a6e; font-weight: 500;'
+                        >{{product.name}}</a>
+                      </div>
+                      <div style='line-height: 1.25rem'>Waga: 250g</div>
+                    </td>
+                    <td align='right'>
+                      {{quantity}}
+                      x
+                      {{formatMoney product.price}}
+                      zł
+                    </td>
+                    <td style='font-weight: 500' align='right'>
+                      {{formatMoney proratedLinePrice}}
+                      zł
+                    </td>
+                  </tr>
+                {{/each}}
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style='padding: 0 2rem;'>
+              <table style='width:100%; color: #475569; font-size: 13px;'>
+                <tr>
+                  <td style='padding: 0.5rem;'>Produkty razem</td>
+                  <td style='padding: 0.5rem;' align='right'>{{formatMoney order.subTotal}}</td>
+                </tr>
+                <tr style='border-top: 1px solid #cbd5e1'>
+                  <td style='padding: 0.5rem;'>Dostawa</td>
+                  <td style='padding: 0.5rem;' align='right'>{{#if streetLine}} {{formatMoney order.shipping}} zł {{else}} Za darmo! {{/if}}</td>
+                </tr>
+                <tr style='font-size: 16px; border-top: 1px solid #cbd5e1'>
+                  <td style='padding: 0.5rem;'>Razem</td>
+                  <td
+                    style='padding: 0.5rem; font-weight: 500;'
+                    align='right'
+                  > 
+                  {{formatMoney order.total}} zł</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+        </mj-table>
+      </mj-column>
+    </mj-section>
+
+  </mj-body>
+</mjml>

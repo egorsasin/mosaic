@@ -1,6 +1,6 @@
 export { coreEntitiesMap } from './core-entities';
 export { MosaicEntity } from './entity';
-
+export { ShippingLine } from './shipping-line';
 export { User } from './user/user.entity';
 export { Order, OrderLine } from './order/';
 export { Product } from './product/product.entity';

@@ -1,4 +1,4 @@
-import { Exact } from './common';
+import { Exact, Maybe } from './common';
 import {
   AlreadyLoggedInError,
   EmailAddressConflictError,
@@ -15,6 +15,19 @@ export interface OrderLine {
   proratedLinePrice: number;
 }
 
+export type Node = {
+  id: number;
+  __typename?: string;
+};
+
+export type Payment = Node & {
+  __typename?: 'Payment';
+  amount: number;
+  createdAt: Date;
+  method: string;
+  updatedAt: Date;
+};
+
 export interface Order {
   __typename: 'Order';
   id: number;
@@ -23,6 +36,7 @@ export interface Order {
   shippingLine?: ShippingLine;
   customer?: any;
   shippingAddress?: any;
+  payments: Maybe<Payment[]>;
   subTotal: number;
   totalQuantity: number;
   total: number;

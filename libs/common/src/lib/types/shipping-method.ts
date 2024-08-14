@@ -12,4 +12,5 @@ export type ShippingMethodQuote = {
 export type ShippingMethod = {
   code: string;
   name: string;
+  description?: string;
 };
