@@ -271,14 +271,10 @@ export class CheckoutProcessComponent implements OnDestroy {
             if (
               ['PaymentSettled', 'PaymentAuthorized'].includes(result?.state)
             ) {
-              //  await new Promise<void>((resolve) =>
-              //    setTimeout(() => {
-              //      this.stateService.setState('activeOrderId', null);
-              //      resolve();
-              //    }, 500)
-              //  );
+              this.store.dispatch(setActiveOrder({ order: null }));
               this.router.navigate(['/order', result.code], {
                 relativeTo: this.activatedRoute,
+                state: { isCheckout: true },
               });
             }
           //         break;

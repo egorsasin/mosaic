@@ -4,5 +4,5 @@ import { Order } from '@mosaic/common';
 
 export const setActiveOrder = createAction(
   '[Order] Set Active Order',
-  props<{ order: Order }>()
+  props<{ order: Order | null }>()
 );

@@ -2,19 +2,14 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  inject,
   OnInit,
+  signal,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import {
-  filter,
-  map,
-  mergeMap,
-  shareReplay,
-  switchMap,
-  take,
-  tap,
-} from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 import { Order } from '@mosaic/common';
 
@@ -28,9 +23,15 @@ export class OrderDetailsComponent {
   order$: Observable<Order> = this.activatedRoute.data.pipe(
     map(({ order }) => order)
   );
-  // notFound$: Observable<boolean>;
+  public readonly isCheckout = signal(false);
 
-  constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(private activatedRoute: ActivatedRoute) {
+    const state: { isCheckout?: boolean } = inject(Location).getState() as {
+      isCheckout?: boolean;
+    };
+
+    this.isCheckout.set(Boolean(state.isCheckout));
+  }
 
   //ngOnInit() {
   //     const orderRequest$ = this.route.paramMap.pipe(
