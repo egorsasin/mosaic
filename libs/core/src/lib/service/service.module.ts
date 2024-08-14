@@ -12,6 +12,7 @@ import { PaymentStateMachine } from './helpers/payment-state-machine/payment-sta
 import { ConfigArgService } from './helpers/config-args';
 import { OrderCalculator } from './helpers/order-calculator';
 import { ShippingCalculator } from './helpers/shipping-calculator';
+import { EntityHydrator } from './helpers/entity-hydrator';
 
 import { UserService } from './services/user.service';
 import { CustomerService } from './services/customer.service';
@@ -36,6 +37,7 @@ const helpers = [
   ExternalAuthenticationService,
   ConfigArgService,
   ShippingCalculator,
+  EntityHydrator,
 ];
 
 const services = [

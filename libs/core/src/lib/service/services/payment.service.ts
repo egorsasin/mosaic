@@ -84,6 +84,7 @@ export class PaymentService {
     //   )
     // );
     await finalize();
+
     return payment;
   }
 }

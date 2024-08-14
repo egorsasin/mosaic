@@ -64,6 +64,7 @@ export class StateMachine<T extends string, Data = any> {
       };
     } else {
       await this.onError(this._currentState, state);
+
       return { finalize: finalizeNoop };
     }
   }

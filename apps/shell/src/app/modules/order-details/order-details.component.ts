@@ -19,14 +19,13 @@ import {
 import { Order } from '@mosaic/common';
 
 @Component({
-  selector: 'mos-checkout-confirmation',
-  templateUrl: './checkout-confirmation.component.html',
+  selector: 'mos-order-details',
+  templateUrl: './order-details.component.html',
   // styleUrls: ['./checkout-confirmation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CheckoutConfirmationComponent {
+export class OrderDetailsComponent {
   order$: Observable<Order> = this.activatedRoute.data.pipe(
-    tap((data) => console.log(data)),
     map(({ order }) => order)
   );
   // notFound$: Observable<boolean>;

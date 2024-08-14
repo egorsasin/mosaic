@@ -51,6 +51,28 @@ export class EmailEventHandler<
     return this;
   }
 
+  public loadData<R>(
+    loadDataFn: LoadDataFn<E, R>
+  ): EmailEventHandlerWithAsyncData<R, T, E, EventWithAsyncData<E, R>> {
+    const asyncHandler = new EmailEventHandlerWithAsyncData(
+      loadDataFn,
+      this.listener,
+      this.event
+    );
+
+    asyncHandler.setRecipientFn = this.setRecipientFn;
+    asyncHandler.setTemplateVarsFn = this.setTemplateVarsFn;
+    // asyncHandler.setAttachmentsFn = this.setAttachmentsFn;
+    // asyncHandler.setOptionalAddressFieldsFn = this.setOptionalAddressFieldsFn;
+    // asyncHandler.filterFns = this.filterFns;
+    // asyncHandler.configurations = this.configurations;
+    // asyncHandler.defaultSubject = this.defaultSubject;
+    // asyncHandler.from = this.from;
+    // asyncHandler._mockEvent = this._mockEvent as any;
+
+    return asyncHandler;
+  }
+
   public async handle(
     event: E,
     globals: { [key: string]: unknown } = {},
@@ -58,6 +80,17 @@ export class EmailEventHandler<
   ): Promise<IntermediateEmailDetails | undefined> {
     for (const filterFn of this.filterFns) {
       if (!filterFn(event)) {
+        return;
+      }
+    }
+
+    if (this instanceof EmailEventHandlerWithAsyncData) {
+      try {
+        (event as EventWithAsyncData<E, unknown>).data = await this.loadDataFn({
+          event,
+          injector,
+        });
+      } catch (err: unknown) {
         return;
       }
     }

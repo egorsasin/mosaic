@@ -18,7 +18,9 @@ export interface NoopTransportOptions {
 
 export type EmailTransportOptions = SMTPTransportOptions | NoopTransportOptions;
 
-export type EventWithContext = MosaicEvent & { ctx: RequestContext };
+export type EventWithContext<T extends MosaicEvent = MosaicEvent> = T & {
+  ctx: RequestContext;
+};
 
 export type EventWithAsyncData<Event extends EventWithContext, R> = Event & {
   data: R;

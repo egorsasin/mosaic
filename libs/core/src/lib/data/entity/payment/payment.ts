@@ -9,6 +9,7 @@ export class Payment extends MosaicEntity {
   constructor(input?: Partial<Payment>) {
     super(input);
   }
+
   @Column() method: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })

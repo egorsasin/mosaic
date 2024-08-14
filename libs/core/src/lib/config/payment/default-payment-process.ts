@@ -55,6 +55,6 @@ export const defaultPaymentProcess: PaymentProcess<PaymentState> = {
     order.payments = await orderService.getOrderPayments(order.id);
 
     // Изменим статус ордера после размещения платежа
-    await orderService.transitionToState(ctx, order.id, 'PaymentSettled');
+    await orderService.transitionToState(ctx, order.id, 'PaymentAuthorized');
   },
 };
