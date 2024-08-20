@@ -9,15 +9,16 @@ import {
   WhereExpressionBuilder,
 } from 'typeorm';
 
-import { unique, UserInputError, LogicalOperator } from '@mosaic/common';
+import {
+  unique,
+  UserInputError,
+  NullOptionals,
+  LogicalOperator,
+} from '@mosaic/common';
 
 import { MosaicEntity } from '../../../data/entity';
 import { DATA_SOURCE_PROVIDER } from '../../../data';
-import {
-  FilterParameter,
-  ListQueryOptions,
-  NullOptionals,
-} from '../../../types';
+import { FilterParameter, ListQueryOptions } from '../../../types';
 import { joinTreeRelationsDynamically } from '../utils';
 import { RequestContext } from '../../../api';
 import { parseFilterParams, WhereGroup } from './parse-filter-params';

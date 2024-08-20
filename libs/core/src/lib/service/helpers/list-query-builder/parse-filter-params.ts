@@ -7,18 +7,15 @@ import {
   InternalServerError,
   UserInputError,
   LogicalOperator,
+  BooleanOperators,
+  StringOperators,
+  NumberOperators,
+  DateOperators,
+  NullOptionals,
 } from '@mosaic/common';
 
 import { MosaicEntity } from '../../../data';
-import {
-  BooleanOperators,
-  DateOperators,
-  FilterParameter,
-  ListOperators,
-  NullOptionals,
-  NumberOperators,
-  StringOperators,
-} from '../../../types';
+import { FilterParameter, ListOperators } from '../../../types';
 import {
   escapeCalculatedColumnExpression,
   getColumnMetadata,

@@ -7,7 +7,7 @@ import {
   pick,
 } from '@mosaic/common';
 
-import { BaseDataService } from '../../base-data.service';
+import { BaseDataService } from '../../data';
 import {
   CREATE_PAYMENT_METHOD,
   GET_PAYMENT_METHOD_LIST,

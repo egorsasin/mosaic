@@ -1,15 +1,7 @@
-export type ConfigArg = {
-  name: string;
-  /**
-   * A JSON stringified representation of the actual value
-   */
-  value: string;
-};
-
-export type ConfigurableOperationInput = {
-  arguments: ConfigArg[];
-  code: string;
-};
+import {
+  ConfigArg,
+  ConfigurableOperationInput,
+} from './configurable-operation';
 
 export type CreatePaymentMethodInput = {
   code: string;

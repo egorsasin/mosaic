@@ -1,4 +1,13 @@
-import { Maybe, LogicalOperator, SortOrder } from '@mosaic/common';
+import {
+  Maybe,
+  LogicalOperator,
+  SortOrder,
+  NullOptionals,
+  StringOperators,
+  NumberOperators,
+  BooleanOperators,
+  DateOperators,
+} from '@mosaic/common';
 
 import { MosaicEntity } from '../data';
 
@@ -19,55 +28,6 @@ export type ErrorResult = {
 export enum CurrencyCode {
   PLN = 'PLN',
   USD = 'USD',
-}
-
-export type PaginatedList<T> = {
-  items: T[];
-  totalItems: number;
-};
-
-export interface StringOperators {
-  eq?: string;
-  notEq?: string;
-  contains?: string;
-  notContains?: string;
-  in?: string[];
-  notIn?: string[];
-  regex?: string;
-  isNull?: boolean;
-}
-
-export interface BooleanOperators {
-  eq?: boolean;
-  isNull?: boolean;
-}
-
-export interface NumberRange {
-  start: number;
-  end: number;
-}
-
-export interface NumberOperators {
-  eq?: number;
-  lt?: number;
-  lte?: number;
-  gt?: number;
-  gte?: number;
-  between?: NumberRange;
-  isNull?: boolean;
-}
-
-export interface DateRange {
-  start: Date;
-  end: Date;
-}
-
-export interface DateOperators {
-  eq?: Date;
-  before?: Date;
-  after?: Date;
-  between?: DateRange;
-  isNull?: boolean;
 }
 
 export interface ListOperators {
@@ -93,17 +53,6 @@ export type FilterParameter<T extends MosaicEntity> = {
 } & {
     _and?: Array<FilterParameter<T>>;
     _or?: Array<FilterParameter<T>>;
-};
-
-/**
- * Returns a type T where any optional fields also have the "null" type added.
- * This is needed to provide interop with the Apollo-generated interfaces, where
- * nullable fields have the type `field?: <type> | null`.
- */
-export type NullOptionals<T> = {
-  [K in keyof T]: undefined extends T[K]
-    ? NullOptionals<T[K]> | null
-    : NullOptionals<T[K]>;
 };
 
 export interface ListQueryOptions<T extends MosaicEntity> {

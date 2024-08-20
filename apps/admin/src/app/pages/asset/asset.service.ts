@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { SortOrder } from '@mosaic/common';
 
-import { BaseDataService } from '../../base-data.service';
+import { BaseDataService } from '../../data';
 import { CREATE_ASSETS, GET_ASSET_LIST } from './asset-list/asset-list.graphql';
 
 @Injectable()

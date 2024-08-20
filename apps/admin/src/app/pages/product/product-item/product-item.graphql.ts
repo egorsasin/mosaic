@@ -1,6 +1,6 @@
 import { gql } from 'apollo-angular';
 
-import { ASSET_FRAGMENT } from '../../../schema';
+import { ASSET_FRAGMENT } from '../../../data';
 
 export const PRODUCT_DETAIL_FRAGMENT = gql`
   fragment ProductDetail on Product {

@@ -3,7 +3,7 @@ import { DataSource } from 'typeorm/data-source/DataSource';
 import { ColumnMetadata } from 'typeorm/metadata/ColumnMetadata';
 import { Type } from '@nestjs/common';
 
-import { unique, UserInputError } from '@mosaic/common';
+import { NullOptionals, unique, UserInputError } from '@mosaic/common';
 
 import { CustomFieldConfig } from '../../../config/custom-field/custom-field-types';
 import {
@@ -12,7 +12,7 @@ import {
 } from './connection-utils';
 import { getCalculatedColumns } from './get-calculated-columns';
 import { MosaicEntity } from '../../../data';
-import { NullOptionals, SortParameter } from '../../../types';
+import { SortParameter } from '../../../types';
 
 /**
  * Parses the provided SortParameter array against the metadata of the given entity, ensuring that only

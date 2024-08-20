@@ -1,11 +1,10 @@
 import { Args, Query, Resolver, Mutation } from '@nestjs/graphql';
 import { UserInputError } from '@nestjs/apollo';
 
-import { MutationArgs } from '@mosaic/common';
+import { PaginatedList, MutationArgs } from '@mosaic/common';
 
 import {
   CreateProductInput,
-  PaginatedList,
   QueryListArgs,
   QueryProductArgs,
 } from '../../../types';

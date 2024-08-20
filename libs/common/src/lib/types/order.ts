@@ -5,6 +5,7 @@ import {
   GuestCheckoutError,
   NoActiveOrderError,
 } from './errors';
+import { Customer } from './customer';
 import { Product } from './product';
 import { ShippingMethod } from './shipping-method';
 
@@ -34,7 +35,7 @@ export interface Order {
   code: string;
   lines: OrderLine[];
   shippingLine?: ShippingLine;
-  customer?: any;
+  customer?: Customer;
   shippingAddress?: any;
   payments: Maybe<Payment[]>;
   subTotal: number;

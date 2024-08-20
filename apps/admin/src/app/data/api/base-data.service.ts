@@ -10,7 +10,7 @@ import { DocumentNode } from 'graphql/language/ast';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { QueryResult } from './common/query-result';
+import { QueryResult } from '../../common/query-result';
 
 @Injectable()
 export class BaseDataService {

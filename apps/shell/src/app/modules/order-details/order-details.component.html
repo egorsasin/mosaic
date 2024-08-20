@@ -45,7 +45,7 @@
           </div>
           <div>
             Wiadomości o zamówieniu wyślemy na:
-            <span class="font-medium">{{ order.customer.emailAddress }}</span>
+            <span class="font-medium">{{ order.customer?.emailAddress }}</span>
           </div>
         </div>
 
@@ -81,7 +81,7 @@
 
           <div class="mt-3">
             <div class="font-medium">
-              {{ order.customer?.firstName }} {{ order.customer.lastName }}
+              {{ order.customer?.firstName }} {{ order.customer?.lastName }}
             </div>
             <div>
               {{ order.shippingAddress.phoneNumber }}

@@ -1,8 +1,8 @@
 import { Args, Query, Resolver } from '@nestjs/graphql';
 
-import { UserInputError } from '@mosaic/common';
+import { UserInputError, PaginatedList } from '@mosaic/common';
 
-import { PaginatedList, QueryListArgs, QueryProductArgs } from '../../../types';
+import { QueryListArgs, QueryProductArgs } from '../../../types';
 import { Product } from '../../../data';
 import { ProductService } from '../../../service/services';
 
