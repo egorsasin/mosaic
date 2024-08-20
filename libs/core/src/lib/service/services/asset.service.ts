@@ -14,14 +14,13 @@ import {
 } from '@mosaic/common';
 
 import { Asset, MosaicEntity, DATA_SOURCE_PROVIDER } from '../../data';
-import { CreateAssetInput, CreateAssetResult } from '../../types';
-import { ConfigService } from '../../config';
 import {
-  AssetType,
+  CreateAssetInput,
   ListQueryOptions,
-  PaginatedList,
-  getAssetType,
-} from '../../common';
+  CreateAssetResult,
+} from '../../types';
+import { ConfigService } from '../../config';
+import { AssetType, PaginatedList, getAssetType } from '../../common';
 import { OrderableAsset } from '../../data/';
 
 export interface EntityWithAssets extends MosaicEntity {
@@ -57,7 +56,7 @@ export class AssetService {
   }
 
   public async findAll(
-    options?: ListQueryOptions
+    options?: ListQueryOptions<Asset>
   ): Promise<PaginatedList<Asset>> {
     return this.dataSource
       .getRepository(Asset)

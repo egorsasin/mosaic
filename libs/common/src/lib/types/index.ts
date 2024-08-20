@@ -8,3 +8,4 @@ export * from './product';
 export * from './customer';
 export * from './history';
 export * from './asset';
+export * from './sort';

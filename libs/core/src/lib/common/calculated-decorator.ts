@@ -1,10 +1,13 @@
 import { SelectQueryBuilder } from 'typeorm';
+import { MosaicEntity } from '../data';
 
 export const CALCULATED_PROPERTIES = '__mosCalculatedProperties__';
 
-export interface CalculatedColumnQueryInstruction {
+export interface CalculatedColumnQueryInstruction<
+  T extends MosaicEntity = MosaicEntity
+> {
   relations?: string[];
-  query?: (qb: SelectQueryBuilder<undefined>) => void;
+  query?: (qb: SelectQueryBuilder<T>) => void;
   expression?: string;
 }
 

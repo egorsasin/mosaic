@@ -1,5 +1,10 @@
 export type Maybe<T> = T | null;
 
+export enum LogicalOperator {
+  AND = 'AND',
+  OR = 'OR',
+}
+
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K];
 };

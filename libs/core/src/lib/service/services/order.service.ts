@@ -24,7 +24,6 @@ import {
   Customer,
 } from '../../data';
 import {
-  ListQueryOptions,
   NegativeQuantityError,
   OrderLimitError,
   OrderStateTransitionError,
@@ -34,6 +33,7 @@ import {
 import {
   RemoveOrderItemResult,
   UpdateOrderItemsResult,
+  ListQueryOptions,
   OrderState,
 } from '../../types';
 import { OrderModifier } from '../helpers/order-modifier/order-modifier';
@@ -78,7 +78,7 @@ export class OrderService {
   ) {}
 
   public async findAll(
-    options?: ListQueryOptions
+    options?: ListQueryOptions<Order>
   ): Promise<PaginatedList<Order>> {
     return this.dataSource
       .getRepository(Order)

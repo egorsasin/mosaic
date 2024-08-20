@@ -1,3 +1,4 @@
+export { Category } from './category';
 export { coreEntitiesMap } from './core-entities';
 export { MosaicEntity } from './entity';
 export { ShippingLine } from './shipping-line';

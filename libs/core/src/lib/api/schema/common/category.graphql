@@ -1,0 +1,14 @@
+type Category implements Node {
+  id: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  slug: String!
+  description: String!
+  filters: [ConfigurableOperation!]!
+}
+
+type CategoryList implements PaginatedList {
+  items: [Category!]!
+  totalItems: Int!
+}

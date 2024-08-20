@@ -12,7 +12,7 @@ export class ProductResolver {
 
   @Query()
   public async products(
-    @Args() { options }: QueryListArgs
+    @Args() { options }: QueryListArgs<Product>
   ): Promise<PaginatedList<Product>> {
     return this.productService.findAll(options);
   }
