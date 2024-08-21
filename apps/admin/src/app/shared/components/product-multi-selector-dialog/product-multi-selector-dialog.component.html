@@ -1,0 +1,12 @@
+<div class="flex-wrapper">
+  <div class="gallery">
+    <div
+      class="card"
+      *ngFor="let item of (items$ | async) || []; trackBy: trackByFn"
+      (click)="toggleSelection(item, $event)"
+      [class.selected]="isSelected(item)"
+    >
+      CARD
+    </div>
+  </div>
+</div>

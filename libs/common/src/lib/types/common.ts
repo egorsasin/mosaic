@@ -17,7 +17,9 @@ export type DefaultFormComponentId =
   | 'boolean-form-input'
   | 'select-form-input'
   | 'textarea-form-input'
-  | 'text-form-input';
+  | 'text-form-input'
+  | 'product-selector-form-input'
+  | 'product-multi-form-input';
 
 interface DefaultFormConfigHash
   extends Record<DefaultFormComponentId, unknown> {
@@ -48,6 +50,7 @@ export type DefaultFormComponentConfig<
 > = DefaultFormComponentUiConfig<T> & {
   ui?: DefaultFormComponentUiConfig<T>;
 };
+
 export type UiComponentConfig<T extends DefaultFormComponentId | string> =
   T extends DefaultFormComponentId
     ? {
@@ -72,7 +75,7 @@ export type ConfigArgDefinition = {
 };
 
 export type ConfigurableOperationDefinition = {
-  args: Array<ConfigArgDefinition>;
+  args: ConfigArgDefinition[];
   code: string;
   description: string;
 };

@@ -1,4 +1,5 @@
 import { TypedDocumentNode, gql } from 'apollo-angular';
+import { CONFIGURABLE_OPERATION_DEF_FRAGMENT } from '../../data';
 
 export const GET_PAYMENT_METHOD_LIST = gql`
   query GetPaymentMethodList($options: PaymentMethodListOptions!) {
@@ -56,23 +57,6 @@ export const GET_PAYMENT_METHOD_DETAIL: TypedDocumentNode = gql`
   }
 
   ${PAYMENT_METHOD_FRAGMENT}
-`;
-
-export const CONFIGURABLE_OPERATION_DEF_FRAGMENT = gql`
-  fragment ConfigurableOperationDef on ConfigurableOperationDefinition {
-    args {
-      name
-      type
-      required
-      defaultValue
-      list
-      ui
-      label
-      description
-    }
-    code
-    description
-  }
 `;
 
 export const GET_PAYMENT_METHOD_OPERATIONS = gql`

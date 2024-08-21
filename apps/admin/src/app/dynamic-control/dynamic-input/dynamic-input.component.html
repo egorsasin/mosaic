@@ -1,0 +1,10 @@
+<div *ngFor="let content of components; trackBy: trackByName" class="mt-2">
+  <label class="block text-sm font-medium leading-6 text-gray-900">{{
+    content.context.label || (content.context.name | sentenceCase)
+  }}</label>
+
+  <ng-container
+    *mosComponentOutlet="content.component; context: content.context"
+  >
+  </ng-container>
+</div>

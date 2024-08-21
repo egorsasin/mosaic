@@ -1,20 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import {
-  BaseListComponent,
-  ListOptions,
-  Paginated,
-} from '../../../common/base-list';
+import { BaseListComponent, ListOptions } from '../../../common/base-list';
 import { PaymentMethod } from '../types';
 import { PaymentMethodDataService } from '../payment-method.service';
+import { PaginatedList } from '@mosaic/common';
 
 @Component({
   selector: 'mos-payment-list',
   templateUrl: './payment-list.component.html',
 })
 export class PaymentListComponent
-  extends BaseListComponent<PaymentMethod>
+  extends BaseListComponent<any, PaymentMethod>
   implements OnInit
 {
   constructor(
@@ -26,8 +23,8 @@ export class PaymentListComponent
     super.setQueryFn(
       (args: ListOptions) => this.dataService.getPaymentMethods(args),
       (data: {
-        paymentMethods: Paginated<PaymentMethod>;
-      }): Paginated<PaymentMethod> => data.paymentMethods
+        paymentMethods: PaginatedList<PaymentMethod>;
+      }): PaginatedList<PaymentMethod> => data.paymentMethods
     );
   }
 

@@ -42,6 +42,7 @@
         >Name</label
       >
       <mos-input
+        [labelOutside]="true"
         formControlName="name"
         name="name"
         placeholder="Product name"
@@ -53,25 +54,52 @@
         >Slug</label
       >
       <mos-input
+        [labelOutside]="true"
         formControlName="slug"
         name="name"
         placeholder="Product slug"
       ></mos-input>
 
-      <mos-input
-        formControlName="price"
-        name="price"
-        placeholder="Price"
-        [mosMask]="maskConfig"
-      ></mos-input>
+      <input
+        type="checkbox"
+        mosSwitch
+        formControlName="isPrivate"
+        name="name"
+      />
 
-      <input type="checkbox" mosSwitch formControlName="enabled" name="name" />
+      <div formArrayName="filters">
+        @for (filter of filters.controls; track filter; let index = $index) {
+        <mos-dynamic-input
+          *ngIf="getFilterDefinition(filter) as operation"
+          [operation]="operation"
+          [formControlName]="index"
+        ></mos-dynamic-input>
+        }
+      </div>
+
+      <mos-dropdown [content]="dropdownTemplate">
+        <button
+          type="button"
+          class="mos-button-md rounded-md font-medium text-sm text-white bg-gray-600 px-3 py-2 drop-shadow hover:bg-gray-500 inline-flex items-center gap-x-1"
+        >
+          <mos-icon class="w-5 h-5" icon="plus-sign"></mos-icon>
+          <div class="">Add condition</div>
+          <mos-icon class="w-5 h-5" icon="more-vertical"></mos-icon>
+        </button>
+      </mos-dropdown>
     </form>
   </div>
 
-  <mos-assets
-    [assets]="assetChanges.assets || entity?.assets"
-    [featuredAsset]="assetChanges.featuredAsset || entity?.featuredAsset"
-    (change)="assetChanges = $event"
-  ></mos-assets>
+  <ng-template #dropdownTemplate>
+    <div class="p-3 bg-white">
+      <button
+        *ngFor="let filter of allFilters$ | async"
+        mosDropdownOption
+        type="button"
+        (click)="addFilter(filter)"
+      >
+        {{ filter.description }}
+      </button>
+    </div>
+  </ng-template>
 </div>

@@ -1,51 +1,100 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormControl,
+  FormGroup,
+  UntypedFormArray,
+  Validators,
+} from '@angular/forms';
+import { map, Observable } from 'rxjs';
 
-import { createNumberMask, TextMaskConfig } from '@mosaic/mask';
-import { Asset, Product } from '@mosaic/common';
+import {
+  Asset,
+  ConfigurableOperationDefinition,
+  Product,
+} from '@mosaic/common';
 
 import { BaseDetailComponent } from '../../asset/asset-list/base-detail.component';
+import { CategoryDataService, CategoryFiltersResult } from '../../../data';
 
 interface ProductForm {
   name: FormControl<string>;
   slug: FormControl<string>;
-}
-
-interface SelectedAssets {
-  assets?: Asset[];
-  featuredAsset?: Asset;
+  isPrivate: FormControl<boolean>;
+  filters: FormArray<any>;
 }
 
 @Component({
   selector: 'mos-category-item',
   templateUrl: './category-item.component.html',
+  styles: ['.mos-button-md {--mos-icon-size: 1.25rem}'],
 })
 export class CategoryItemComponent extends BaseDetailComponent<Product> {
-  public maskConfig: TextMaskConfig = {
-    mask: createNumberMask({
-      prefix: '',
-      allowNegative: false,
-    }),
-  };
+  private filtersMap: WeakMap<
+    AbstractControl,
+    ConfigurableOperationDefinition
+  > = new WeakMap();
+
+  public allFilters$: Observable<ConfigurableOperationDefinition[]> =
+    this.dataService
+      .getCategoryFilters()
+      .single$.pipe(
+        map(({ categoryFilters }: CategoryFiltersResult) => categoryFilters)
+      );
   public detailForm: FormGroup<ProductForm> = new FormGroup({
     name: new FormControl<string>('', {
       nonNullable: true,
       validators: [Validators.required],
     }),
+    isPrivate: new FormControl<boolean>(false, {
+      nonNullable: true,
+    }),
     slug: new FormControl<string>('', {
       nonNullable: true,
       validators: [Validators.required],
     }),
+    filters: new FormArray<any>([]),
   });
-  public assetChanges: SelectedAssets = {};
 
-  public get assetsChanged(): boolean {
-    return !!Object.values(this.assetChanges).length;
+  public get filters(): FormArray {
+    return this.detailForm.controls.filters;
   }
 
-  constructor() {
+  constructor(private dataService: CategoryDataService) {
     super();
+
     this.init();
+  }
+
+  public getFilterDefinition(
+    control: AbstractControl
+  ): ConfigurableOperationDefinition | undefined {
+    return this.filtersMap.has(control)
+      ? this.filtersMap.get(control)
+      : undefined;
+  }
+
+  public addFilter(collectionFilter: ConfigurableOperationDefinition) {
+    console.log('__FILTERS', this.filters);
+
+    const argsHash = collectionFilter.args.reduce(
+      (output, arg) => ({
+        ...output,
+        //[arg.name]: getConfigArgValue(arg.value),
+      }),
+      {}
+    );
+
+    const control = new FormControl({
+      code: collectionFilter.code,
+      args: argsHash,
+    });
+
+    this.filters.push(control);
+    this.filtersMap.set(control, collectionFilter);
+
+    console.log('__FILTERS', this.filters);
   }
 
   protected setFormValues(entity: Product): void {

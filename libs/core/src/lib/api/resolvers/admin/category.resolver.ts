@@ -1,6 +1,6 @@
 import { Args, Query, Resolver } from '@nestjs/graphql';
 
-import { PaginatedList } from '@mosaic/common';
+import { ConfigurableOperationDefinition, PaginatedList } from '@mosaic/common';
 
 import { QueryListArgs } from '../../../types';
 import { Category } from '../../../data';
@@ -23,5 +23,10 @@ export class CategoryResolver {
     relations: RelationPaths<Category>
   ): Promise<PaginatedList<Category>> {
     return this.categoryService.findAll(args.options || undefined, relations);
+  }
+
+  @Query()
+  public async categoryFilters(): Promise<ConfigurableOperationDefinition[]> {
+    return this.categoryService.getAvailableFilters();
   }
 }

@@ -1,43 +1,34 @@
 import { Injectable } from '@angular/core';
 
+import { QueryListArgs } from '@mosaic/common';
+
+import { BaseDataService } from '../api';
+import { GET_CATEGORY_FILTERS, GET_CATEGORY_LIST } from '../definitions';
+import { QueryResult } from '../../common/query-result';
 import {
-  NumberOperators,
-  PaginatedList,
-  QueryListArgs,
-  SortOrder,
-  LogicalOperator,
-  Category,
-} from '@mosaic/common';
-
-import { BaseDataService } from '../../data';
-import { GET_CATEGORY_LIST } from '../definitions';
-
-export type CollectionFilterParameter = {
-  id?: NumberOperators;
-};
-
-export type CollectionSortParameter = {
-  id?: SortOrder;
-};
-
-export interface CategoryListOptions {
-  take?: number | null;
-  skip?: number | null;
-  sort?: CollectionSortParameter;
-  filter?: CollectionFilterParameter;
-  filterOperator?: LogicalOperator;
-}
+  CategoryFiltersResult,
+  CategoryLidstQueryResult,
+  CategoryListOptions,
+} from '../models';
 
 @Injectable()
 export class CategoryDataService {
   constructor(private baseDataService: BaseDataService) {}
 
-  public getCollections(options?: CategoryListOptions) {
+  public getCollections(
+    options?: CategoryListOptions
+  ): QueryResult<CategoryLidstQueryResult> {
     return this.baseDataService.query<
-      PaginatedList<Category>,
+      CategoryLidstQueryResult,
       QueryListArgs<CategoryListOptions>
     >(GET_CATEGORY_LIST, {
       options,
     });
+  }
+
+  public getCategoryFilters() {
+    return this.baseDataService.query<CategoryFiltersResult>(
+      GET_CATEGORY_FILTERS
+    );
   }
 }

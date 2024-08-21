@@ -1,7 +1,8 @@
 import { Injectable, Injector, Provider, Type } from '@angular/core';
 import { ContextWrapper } from '@mosaic/cdk';
-import { DefaultFormComponentId } from './default-form-inputs';
 import { UntypedFormControl } from '@angular/forms';
+
+import { DefaultFormComponentId } from '@mosaic/common';
 
 export abstract class FormInputComponent {
   public get formControl(): UntypedFormControl {

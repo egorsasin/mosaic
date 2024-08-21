@@ -19,7 +19,7 @@ import { DataModule } from './data';
   imports: [
     BrowserModule,
     DataModule.forRoot(),
-    MosDynamicControlModule,
+    MosDynamicControlModule.forRoot(),
     RouterModule.forRoot([]),
     OverlayHostComponent,
     MosDialogHostModule,

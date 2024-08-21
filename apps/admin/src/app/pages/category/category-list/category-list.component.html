@@ -3,12 +3,8 @@
     <div class="flex items-center">
       <div class="flex-auto">
         <h1 class="text-base leading-6 font-semibold text-gray-900">
-          Products
+          Categories
         </h1>
-        <p class="mt-2 text-sm text-gray-700">
-          A list of all the users in your account including their name, title,
-          email and role.
-        </p>
       </div>
 
       <div class="flex-none sm:ml-16">
@@ -16,7 +12,7 @@
           routerLink="/products/create"
           class="block rounded-md font-semibold text-sm text-white bg-gray-600 px-3 py-2 drop-shadow hover:bg-gray-500"
         >
-          Add product
+          Add category
         </a>
       </div>
     </div>
@@ -26,20 +22,23 @@
         <thead>
           <th
             scope="col"
-            class="text-sm font-semibold text-gray-700 text-left py-3 pl-6 pr-3"
-          >
-            SKU
-          </th>
-          <th
-            scope="col"
             class="text-sm font-semibold text-gray-700 text-left py-3 px-3"
           >
             Name
           </th>
+
           <th
             scope="col"
-            class="text-sm font-semibold text-gray-700 text-left py-3 px-3"
-          ></th>
+            class="text-sm font-semibold text-gray-700 text-left py-3 pl-6 pr-3"
+          >
+            Slug
+          </th>
+          <th
+            scope="col"
+            class="text-sm font-semibold text-gray-700 text-left py-3 pl-6 pr-3"
+          >
+            Visibility
+          </th>
         </thead>
 
         <tbody>
@@ -50,56 +49,40 @@
               let last = last
             "
           >
-            <td class="pl-6 py-4 text-sm text-gray-500 relative">
-              <a [routerLink]="[item.id]">12345</a>
-              <div
-                *ngIf="!first"
-                class="absolute -top-px h-px left-6 right-0 bg-gray-200"
-              ></div>
-            </td>
-            <td class="px-3 py-4 text-sm font-norml relative">
-              {{ item.name }}
+            <td
+              class="pl-6 pr-3 py-4 text-sm text-gray-500 font-norml relative"
+            >
+              <a [routerLink]="[item.id]">{{ item.name }}</a>
               <div
                 *ngIf="!first"
                 class="absolute -top-px h-px left-0 right-0 bg-gray-200"
               ></div>
             </td>
             <td class="px-3 py-4 text-sm font-norml relative">
+              {{ item.slug }}
               <div
                 *ngIf="!first"
                 class="absolute -top-px h-px left-0 right-6 bg-gray-200"
               ></div>
             </td>
+            <td class="px-3 py-4 text-sm font-norml relative">
+              @if(item.isPrivate){
+              <span
+                class="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10"
+              >
+                Private
+              </span>
+              } @else {
+              <span
+                class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/10"
+              >
+                Public
+              </span>
+              }
+            </td>
           </tr>
         </tbody>
       </table>
-
-      <!-- PAGINATION -->
-      <div
-        class="flex items-center justify-between border-t border-gray-300 px-6"
-      >
-        <div>
-          <p class="text-sm text-gray-700">
-            Showing
-            <!-- space -->
-            <span class="font-medium">1</span>
-            <!-- space -->
-            to
-            <!-- space -->
-            <span class="font-medium">10</span>
-            <!-- space -->
-            of
-            <!-- space -->
-            <span class="font-medium">97</span>
-            <!-- space -->
-            results
-          </p>
-        </div>
-
-        <div class="flex -mt-px">
-          <a href="#" class="px-4 py-3 text-sm border-t-2">1</a>
-        </div>
-      </div>
     </div>
   </div>
 </div>

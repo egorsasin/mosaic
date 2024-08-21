@@ -7,6 +7,7 @@ import {
   MosAssetPickerDialogComponent,
   MosAssetsComponent,
   MosPaginationComponent,
+  MosProductMultiSelectorDialogComponent,
 } from './components';
 
 const DECLARATIONS = [
@@ -15,6 +16,7 @@ const DECLARATIONS = [
   MosAssetsComponent,
   MosAssetPickerDialogComponent,
   MosPaginationComponent,
+  MosProductMultiSelectorDialogComponent,
 ];
 
 @NgModule({
