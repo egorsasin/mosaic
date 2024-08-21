@@ -7,7 +7,7 @@ import { GET_CATEGORY_FILTERS, GET_CATEGORY_LIST } from '../definitions';
 import { QueryResult } from '../../common/query-result';
 import {
   CategoryFiltersResult,
-  CategoryLidstQueryResult,
+  CategoryListQueryResult,
   CategoryListOptions,
 } from '../models';
 
@@ -17,9 +17,9 @@ export class CategoryDataService {
 
   public getCollections(
     options?: CategoryListOptions
-  ): QueryResult<CategoryLidstQueryResult> {
+  ): QueryResult<CategoryListQueryResult> {
     return this.baseDataService.query<
-      CategoryLidstQueryResult,
+      CategoryListQueryResult,
       QueryListArgs<CategoryListOptions>
     >(GET_CATEGORY_LIST, {
       options,

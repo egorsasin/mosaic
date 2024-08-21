@@ -1,4 +1,4 @@
-import { gql } from 'apollo-angular';
+import { gql, TypedDocumentNode } from 'apollo-angular';
 
 import {
   CATEGORY_FOR_LIST_FRAGMENT,
@@ -17,7 +17,7 @@ export const GET_CATEGORY_LIST = gql`
   ${CATEGORY_FOR_LIST_FRAGMENT}
 `;
 
-export const GET_CATEGORY_FILTERS = gql`
+export const GET_CATEGORY_FILTERS: TypedDocumentNode = gql`
   query GetCategoryFilters {
     categoryFilters {
       ...ConfigurableOperationDef

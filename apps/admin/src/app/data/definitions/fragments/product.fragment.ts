@@ -1,6 +1,6 @@
-import { TypedDocumentNode, gql } from 'apollo-angular';
+import { gql } from 'apollo-angular';
 
-import { ASSET_FRAGMENT } from '../../data';
+import { ASSET_FRAGMENT } from './asset.fragment';
 
 export const PRODUCT_DETAIL_FRAGMENT = gql`
   fragment ProductDetail on Product {
@@ -22,11 +22,10 @@ export const PRODUCT_DETAIL_FRAGMENT = gql`
   ${ASSET_FRAGMENT}
 `;
 
-export const GET_PRODUCT_DETAIL: TypedDocumentNode = gql`
-  query GetProductDetail($id: Int!) {
-    product(id: $id) {
-      ...ProductDetail
-    }
+export const PRODUCT_LIST_QUERY_PRODUCT_FRAGMENT = gql`
+  fragment ProductListQueryProductFragment on Product {
+    id
+    name
+    slug
   }
-  ${PRODUCT_DETAIL_FRAGMENT}
 `;

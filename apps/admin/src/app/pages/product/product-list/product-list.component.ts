@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { PaginatedList } from '@mosaic/common';
 
 import { BaseListComponent } from '../../../common/base-list';
-import { ProductDataService } from '../product.service';
+import { ProductDataService } from '../../../data';
 
 interface Product {
   id: number;

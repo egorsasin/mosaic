@@ -11,3 +11,4 @@ export * from './asset';
 export * from './sort';
 export * from './cartegory';
 export * from './configurable-operation';
+export * from './search';

@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 
 import { Product } from '@mosaic/common';
 
 import { SelectionManager } from '../asset-picker-dialog/selection-manager';
+import { ProductDataService } from '../../../data';
 
 export type SearchItem = Product;
 
@@ -16,7 +17,7 @@ export type SearchItem = Product;
 export class MosProductMultiSelectorDialogComponent implements OnInit {
   mode: 'product' | 'variant' = 'product';
   initialSelectionIds: string[] = [];
-  items$?: Observable<SearchItem[]>;
+  items$: Observable<SearchItem[]>;
   searchTerm$ = new BehaviorSubject<string>('');
   searchFacetValueIds$ = new BehaviorSubject<string[]>([]);
   paginationConfig = {
@@ -31,10 +32,23 @@ export class MosProductMultiSelectorDialogComponent implements OnInit {
   //     this.paginationConfig
   //   );
 
-  //   constructor(
-  //     private dataService: DataService,
-  //     private changeDetector: ChangeDetectorRef
-  //   ) {}
+  constructor(
+    private dataService: ProductDataService // private changeDetector: ChangeDetectorRef
+  ) {
+    const searchQueryResult = this.dataService.searchProducts(
+      '',
+      this.paginationConfig.itemsPerPage,
+      0
+    );
+
+    this.items$ = searchQueryResult.stream$.pipe(
+      // tap((data) => {
+      //   this.paginationConfig.totalItems = data.search.totalItems;
+      //   this.selectionManager.setCurrentItems(data.search.items);
+      // }),
+      map(({ search }) => search.items)
+    );
+  }
 
   ngOnInit(): void {
     console.log('ON INIT');
@@ -47,11 +61,7 @@ export class MosProductMultiSelectorDialogComponent implements OnInit {
     //     itemsAreEqual: idFn,
     //     additiveMode: true,
     // });
-    // const searchQueryResult = this.dataService.product.searchProducts(
-    //     '',
-    //     this.paginationConfig.itemsPerPage,
-    //     0,
-    // );
+
     // const result$ = combineLatest(
     //     this.searchTerm$,
     //     this.searchFacetValueIds$,

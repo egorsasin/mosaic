@@ -1,0 +1,39 @@
+"""
+Which Collections are present in the products returned
+by the search, and in what quantity.
+"""
+type CategoryResult {
+  collection: Category!
+  count: Int!
+}
+
+type SearchResultAsset {
+  id: Int!
+  preview: String!
+  focalPoint: Coordinate
+}
+
+type SearchResult {
+  sku: String!
+  slug: String!
+  productId: ID!
+  productName: String!
+  productAsset: SearchResultAsset
+  price: Float!
+  description: String!
+  "An array of ids of the Collections in which this result appears"
+  categoryIds: [ID!]!
+  "A relevance score for the result. Differs between database implementations"
+  score: Float!
+}
+
+type SearchResponse {
+  items: [SearchResult!]!
+  totalItems: Int!
+  categories: [CategoryResult!]!
+}
+
+type Query {
+  search(input: SearchInput!): SearchResponse!
+  pendingSearchIndexUpdates: Int!
+}

@@ -4,14 +4,14 @@ import { ActivatedRoute } from '@angular/router';
 import { Category, PaginatedList } from '@mosaic/common';
 
 import { BaseListComponent } from '../../../common/base-list';
-import { CategoryDataService, CategoryLidstQueryResult } from '../../../data';
+import { CategoryDataService, CategoryListQueryResult } from '../../../data';
 
 @Component({
   selector: 'mos-category-list',
   templateUrl: './category-list.component.html',
 })
 export class CategoryListComponent
-  extends BaseListComponent<CategoryLidstQueryResult, Category>
+  extends BaseListComponent<CategoryListQueryResult, Category>
   implements OnInit
 {
   constructor(activateRoute: ActivatedRoute) {
@@ -21,7 +21,7 @@ export class CategoryListComponent
 
     super.setQueryFn(
       () => dataService.getCollections(),
-      ({ categories }: CategoryLidstQueryResult): PaginatedList<Category> =>
+      ({ categories }: CategoryListQueryResult): PaginatedList<Category> =>
         categories
     );
   }

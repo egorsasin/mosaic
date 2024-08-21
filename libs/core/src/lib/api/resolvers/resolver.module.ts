@@ -35,6 +35,7 @@ const ADMIN_RESOLVERS = [
   AdminResolvers.PaymentMethodResolver,
   AdminResolvers.OrderResolver,
   AdminResolvers.CategoryResolver,
+  AdminResolvers.SearchResolver,
 ];
 
 @Module({

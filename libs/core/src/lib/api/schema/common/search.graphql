@@ -1,0 +1,20 @@
+input FacetValueFilterInput {
+  and: Int
+  or: [Int]
+}
+
+input SearchResultSortParameter {
+  name: SortOrder
+  price: SortOrder
+}
+
+input SearchInput {
+  term: String
+  facetValueFilters: [FacetValueFilterInput!]
+  collectionId: ID
+  collectionSlug: String
+  groupByProduct: Boolean
+  take: Int
+  skip: Int
+  sort: SearchResultSortParameter
+}

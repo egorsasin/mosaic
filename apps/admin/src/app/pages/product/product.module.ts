@@ -6,7 +6,6 @@ import { MosInputModule } from '@mosaic/ui/input';
 import { MosSwitchComponent } from '@mosaic/ui/switch';
 import { MosMaskModule } from '@mosaic/mask';
 
-import { ProductDataService } from './product.service';
 import {
   ProductRoutingModule,
   ROUTED_COMPONENTS,
@@ -24,6 +23,6 @@ import { SharedModule } from '../../shared/shared.module';
     MosSwitchComponent,
     MosMaskModule,
   ],
-  providers: [ProductDataService],
+  providers: [],
 })
 export class ProductModule {}

@@ -18,3 +18,8 @@ interface PaginatedList {
 type Success {
   success: Boolean!
 }
+
+enum SortOrder {
+  ASC
+  DESC
+}

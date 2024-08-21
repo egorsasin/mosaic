@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { createBaseDetailResolveFn } from '../../common/utils';
 import { ProductItemComponent } from './product-item';
 import { ProductListComponent } from './product-list';
-import { GET_PRODUCT_DETAIL } from './schema';
+import { GET_PRODUCT_DETAIL } from '../../data';
 
 export const ROUTED_COMPONENTS = [ProductListComponent, ProductItemComponent];
 export const CREATE_ROUTE_PARAM = 'create';

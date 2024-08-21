@@ -15,7 +15,7 @@ export type CategorySortParameter = {
   id?: SortOrder;
 };
 
-export type CategoryLidstQueryResult = {
+export type CategoryListQueryResult = {
   categories: PaginatedList<Category>;
 };
 

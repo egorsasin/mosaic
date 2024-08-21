@@ -1,8 +1,11 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 
-import { FormInputComponent } from '../../component-registry.service';
 import { DefaultFormComponentId } from '@mosaic/common';
-import { MOSAIC_CONTEXT } from '@mosaic/cdk';
+import { ContextWrapper, MOSAIC_CONTEXT } from '@mosaic/cdk';
+import { MosDialogService } from '@mosaic/ui/dialog';
+
+import { MosProductMultiSelectorDialogComponent } from '../../../shared/components';
+import { FormInputComponent } from '../../component-registry.service';
 
 @Component({
   selector: 'mos-product-multi-selector-form-input',
@@ -16,13 +19,21 @@ export class MosProductMultiSelectorFormInputComponent<
   readonly isListInput = true;
   static readonly id: DefaultFormComponentId = 'product-multi-form-input';
 
-  constructor(@Inject(MOSAIC_CONTEXT) context: T) {
+  constructor(
+    @Inject(MOSAIC_CONTEXT) context: T,
+    private dialogService: MosDialogService
+  ) {
     super(context);
-
-    console.log('__context', context);
   }
 
   public select(): void {
+    const wrapper = new ContextWrapper(MosProductMultiSelectorDialogComponent);
+
+    this.dialogService
+      .open(wrapper, {
+        label: 'Select products',
+      })
+      .subscribe();
     // this.modalService
     //   .fromComponent(ProductMultiSelectorDialogComponent, {
     //     size: 'xl',
