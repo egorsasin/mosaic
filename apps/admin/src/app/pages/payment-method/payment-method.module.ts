@@ -11,7 +11,6 @@ import {
   PaymentRoutingModule,
   ROUTED_COMPONENTS,
 } from './payment-routing.module';
-import { PaymentMethodDataService } from './payment-method.service';
 import { SharedModule } from '../../shared/shared.module';
 import { DynamicFormInputComponent } from './dynamic-input';
 
@@ -28,6 +27,6 @@ import { DynamicFormInputComponent } from './dynamic-input';
     MosOptionDirective,
     MosComponentOutletDirective,
   ],
-  providers: [PaymentMethodDataService],
+  providers: [],
 })
 export class PaymentMethodModule {}

@@ -17,6 +17,7 @@ const ENTITY_RESOLVERS = [
   EntityResolvers.OrderEntityResolver,
   EntityResolvers.PaymentEntityResolver,
   EntityResolvers.PaymentMethodEntityResolver,
+  EntityResolvers.CategoryEntityResolver,
 ];
 
 const SHOP_RESOLVERS = [

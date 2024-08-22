@@ -44,7 +44,7 @@ export class ProductDataService {
     }) as any;
   }
 
-  searchProducts(term: string, take = 10, skip = 0) {
+  public searchProducts(term: string, take = 10, skip = 0) {
     return this.baseDataService.query<
       SearchProductsQuery,
       SearchProductsQueryVariables

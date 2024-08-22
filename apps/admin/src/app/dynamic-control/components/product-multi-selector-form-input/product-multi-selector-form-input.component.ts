@@ -1,6 +1,11 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Inject,
+} from '@angular/core';
 
-import { DefaultFormComponentId } from '@mosaic/common';
+import { DefaultFormComponentId, Product } from '@mosaic/common';
 import { ContextWrapper, MOSAIC_CONTEXT } from '@mosaic/cdk';
 import { MosDialogService } from '@mosaic/ui/dialog';
 
@@ -21,7 +26,8 @@ export class MosProductMultiSelectorFormInputComponent<
 
   constructor(
     @Inject(MOSAIC_CONTEXT) context: T,
-    private dialogService: MosDialogService
+    private dialogService: MosDialogService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     super(context);
   }
@@ -30,30 +36,16 @@ export class MosProductMultiSelectorFormInputComponent<
     const wrapper = new ContextWrapper(MosProductMultiSelectorDialogComponent);
 
     this.dialogService
-      .open(wrapper, {
+      .open<Product[]>(wrapper, {
         label: 'Select products',
       })
-      .subscribe();
-    // this.modalService
-    //   .fromComponent(ProductMultiSelectorDialogComponent, {
-    //     size: 'xl',
-    //     locals: {
-    //       mode: this.mode,
-    //       initialSelectionIds: this.formControl.value.map((item) =>
-    //         typeof item === 'string' ? item : item.id
-    //       ),
-    //     },
-    //   })
-    //   .subscribe((selection) => {
-    //     if (selection) {
-    //       this.formControl.setValue(
-    //         selection.map((item) =>
-    //           this.mode === 'product' ? item.productId : item.productVariantId
-    //         )
-    //       );
-    //       this.formControl.markAsDirty();
-    //       this.changeDetector.markForCheck();
-    //     }
-    //   });
+      .subscribe((selection: Product[]) => {
+        if (selection) {
+          this.formControl.setValue(selection.map(({ id }) => id));
+
+          this.formControl.markAsDirty();
+          this.changeDetectorRef.markForCheck();
+        }
+      });
   }
 }

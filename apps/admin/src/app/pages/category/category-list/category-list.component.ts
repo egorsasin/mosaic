@@ -20,7 +20,7 @@ export class CategoryListComponent
     const dataService = inject(CategoryDataService);
 
     super.setQueryFn(
-      () => dataService.getCollections(),
+      () => dataService.getCategories(),
       ({ categories }: CategoryListQueryResult): PaginatedList<Category> =>
         categories
     );

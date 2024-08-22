@@ -51,7 +51,7 @@ export const productIdCategoryFilter = new CategoryFilter({
       return qb;
     }
     const productIdsKey = randomSuffix('productIds');
-    const clause = `product.productId IN (:...${productIdsKey})`;
+    const clause = `product.id IN (:...${productIdsKey})`;
     const params = { [productIdsKey]: args.productIds };
 
     if (args.combineWithAnd === false) {

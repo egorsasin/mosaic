@@ -7,19 +7,10 @@ import {
   CreateProductInput,
   QueryListArgs,
   QueryProductArgs,
+  UpdateProductInput,
 } from '../../../types';
 import { Product } from '../../../data';
 import { ProductService } from '../../../service/services';
-
-export type UpdateProductInput = {
-  assetIds?: number[];
-  enabled?: boolean;
-  featuredAssetId?: number;
-  id: number;
-  description?: string;
-  name?: string;
-  slug?: string;
-};
 
 @Resolver()
 export class ProductResolver {

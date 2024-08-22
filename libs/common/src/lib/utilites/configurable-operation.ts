@@ -13,3 +13,9 @@ export function getConfigArgValue(value: string) {
     return value;
   }
 }
+
+export function encodeConfigArgValue(value: unknown): string {
+  return Array.isArray(value)
+    ? JSON.stringify(value)
+    : (value ?? '').toString();
+}

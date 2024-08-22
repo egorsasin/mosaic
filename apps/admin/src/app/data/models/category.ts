@@ -5,6 +5,7 @@ import {
   LogicalOperator,
   Category,
   ConfigurableOperationDefinition,
+  ConfigurableOperationInput,
 } from '@mosaic/common';
 
 export type CategoryFilterParameter = {
@@ -30,3 +31,14 @@ export interface CategoryListOptions {
 export type CategoryFiltersResult = {
   categoryFilters: ConfigurableOperationDefinition[];
 };
+
+export type UpdateCategoryInput = {
+  filters?: ConfigurableOperationInput[];
+  id: number;
+  isPrivate?: boolean;
+  name?: string;
+  slug?: string;
+  description?: string;
+};
+
+export type UpdateCategoryMutation = { updateCollection: Category };

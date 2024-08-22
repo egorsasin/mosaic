@@ -7,12 +7,12 @@ import {
   pick,
 } from '@mosaic/common';
 
-import { BaseDataService } from '../../data';
+import { BaseDataService } from './base-data.service';
 import {
   CREATE_PAYMENT_METHOD,
   GET_PAYMENT_METHOD_LIST,
   GET_PAYMENT_METHOD_OPERATIONS,
-} from './schema';
+} from '../definitions';
 
 @Injectable()
 export class PaymentMethodDataService {

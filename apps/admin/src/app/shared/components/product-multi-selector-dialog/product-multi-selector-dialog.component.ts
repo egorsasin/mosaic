@@ -1,10 +1,16 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  OnInit,
+} from '@angular/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 
 import { Product } from '@mosaic/common';
 
 import { SelectionManager } from '../asset-picker-dialog/selection-manager';
 import { ProductDataService } from '../../../data';
+import { MOSAIC_CONTEXT } from '@mosaic/cdk';
 
 export type SearchItem = Product;
 
@@ -15,17 +21,15 @@ export type SearchItem = Product;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MosProductMultiSelectorDialogComponent implements OnInit {
-  mode: 'product' | 'variant' = 'product';
   initialSelectionIds: string[] = [];
   items$: Observable<SearchItem[]>;
-  searchTerm$ = new BehaviorSubject<string>('');
-  searchFacetValueIds$ = new BehaviorSubject<string[]>([]);
+
   paginationConfig = {
     currentPage: 1,
     itemsPerPage: 25,
     totalItems: 1,
   };
-  selectionManager?: SelectionManager<SearchItem>;
+  selectionManager: SelectionManager<SearchItem>;
 
   //   resolveWith: (result?: SearchItem[]) => void;
   //   private paginationConfig$ = new BehaviorSubject<PaginationInstance>(
@@ -33,20 +37,28 @@ export class MosProductMultiSelectorDialogComponent implements OnInit {
   //   );
 
   constructor(
+    @Inject(MOSAIC_CONTEXT) private context: any,
     private dataService: ProductDataService // private changeDetector: ChangeDetectorRef
   ) {
-    const searchQueryResult = this.dataService.searchProducts(
-      '',
-      this.paginationConfig.itemsPerPage,
-      0
-    );
+    const idFn = (a: SearchItem, b: SearchItem) => a.id === b.id;
+
+    this.selectionManager = new SelectionManager<SearchItem>({
+      multiSelect: true,
+      itemsAreEqual: idFn,
+      additiveMode: true,
+    });
+
+    const searchQueryResult = this.dataService.getProducts({
+      take: this.paginationConfig.itemsPerPage,
+      skip: 0,
+    });
 
     this.items$ = searchQueryResult.stream$.pipe(
       // tap((data) => {
       //   this.paginationConfig.totalItems = data.search.totalItems;
       //   this.selectionManager.setCurrentItems(data.search.items);
       // }),
-      map(({ search }) => search.items)
+      map(({ products }) => products.items)
     );
   }
 
@@ -130,32 +142,25 @@ export class MosProductMultiSelectorDialogComponent implements OnInit {
     // }
   }
 
-  trackByFn(index: number, item: SearchItem) {
+  public trackByFn(index: number, item: SearchItem) {
     return item.id;
   }
 
-  setSearchTerm(term: string) {
-    // this.searchTerm$.next(term);
-  }
-  setFacetValueIds(ids: string[]) {
-    // this.searchFacetValueIds$.next(ids);
+  public toggleSelection(item: SearchItem, event: MouseEvent): void {
+    this.selectionManager.toggleSelection(item, event);
   }
 
-  toggleSelection(item: SearchItem, event: MouseEvent) {
-    // this.selectionManager.toggleSelection(item, event);
+  public clearSelection(): void {
+    this.selectionManager.selectMultiple([]);
   }
 
-  clearSelection() {
-    // this.selectionManager.selectMultiple([]);
+  public isSelected(item: SearchItem): boolean {
+    return this.selectionManager.isSelected(item);
   }
 
-  isSelected(item: SearchItem) {
-    // return this.selectionManager.isSelected(item);
-  }
-
-  entityInfoClick(event: MouseEvent) {
-    // event.preventDefault();
-    // event.stopPropagation();
+  public entityInfoClick(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
   }
 
   pageChange(page: number) {
@@ -168,11 +173,11 @@ export class MosProductMultiSelectorDialogComponent implements OnInit {
     // this.paginationConfig$.next(this.paginationConfig);
   }
 
-  select() {
-    //this.resolveWith(this.selectionManager.selection);
+  public select() {
+    this.context.completeWith(this.selectionManager.selection);
   }
 
-  cancel() {
-    //this.resolveWith();
+  public cancel() {
+    this.context.completeWith(null);
   }
 }

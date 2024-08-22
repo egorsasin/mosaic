@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { createBaseDetailResolveFn } from '../../common/utils';
 import { PaymentListComponent } from './payment-list';
 import { PaymentMethodComponent } from './payment-method-item';
-import { GET_PAYMENT_METHOD_DETAIL } from './schema';
+import { GET_PAYMENT_METHOD_DETAIL } from '../../data';
 
 export const ROUTED_COMPONENTS = [PaymentListComponent, PaymentMethodComponent];
 

@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MosInputModule } from '@mosaic/ui/input';
 import { MosSwitchComponent } from '@mosaic/ui/switch';
 import { MosMaskModule } from '@mosaic/mask';
+import { MosLetDirective } from '@mosaic/cdk';
 
 import {
   ProductRoutingModule,
@@ -22,6 +23,7 @@ import { SharedModule } from '../../shared/shared.module';
     SharedModule,
     MosSwitchComponent,
     MosMaskModule,
+    MosLetDirective,
   ],
   providers: [],
 })

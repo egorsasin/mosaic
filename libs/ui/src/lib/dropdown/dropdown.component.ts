@@ -18,6 +18,7 @@ import { DataListHost } from '../types';
   selector: 'mos-dropdown',
   exportAs: 'mosDropdownComponent',
   templateUrl: './dropdown.component.html',
+  styles: [':host {display: inline-block;}'],
   providers: [
     {
       provide: DATA_LIST_HOST,

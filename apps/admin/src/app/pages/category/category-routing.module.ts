@@ -1,13 +1,23 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
+import { gql, TypedDocumentNode } from 'apollo-angular';
 
 import { createBaseDetailResolveFn } from '../../common/utils';
 import { CategoryListComponent } from './category-list';
 import { CategoryItemComponent } from './category-item/category-item.component';
-import { GET_PRODUCT_DETAIL } from '../../data';
+import { CATEGORY_FRAGMENT } from '../../data';
 
 export const ROUTED_COMPONENTS = [CategoryListComponent, CategoryItemComponent];
 export const CREATE_ROUTE_PARAM = 'create';
+
+export const CATEGORY_DETAIL_QUERY: TypedDocumentNode = gql`
+  query CategoryDetailQuery($id: Int!) {
+    category(id: $id) {
+      ...Category
+    }
+  }
+  ${CATEGORY_FRAGMENT}
+`;
 
 const routes: Routes = [
   {
@@ -19,8 +29,8 @@ const routes: Routes = [
     component: CategoryItemComponent,
     resolve: {
       detail: createBaseDetailResolveFn({
-        query: GET_PRODUCT_DETAIL,
-        entityKey: 'product',
+        query: CATEGORY_DETAIL_QUERY,
+        entityKey: 'category',
       }),
     },
   },

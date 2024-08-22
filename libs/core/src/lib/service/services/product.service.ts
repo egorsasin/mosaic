@@ -6,8 +6,11 @@ import { unique } from '@mosaic/common';
 
 import { Product, DATA_SOURCE_PROVIDER } from '../../data';
 import { PaginatedList } from '../../common';
-import { CreateProductInput, ListQueryOptions } from '../../types';
-import { UpdateProductInput } from '../../api/resolvers/admin/product.resolver';
+import {
+  CreateProductInput,
+  ListQueryOptions,
+  UpdateProductInput,
+} from '../../types';
 import { AssetService } from './asset.service';
 
 const PRODUCT_RELATIONS = ['assets'];

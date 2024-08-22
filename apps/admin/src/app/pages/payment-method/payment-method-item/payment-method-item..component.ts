@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { takeUntil } from 'rxjs';
 
 import {
   ConfigArgDefinition,
@@ -10,8 +11,7 @@ import { IdentityMatcher, StringHandler } from '@mosaic/ui/types';
 
 import { BaseDetailComponent } from '../../asset/asset-list/base-detail.component';
 import { PaymentMethod } from '../types';
-import { PaymentMethodDataService } from '../payment-method.service';
-import { takeUntil } from 'rxjs';
+import { PaymentMethodDataService } from '../../../data';
 
 interface PaymentMethodForm {
   name: FormControl<string>;

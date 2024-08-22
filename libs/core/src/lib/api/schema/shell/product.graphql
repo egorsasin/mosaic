@@ -2,5 +2,5 @@ type Query {
   "Get a list of Products"
   products(options: ProductListOptions): ProductList!
   "Get a Product either by id or slug. If neither 'id' nor 'slug' is specified, an error will result."
-  product(id: ID, slug: String): Product
+  product(id: Int, slug: String): Product
 }

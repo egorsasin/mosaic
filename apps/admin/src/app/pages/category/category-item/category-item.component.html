@@ -3,16 +3,13 @@
     <div class="flex items-center">
       <div class="flex-auto">
         <h1 class="text-base leading-6 font-semibold text-gray-900">
-          Products
+          Categries
         </h1>
-        <p class="mt-2 text-sm text-gray-700">
-          A list of all the users in your account including their name, title,
-          email and role.
-        </p>
       </div>
 
       <button class="flex-none sm:ml-16">
         <button
+          (click)="save()"
           class="rounded-md font-semibold text-sm text-white bg-gray-600 px-4 py-2 drop-shadow hover:bg-gray-500 inline-flex items-center gap-x-1"
         >
           <svg
@@ -45,7 +42,7 @@
         [labelOutside]="true"
         formControlName="name"
         name="name"
-        placeholder="Product name"
+        placeholder="Category name"
       ></mos-input>
 
       <label
@@ -57,7 +54,7 @@
         [labelOutside]="true"
         formControlName="slug"
         name="name"
-        placeholder="Product slug"
+        placeholder="Category slug"
       ></mos-input>
 
       <input

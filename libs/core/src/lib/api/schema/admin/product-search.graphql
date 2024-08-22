@@ -16,13 +16,13 @@ type SearchResultAsset {
 type SearchResult {
   sku: String!
   slug: String!
-  productId: ID!
+  productId: Int!
   productName: String!
   productAsset: SearchResultAsset
   price: Float!
   description: String!
   "An array of ids of the Collections in which this result appears"
-  categoryIds: [ID!]!
+  categoryIds: [Int!]!
   "A relevance score for the result. Differs between database implementations"
   score: Float!
 }

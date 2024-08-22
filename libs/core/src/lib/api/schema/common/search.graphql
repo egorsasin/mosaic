@@ -11,7 +11,7 @@ input SearchResultSortParameter {
 input SearchInput {
   term: String
   facetValueFilters: [FacetValueFilterInput!]
-  collectionId: ID
+  collectionId: Int
   collectionSlug: String
   groupByProduct: Boolean
   take: Int

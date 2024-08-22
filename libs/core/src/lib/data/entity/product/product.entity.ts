@@ -3,6 +3,7 @@ import {
   Entity,
   Index,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
   OneToMany,
 } from 'typeorm';
@@ -11,6 +12,7 @@ import { Money } from '../../../config/entity/money.decorator';
 import { MosaicEntity, SoftDeletable } from '../entity';
 import { Asset } from '../asset';
 import { ProductAsset } from './product-asset.entity';
+import { Category } from '../category';
 
 @Entity()
 export class Product extends MosaicEntity implements SoftDeletable {
@@ -48,4 +50,7 @@ export class Product extends MosaicEntity implements SoftDeletable {
 
   @OneToMany(() => ProductAsset, (productAsset) => productAsset.product)
   public assets: ProductAsset[];
+
+  @ManyToMany(() => Category, (category) => category.products)
+  categories: Category[];
 }
