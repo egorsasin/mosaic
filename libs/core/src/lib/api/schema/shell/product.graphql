@@ -3,4 +3,6 @@ type Query {
   products(options: ProductListOptions): ProductList!
   "Get a Product either by id or slug. If neither 'id' nor 'slug' is specified, an error will result."
   product(id: Int, slug: String): Product
+  "Search Products based on the criteria set by the `SearchInput`"
+  search(input: SearchInput!): SearchResponse!
 }

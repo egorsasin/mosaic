@@ -1,9 +1,11 @@
+import path from 'path';
+
+import { DefaultSearchPlugin } from '@mosaic/core';
 import { API_PORT } from '@mosaic/common';
 import { DefaultAssetNamingStrategy, MosaicConfig } from '@mosaic/core/config';
 import { GoogleAuthPlugin } from '@mosaic/google-auth';
 import { AssetServerPlugin } from '@mosaic/asset-server';
 import { defaultEmailHandlers, EmailPlugin } from '@mosaic/email-plugin';
-import path from 'path';
 
 import { examplePaymentHandler, PaynowPlugin } from './payment';
 import { InvoicePlugin } from './payment/invoice/invoice.plugin';
@@ -69,6 +71,7 @@ export const appConfig: MosaicConfig = {
         },
       },
     }),
+    DefaultSearchPlugin.init(),
   ],
   paymentOptions: {
     paymentMethodHandlers: [examplePaymentHandler],

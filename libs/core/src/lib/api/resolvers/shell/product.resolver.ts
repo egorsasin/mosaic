@@ -1,6 +1,11 @@
 import { Args, Query, Resolver } from '@nestjs/graphql';
 
-import { UserInputError, PaginatedList } from '@mosaic/common';
+import {
+  UserInputError,
+  PaginatedList,
+  InternalServerError,
+  SearchResponse,
+} from '@mosaic/common';
 
 import { QueryListArgs, QueryProductArgs } from '../../../types';
 import { Product } from '../../../data';
@@ -32,5 +37,10 @@ export class ProductResolver {
     } else {
       throw new UserInputError('error.product-id-or-slug-must-be-provided');
     }
+  }
+
+  @Query()
+  public async search(): Promise<SearchResponse> {
+    throw new InternalServerError('error.no-search-plugin-configured');
   }
 }

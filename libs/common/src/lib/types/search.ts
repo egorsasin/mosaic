@@ -3,6 +3,7 @@ import { Maybe } from './common';
 import { Category } from './cartegory';
 
 export type SearchResult = {
+  id: number;
   sku: string;
   slug: string;
   productId: number;
@@ -35,7 +36,7 @@ export type SearchResultAsset = {
 
 export type SearchResponse = {
   __typename?: 'SearchResponse';
-  collections: Array<CategoryResult>;
+  categories: Array<CategoryResult>;
   items: SearchResult[];
   totalItems: number;
 };

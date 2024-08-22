@@ -27,12 +27,6 @@ type SearchResult {
   score: Float!
 }
 
-type SearchResponse {
-  items: [SearchResult!]!
-  totalItems: Int!
-  categories: [CategoryResult!]!
-}
-
 type Query {
   search(input: SearchInput!): SearchResponse!
   pendingSearchIndexUpdates: Int!

@@ -22,7 +22,10 @@ import { ServiceModule } from '../service/service.module';
 import { getPluginAPIExtensions } from '../plugin';
 import { I18nModule } from '../i18n/i18n.module';
 
-import { ResolverModule, AdminResolverModule } from './resolvers';
+import {
+  ResolverModule,
+  AdminResolverModule,
+} from './resolvers/resolver.module';
 import {
   generateAdminResolvers,
   generateAuthenticationTypes,
@@ -65,8 +68,11 @@ function configuregGraphQLModule(options: GraphQLApiOptions) {
 
       return {
         driver: ApolloDriver,
+        typeDefs: printSchema(await buildSchemaForApi(apiType)),
         include: [include],
         context: ({ req, res }) => ({ req, res }),
+        inheritResolversFromInterfaces: true,
+        fieldResolverEnhancers: ['guards'],
         resolvers,
         cors: {
           origin: true,
@@ -74,7 +80,6 @@ function configuregGraphQLModule(options: GraphQLApiOptions) {
         },
         playground: false,
         debug: false,
-        typeDefs: printSchema(await buildSchemaForApi(apiType)),
         path: `/${apiPath}`,
         plugins: [
           ApolloServerPluginLandingPageLocalDefault(),

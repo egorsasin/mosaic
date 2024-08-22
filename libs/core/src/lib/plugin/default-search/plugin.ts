@@ -1,19 +1,24 @@
-import { OnApplicationBootstrap } from '@nestjs/common';
+import { OnApplicationBootstrap, Type } from '@nestjs/common';
 
 import { EventBus, ProductEvent } from '../../event-bus';
 import { MosaicPlugin } from '../mosaic-plugin';
 import { PluginCommonModule } from '../plugin-common.module';
-import { SearchIndexItem } from './entities';
+import { SearchIndex } from './entities';
+import { ShopFulltextSearchResolver } from './api';
+import { FulltextSearchService } from './providers';
 
 @MosaicPlugin({
   imports: [PluginCommonModule],
-  providers: [],
-  entities: [SearchIndexItem],
+  providers: [FulltextSearchService],
+  entities: [SearchIndex],
   adminApiExtensions: {
     resolvers: [],
   },
+  shopApiExtensions: {
+    resolvers: [ShopFulltextSearchResolver],
+  },
 })
-export class EmailPlugin implements OnApplicationBootstrap {
+export class DefaultSearchPlugin implements OnApplicationBootstrap {
   constructor(private eventBus: EventBus) {
     this.eventBus.ofType(ProductEvent).subscribe((event) => {
       if (event.type === 'deleted') {
@@ -24,7 +29,11 @@ export class EmailPlugin implements OnApplicationBootstrap {
     });
   }
 
+  public static init(): Type<DefaultSearchPlugin> {
+    return DefaultSearchPlugin;
+  }
+
   public onApplicationBootstrap(): void {
-    throw new Error('Method not implemented.');
+    // TODO
   }
 }

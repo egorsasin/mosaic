@@ -1,7 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Exact, LogicalOperator, PaginatedList, Product } from '@mosaic/common';
+import {
+  MutationArgs,
+  PaginatedList,
+  Product,
+  SearchInput,
+} from '@mosaic/common';
 
 import {
   PRODUCT_LIST_QUERY,
@@ -19,21 +24,6 @@ export type FacetValueFilterInput = {
   or?: number;
 };
 
-export type SearchInput = {
-  categoryId?: number;
-  categorySlug?: string;
-  facetValueFilters?: FacetValueFilterInput[];
-  groupByProduct?: boolean;
-  skip?: number;
-  sort?: number;
-  take?: number;
-  term?: string;
-};
-
-export type SearchProductsQueryVariables = Exact<{
-  input: SearchInput;
-}>;
-
 @Injectable()
 export class ProductDataService {
   constructor(private baseDataService: BaseDataService) {}
@@ -47,7 +37,7 @@ export class ProductDataService {
   public searchProducts(term: string, take = 10, skip = 0) {
     return this.baseDataService.query<
       SearchProductsQuery,
-      SearchProductsQueryVariables
+      MutationArgs<SearchInput>
     >(SEARCH_PRODUCTS, {
       input: {
         term,

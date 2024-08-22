@@ -6,9 +6,17 @@ import { ServiceModule } from './service/service.module';
 import { ConfigModule } from './config/config.module';
 import { I18nService } from './i18n';
 import { I18nModule } from './i18n/i18n.module';
+import { PluginModule } from './plugin/plugin.module';
 
 @Module({
-  imports: [ConfigModule, DataModule, ApiModule, ServiceModule, I18nModule],
+  imports: [
+    ConfigModule,
+    DataModule,
+    ApiModule,
+    ServiceModule,
+    I18nModule,
+    PluginModule.forRoot(),
+  ],
 })
 export class MosCoreModule implements NestModule {
   constructor(private i18nService: I18nService) {}

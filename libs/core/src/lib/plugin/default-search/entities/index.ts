@@ -1,1 +1,1 @@
-export { SearchIndexItem } from './search-index-item.entity';
+export { SearchIndex } from './search-index-item.entity';

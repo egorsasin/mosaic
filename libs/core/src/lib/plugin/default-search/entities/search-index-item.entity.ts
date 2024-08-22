@@ -3,8 +3,8 @@ import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 import { Money } from '../../../config/entity/money.decorator';
 
 @Entity()
-export class SearchIndexItem {
-  constructor(input?: Partial<SearchIndexItem>) {
+export class SearchIndex {
+  constructor(input?: Partial<SearchIndex>) {
     if (input) {
       for (const [key, value] of Object.entries(input)) {
         (this as any)[key] = value;
