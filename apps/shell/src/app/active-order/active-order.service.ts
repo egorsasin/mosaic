@@ -3,7 +3,7 @@ import { map, Observable, shareReplay } from 'rxjs';
 
 import { Order } from '@mosaic/common';
 
-import { DataService } from '../data/data.service';
+import { DataService } from '../data';
 import { QueryResult } from '../data/query-result';
 import { GET_ACTIVE_ORDER } from '../common';
 

@@ -1,0 +1,4 @@
+type Query {
+  "A list of Categories available to the shop"
+  categories(options: CategoryListOptions): CategoryList!
+}

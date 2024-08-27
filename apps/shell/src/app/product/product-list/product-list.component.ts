@@ -5,6 +5,8 @@ import { ListOptions, Product } from '../../types';
 import { BaseListComponent } from '../base-list.component';
 import { ProductService } from '../product.service';
 import { GetProductList } from '../product.types';
+import { CategoryService } from '../../data';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'mos-product-list',
@@ -16,8 +18,13 @@ export class ProductListComponent
   extends BaseListComponent<GetProductList.Query, Product>
   implements OnInit
 {
+  public categories$ = this.categoryService
+    .getCategories()
+    .single$.pipe(map(({ categories }) => categories.items));
+
   constructor(
     private productService: ProductService,
+    private categoryService: CategoryService,
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) {

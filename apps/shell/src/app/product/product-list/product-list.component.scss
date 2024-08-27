@@ -1,0 +1,15 @@
+.mos-categories {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 0;
+    width: 100%;
+    @apply border-b;
+  }
+
+  --mos-icon-size: 1rem;
+}

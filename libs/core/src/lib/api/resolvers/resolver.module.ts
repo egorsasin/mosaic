@@ -27,7 +27,7 @@ const SHOP_RESOLVERS = [
   StorefrontResolvers.ProductResolver,
   StorefrontResolvers.OrderResolver,
   StorefrontResolvers.PaymentMethodResolver,
-  StorefrontResolvers.ShippingMethodResolver,
+  StorefrontResolvers.CategoryResolver,
 ];
 
 const ADMIN_RESOLVERS = [

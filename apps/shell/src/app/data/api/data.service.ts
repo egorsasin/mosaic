@@ -5,10 +5,9 @@ import { OperationVariables } from '@apollo/client';
 import { DocumentNode } from 'graphql/language/ast';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
 import type { EmptyObject } from 'apollo-angular/types';
 
-import { QueryResult } from './query-result';
+import { QueryResult } from '../query-result';
 
 @Injectable()
 export class DataService {

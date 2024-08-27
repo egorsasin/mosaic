@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { DataService } from '../data/data.service';
+import { DataService } from '../data';
 import { ListOptions } from '../types';
 
 import { GET_PRODUCT_LIST } from './product.definitions';
