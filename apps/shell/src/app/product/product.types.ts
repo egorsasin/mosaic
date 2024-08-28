@@ -4,7 +4,7 @@ import { Exact, ListOptions, Maybe, PaginatedList, Product } from '../types';
 
 export type ProductList = PaginatedList<Product>;
 export namespace GetProductList {
-  export type Query = { products: ProductList };
+  export type Query = { search: ProductList };
   export type Variables = Exact<{
     options?: Maybe<ListOptions>;
   }>;

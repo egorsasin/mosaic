@@ -1,23 +1,23 @@
-:host {
+mos-hint {
   position: fixed;
   max-width: 18rem;
   min-height: 20px;
-  //border: 1px solid #eee;
   padding: 0.75rem 1rem;
   background: #fff;
   //border-radius: 5px;
   box-sizing: border-box;
   white-space: pre-line;
   word-wrap: break-word;
-  @apply shadow-md bg-amber-100 rounded-sm z-50;
+  @apply shadow-md bg-white rounded-sm z-50 border border-gray-200;
 
   &:before {
     content: '';
     position: absolute;
     top: var(--top);
     left: var(--left);
-    border-left: 1px solid #eee;
-    border-top: 1px solid #eee;
+    border-left: 1px solid;
+    border-top: 1px solid;
+    @apply border-gray-200;
     width: 0.5rem;
     height: 0.5rem;
     box-sizing: border-box;

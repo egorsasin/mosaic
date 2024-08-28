@@ -9,8 +9,8 @@ export const ASSET_FRAGMENT = gql`
 `;
 
 export const GET_PRODUCT_LIST = gql`
-  query GetProductList($options: ProductListOptions) {
-    products(options: $options) {
+  query GetProductList($input: SearchInput!) {
+    search(input: $input) {
       items {
         id
         createdAt

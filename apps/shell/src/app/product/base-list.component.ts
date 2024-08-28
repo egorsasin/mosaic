@@ -1,6 +1,8 @@
 import { Directive, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import {
+  BehaviorSubject,
+  combineLatest,
   distinctUntilChanged,
   map,
   Observable,
@@ -31,6 +33,7 @@ export class BaseListComponent<ResultType, ItemType, VariableType = any>
 
   private defaults: ListOptions = { take: 12 };
   protected destroy$: Subject<void> = new Subject<void>();
+  protected refresh$ = new BehaviorSubject<undefined>(undefined);
 
   private listQueryFn?: ListQueryFn<ResultType>;
   private mappingFn?: MappingFn<ItemType, ResultType>;
@@ -73,14 +76,20 @@ export class BaseListComponent<ResultType, ItemType, VariableType = any>
       map((data) => (this.mappingFn ? this.mappingFn(data).totalItems : 0))
     );
 
-    const fetchPage = (currentPage: number) => {
+    const fetchPage = ([currentPage, _]: [number, unknown]) => {
       const { take } = this.defaults;
       const skip = currentPage * take;
 
       listQuery.ref.refetch(this.onPageChangeFn({ skip, take }));
     };
 
-    this.currentPage$.pipe(takeUntil(this.destroy$)).subscribe(fetchPage);
+    combineLatest([this.currentPage$, this.refresh$])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(fetchPage);
+  }
+
+  public setPageNumber(page: number) {
+    // TODO:
   }
 
   public ngOnDestroy(): void {

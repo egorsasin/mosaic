@@ -23,7 +23,7 @@ export class FulltextSearchService {
     input: SearchInput,
     enabledOnly = false
   ): Promise<Omit<SearchResponse, 'categories'>> {
-    const { take = 20, skip = 0 } = input;
+    const { take = 20, skip = 0, categoryId, categorySlug } = input;
 
     const qb = this.dataSource
       .getRepository(Product)
@@ -33,12 +33,19 @@ export class FulltextSearchService {
       qb.andWhere('product.enabled = :enabled', { enabled: true });
     }
 
-    if (input.categoryId) {
+    if (categoryId) {
       qb.innerJoin(
         'product.categories',
         'productCategory',
         'productCategory.id = :categoryId',
-        { categoryId: 1 }
+        { categoryId }
+      );
+    } else if (categorySlug) {
+      qb.innerJoin(
+        'product.categories',
+        'productCategory',
+        'productCategory.slug = :categorySlug',
+        { categorySlug }
       );
     }
 

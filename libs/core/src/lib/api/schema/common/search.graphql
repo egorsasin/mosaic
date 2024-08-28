@@ -12,7 +12,7 @@ input SearchInput {
   term: String
   facetValueFilters: [FacetValueFilterInput!]
   categoryId: Int
-  ctegorySlug: String
+  categorySlug: String
   groupByProduct: Boolean
   take: Int
   skip: Int

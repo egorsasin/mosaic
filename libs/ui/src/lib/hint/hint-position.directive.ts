@@ -2,9 +2,7 @@ import { Directive, Inject, Input } from '@angular/core';
 
 import { WINDOW } from '@mosaic/cdk/common';
 
-import { MosPoint, PositionAccessor } from '../types';
-
-import { HintDirective } from './hint.directive';
+import { ClientRectAccessor, MosPoint, PositionAccessor } from '../types';
 import { HintDirection, HINT_DIRECTIONS } from './types';
 
 const OFFSET = 8;
@@ -33,7 +31,7 @@ export class HintPositionDirective implements PositionAccessor {
   }
 
   constructor(
-    private clientRectAccessor: HintDirective<unknown>,
+    private clientRectAccessor: ClientRectAccessor,
     @Inject(WINDOW) private window: Window
   ) {}
 

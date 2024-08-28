@@ -7,6 +7,7 @@ import {
   Inject,
   OnDestroy,
   TemplateRef,
+  ViewEncapsulation,
 } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
 
@@ -23,6 +24,7 @@ import { HoveredService } from './hovered.service';
   styleUrls: ['./hint.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   viewProviders: [HoveredService, HintPositionService],
+  encapsulation: ViewEncapsulation.None,
   animations: [hintAnimation],
 })
 export class HintComponent<T> implements OnDestroy {

@@ -39,3 +39,11 @@ mos-hint[data-appearance='mini-cart'] {
 mos-dialog[data-appearance='mos-success-top'] {
   @apply my-12 mx-auto bg-amber-100;
 }
+
+mos-hint[data-appearance='mini-cart'] {
+  @apply bg-amber-100 border-0;
+
+  &:before {
+    @apply border-0;
+  }
+}
