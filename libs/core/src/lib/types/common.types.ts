@@ -1,4 +1,15 @@
-import { Maybe } from '@mosaic/common';
+import {
+  Maybe,
+  LogicalOperator,
+  SortOrder,
+  NullOptionals,
+  StringOperators,
+  NumberOperators,
+  BooleanOperators,
+  DateOperators,
+} from '@mosaic/common';
+
+import { MosaicEntity } from '../data';
 
 export type PayloadArgs<T> = {
   input: T;
@@ -19,18 +30,41 @@ export enum CurrencyCode {
   USD = 'USD',
 }
 
-export type PaginatedList<T> = {
-  items: T[];
-  totalItems: number;
-};
-
-export interface ListQueryOptions {
-  take?: Maybe<number>;
-  skip?: Maybe<number>;
+export interface ListOperators {
+  inList?: string | number | boolean | Date;
 }
 
-export type QueryListArgs = {
-  options?: Maybe<ListQueryOptions>;
+// prettier-ignore
+export type PrimitiveFields<T extends MosaicEntity> = {
+    [K in keyof T]: NonNullable<T[K]> extends number | string | boolean | Date ? K : never
+}[keyof T];
+
+// prettier-ignore
+export type SortParameter<T extends MosaicEntity> = {
+    [K in PrimitiveFields<T>]?: SortOrder
+};
+
+// prettier-ignore
+export type FilterParameter<T extends MosaicEntity> = {
+    [K in PrimitiveFields<T>]?: T[K] extends string ? StringOperators
+        : T[K] extends number ? NumberOperators
+            : T[K] extends boolean ? BooleanOperators
+                : T[K] extends Date ? DateOperators : StringOperators;
+} & {
+    _and?: Array<FilterParameter<T>>;
+    _or?: Array<FilterParameter<T>>;
+};
+
+export interface ListQueryOptions<T extends MosaicEntity> {
+  take?: number | null;
+  skip?: number | null;
+  sort?: NullOptionals<SortParameter<T>> | null;
+  filter?: NullOptionals<FilterParameter<T>> | null;
+  filterOperator?: LogicalOperator;
+}
+
+export type QueryListArgs<T extends MosaicEntity = MosaicEntity> = {
+  options?: Maybe<ListQueryOptions<T>>;
 };
 
 export type QueryProductArgs = {

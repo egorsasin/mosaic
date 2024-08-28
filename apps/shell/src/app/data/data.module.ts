@@ -12,7 +12,7 @@ import { setContext } from '@apollo/client/link/context';
 import { LocalStorageService } from '../services/local-storage.service';
 import { environment } from './../../environments/environment';
 
-import { DataService } from './data.service';
+import { APIS, DataService } from './api';
 import { clientResolvers, GET_USER_STATUS } from './client';
 
 const uri = environment.API_URL;
@@ -58,6 +58,7 @@ export function createApollo(
 @NgModule({
   exports: [ApolloModule],
   providers: [
+    ...APIS,
     {
       provide: APOLLO_OPTIONS,
       useFactory: createApollo,

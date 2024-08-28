@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 
-import { BaseDataService } from '../../base-data.service';
+import { SortOrder } from '@mosaic/common';
+
+import { BaseDataService } from '../../data';
 import { CREATE_ASSETS, GET_ASSET_LIST } from './asset-list/asset-list.graphql';
-import { SortOrder } from '../../common';
 
 @Injectable()
 export class AssetDataService {

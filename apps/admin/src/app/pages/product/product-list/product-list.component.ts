@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { BaseListComponent, Paginated } from '../../../common/base-list';
-import { ProductDataService } from '../product.service';
+import { PaginatedList } from '@mosaic/common';
+
+import { BaseListComponent } from '../../../common/base-list';
+import { ProductDataService } from '../../../data';
 
 interface Product {
   id: number;
@@ -10,11 +12,11 @@ interface Product {
 }
 
 @Component({
-  selector: 'mosaic-product-list',
+  selector: 'mos-product-list',
   templateUrl: './product-list.component.html',
 })
 export class ProductListComponent
-  extends BaseListComponent<Product>
+  extends BaseListComponent<any, any>
   implements OnInit
 {
   constructor(
@@ -24,7 +26,7 @@ export class ProductListComponent
     super(activateRoute);
     super.setQueryFn(
       (args: any) => this.dataService.getProducts(args),
-      (data: { products: Paginated<Product> }): Paginated<Product> =>
+      (data: { products: PaginatedList<Product> }): PaginatedList<Product> =>
         data.products
     );
   }

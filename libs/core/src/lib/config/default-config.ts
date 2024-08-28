@@ -16,6 +16,7 @@ import {
 import { DefaultMoneyStrategy } from './entity';
 import { defaultShippingCalculator } from './shipping-method';
 import { DefaultGuestCheckoutStrategy } from './order/default-guest-checkout.strategy';
+import { defaultCategoryFilters } from './catalog';
 
 export const defaultConfig: RuntimeConfig = {
   apiOptions: {
@@ -44,6 +45,9 @@ export const defaultConfig: RuntimeConfig = {
     sessionDuration: '1y',
     sessionCacheTTL: 300,
     requireVerification: false,
+  },
+  catalogOptions: {
+    categoryFilters: defaultCategoryFilters,
   },
   orderOptions: {
     orderItemsLimit: 999,

@@ -1,12 +1,13 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import {
+  PaginatedList,
   ConfigurableOperationDefinition,
   CreatePaymentMethodInput,
   MutationArgs,
 } from '@mosaic/common';
 
-import { PaginatedList, QueryListArgs } from '../../../types';
+import { QueryListArgs } from '../../../types';
 import { PaymentMethod } from '../../../data';
 import { PaymentMethodService } from '../../../service/services';
 

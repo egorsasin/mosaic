@@ -5,7 +5,7 @@ import { ContextWrapper } from '@mosaic/cdk/common';
 import { AbstractMosPopoverService } from '@mosaic/cdk/abstract';
 
 import { MosDialogComponent } from './dialog.component';
-import { MOS_DIALOG_OPTIONS, MosDialogDefaultOptions } from './dialog.tokens';
+import { MOS_DIALOG_OPTIONS } from './dialog.tokens';
 import { MOS_DIALOGS, MosPopover } from '@mosaic/cdk';
 
 const DIALOG = new ContextWrapper(MosDialogComponent);

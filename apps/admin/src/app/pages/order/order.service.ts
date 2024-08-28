@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { BaseDataService } from '../../base-data.service';
+import { BaseDataService } from '../../data';
 
 import { ORDER_LIST_QUERY } from './order-list/order-list.graphql';
 

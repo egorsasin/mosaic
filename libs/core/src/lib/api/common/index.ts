@@ -7,3 +7,4 @@ export * from './request-context';
 export * from './request-context';
 export * from './id-generator';
 export * from './graphql-value-transformer';
+export * from './ttl-cache';

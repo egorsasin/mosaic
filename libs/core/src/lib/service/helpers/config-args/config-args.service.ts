@@ -6,9 +6,11 @@ import { ConfigurableOperationInput } from '@mosaic/common';
 import { ConfigService, PaymentMethodHandler } from '../../../config';
 import { ConfigArg, ConfigurableOperation } from '../../../types';
 import { ConfigurableOperationDef } from '../../../common';
+import { CategoryFilter } from '../../../config/catalog';
 
 export type ConfigDefTypeMap = {
   PaymentMethodHandler: PaymentMethodHandler;
+  CategoryFilter: CategoryFilter;
 };
 
 export type ConfigDefType = keyof ConfigDefTypeMap;
@@ -23,6 +25,7 @@ export class ConfigArgService {
     this.definitionsByType = {
       PaymentMethodHandler:
         this.configService.paymentOptions.paymentMethodHandlers,
+      CategoryFilter: this.configService.catalogOptions.categoryFilters,
     };
   }
 

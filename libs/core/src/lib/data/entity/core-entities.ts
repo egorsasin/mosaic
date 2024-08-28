@@ -5,6 +5,7 @@ import {
   ExternalAuthenticationMethod,
   NativeAuthenticationMethod,
 } from './authentication';
+import { Category } from './category';
 import { Customer } from './customer/customer.entity';
 import { HistoryEntry, OrderHistoryEntry } from './history';
 import { Order, OrderLine } from './order';
@@ -37,4 +38,5 @@ export const coreEntitiesMap = {
   OrderHistoryEntry,
   AuthenticatedSession,
   ShippingLine,
+  Category,
 };

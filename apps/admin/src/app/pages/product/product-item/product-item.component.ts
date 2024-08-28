@@ -7,7 +7,7 @@ import { createNumberMask, TextMaskConfig } from '@mosaic/mask';
 import { Asset, Product } from '@mosaic/common';
 
 import { BaseDetailComponent } from '../../asset/asset-list/base-detail.component';
-import { ProductDataService } from '../product.service';
+import { ProductDataService } from '../../../data';
 
 interface ProductForm {
   name: FormControl<string>;

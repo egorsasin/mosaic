@@ -17,7 +17,7 @@ import {
   SET_AS_LOGGED_OUT,
   GET_USER_STATUS,
 } from '../data/client';
-import { DataService } from '../data/data.service';
+import { DataService } from '../data';
 import { LocalStorageService } from '../services/local-storage.service';
 import { loadActiveCustomer } from '../store';
 

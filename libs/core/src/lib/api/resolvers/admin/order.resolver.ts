@@ -1,6 +1,8 @@
 import { Args, Query, Resolver } from '@nestjs/graphql';
 
-import { PaginatedList, QueryListArgs } from '../../../types';
+import { PaginatedList } from '@mosaic/common';
+
+import { QueryListArgs } from '../../../types';
 import { Order } from '../../../data';
 import { OrderService } from '../../../service/services/order.service';
 

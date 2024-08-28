@@ -13,6 +13,7 @@ import { ConfigArgService } from './helpers/config-args';
 import { OrderCalculator } from './helpers/order-calculator';
 import { ShippingCalculator } from './helpers/shipping-calculator';
 import { EntityHydrator } from './helpers/entity-hydrator';
+import { ListQueryBuilder } from './helpers';
 
 import { UserService } from './services/user.service';
 import { CustomerService } from './services/customer.service';
@@ -24,7 +25,7 @@ import { PaymentMethodService } from './services/payment-method.service';
 import { ShippingMethodService } from './services/shipping-method.service';
 import { OrderService } from './services/order.service';
 import { PaymentService } from './services/payment.service';
-import { AssetService } from './services';
+import { AssetService, CategoryService } from './services';
 import { HistoryService } from './services';
 
 const helpers = [
@@ -38,11 +39,13 @@ const helpers = [
   ConfigArgService,
   ShippingCalculator,
   EntityHydrator,
+  ListQueryBuilder,
 ];
 
 const services = [
   AssetService,
   AuthService,
+  CategoryService,
   CustomerService,
   OrderService,
   UserService,

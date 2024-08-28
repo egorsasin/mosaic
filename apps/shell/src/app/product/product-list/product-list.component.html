@@ -1,14 +1,47 @@
-<div
-  class="grid grid-cols-2 lg:grid-cols-3 gap-6 mx-auto max-w-4xl xl:max-w-6xl p-6"
->
-  @for (product of (items$ | async); track product.id ) {
-  <mos-product-card [product]="product"></mos-product-card>
-  }
-</div>
+<div class="mx-auto max-w-4xl xl:max-w-6xl px-5 pb-6 text-slate-700">
+  <nav class="mos-categories flex w-full mb-5 pt-3 text-sm border-transparent">
+    <a
+      [routerLink]="['./']"
+      [class.mos-category--active]="!categorySlug()"
+      class="mos-category"
+    >
+      Wszystkie kawy
+    </a>
 
-<mos-pagination
-  *ngIf="false"
-  [pageIndex]="currentPage$ | async"
-  [length]="totalItems$ | async"
-  (onPageChange)="onPageChange($event)"
-></mos-pagination>
+    <a
+      *ngFor="let category of categories$ | async"
+      #navLink
+      [routerLink]="['./']"
+      [queryParams]="{ category: category.slug }"
+      class="mos-category"
+      [class.mos-category--active]="category.slug === categorySlug()"
+    >
+      {{ category.name }}
+      <mos-icon
+        *ngIf="category.description"
+        class="w-4 h-4 text-slate-400"
+        icon="help-circle"
+        [mosHint]="category.description ? categoryDescription : null"
+        direction="bottom"
+        [hintHost]="navLink"
+      ></mos-icon>
+
+      <ng-template #categoryDescription>
+        <span class="text-sm text-slate-600">{{ category.description }}</span>
+      </ng-template>
+    </a>
+  </nav>
+
+  <div class="grid grid-cols-2 lg:grid-cols-3 gap-6">
+    @for (product of (items$ | async); track product.id ) {
+    <mos-product-card [product]="product"></mos-product-card>
+    }
+  </div>
+
+  <mos-pagination
+    *ngIf="false"
+    [pageIndex]="currentPage$ | async"
+    [length]="totalItems$ | async"
+    (onPageChange)="onPageChange($event)"
+  ></mos-pagination>
+</div>

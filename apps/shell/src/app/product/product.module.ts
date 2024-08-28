@@ -4,6 +4,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 
 import { MosAssetPreviewPipe } from '@mosaic/common-ui';
+import { MosIconComponent } from '@mosaic/ui/svg-icon';
+import { HintModule } from '@mosaic/ui/hint';
 
 import { PaginationComponent } from '../pagination/pagination.component';
 
@@ -36,7 +38,9 @@ const routes: Routes = [
     MosAssetPreviewPipe,
     FormsModule,
     CommonModule,
+    HintModule,
     MosQuantitySelectorComponent,
+    MosIconComponent,
     RouterModule.forChild(routes),
   ],
   providers: [ProductService],

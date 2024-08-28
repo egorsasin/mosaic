@@ -2,6 +2,9 @@ import { Directive, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EMPTY, Observable, Subject, map, shareReplay } from 'rxjs';
 
+import { PaginatedList } from '@mosaic/common';
+import { QueryResult } from './query-result';
+
 export type ItemOf<T, K extends keyof T> = T[K] extends { items: infer R }
   ? R extends unknown[]
     ? R[number]
@@ -14,26 +17,24 @@ export interface Pagination {
   total: number;
 }
 
-export interface Paginated<T> {
-  items: T[];
-  totalItems: number;
-}
-
 export type ListOptions = {
   take: number;
   skip?: number;
 };
 
-export type ListQueryFn<R> = (options: ListOptions) => Observable<Paginated<R>>;
-export type MappingFn<T, R> = (result: R) => Paginated<T>;
+export type ListQueryFn<R> = (
+  options: ListOptions & Record<string, unknown>
+) => QueryResult<R>;
+
+export type MappingFn<T, R> = (result: R) => PaginatedList<T>;
 
 const DEFAULTS: { take: number; skip: number } = { take: 10, skip: 0 };
 
 @Directive()
-export class BaseListComponent<T> implements OnInit, OnDestroy {
+export class BaseListComponent<ResultType, T> implements OnInit, OnDestroy {
   protected destroy$: Subject<void> = new Subject<void>();
 
-  private listQueryFn?: ListQueryFn<Paginated<T>>;
+  private listQueryFn?: ListQueryFn<ResultType>;
   private listQuery: any;
   private mappingFn!: MappingFn<any, any>;
 
@@ -47,7 +48,7 @@ export class BaseListComponent<T> implements OnInit, OnDestroy {
    * Sets the fetch function for the list being implemented.
    */
   public setQueryFn(
-    listQueryFn: ListQueryFn<Paginated<T>>,
+    listQueryFn: ListQueryFn<ResultType>,
     mappingFn: MappingFn<any, any>
   ): void {
     this.listQueryFn = listQueryFn;

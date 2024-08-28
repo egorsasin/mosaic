@@ -10,12 +10,12 @@ import {
 } from '@mosaic/common';
 
 import { Order, PaymentMethod, DATA_SOURCE_PROVIDER } from '../../data';
-import { ConfigArgs, ListQueryOptions, PaginatedList } from '../../common';
+import { ConfigArgs, PaginatedList } from '../../common';
 import { ConfigOptionsService } from '../helpers/config-options';
 import { PaymentMethodHandler } from '../../config';
 import { RequestContext } from '../../api/common';
 import { ConfigArgService } from '../helpers/config-args';
-import { ConfigurableOperation } from '../../types';
+import { ConfigurableOperation, ListQueryOptions } from '../../types';
 
 const PAYMENT_METHOD_HANDLER = 'PaymentMethodHandler';
 
@@ -40,7 +40,7 @@ export class PaymentMethodService {
   }
 
   public async findAll(
-    options?: ListQueryOptions
+    options?: ListQueryOptions<PaymentMethod>
   ): Promise<PaginatedList<PaymentMethod>> {
     return this.dataSource
       .getRepository(PaymentMethod)

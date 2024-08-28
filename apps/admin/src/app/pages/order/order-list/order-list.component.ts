@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { Order } from '@mosaic/common';
+import { Order, PaginatedList } from '@mosaic/common';
 
-import { BaseListComponent, Paginated } from '../../../common/base-list';
+import { BaseListComponent } from '../../../common/base-list';
 import { OrderDataService } from '../order.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { OrderDataService } from '../order.service';
   templateUrl: './order-list.component.html',
 })
 export class OrderListComponent
-  extends BaseListComponent<Order>
+  extends BaseListComponent<any, Order>
   implements OnInit
 {
   constructor(
@@ -21,7 +21,8 @@ export class OrderListComponent
     super(activateRoute);
     super.setQueryFn(
       (args: any) => this.dataService.getOrders(args),
-      (data: { orders: Paginated<Order> }): Paginated<Order> => data.orders
+      (data: { orders: PaginatedList<Order> }): PaginatedList<Order> =>
+        data.orders
     );
   }
 

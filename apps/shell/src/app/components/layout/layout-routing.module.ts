@@ -13,11 +13,16 @@ const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: 'profile',
-        loadChildren: () =>
-          import('../profile').then((m) => m.MosProfileModule),
-        canActivate: [AuthGuard],
+        path: '',
+        pathMatch: 'full',
+        redirectTo: '/coffee',
       },
+      // {
+      //   path: 'profile',
+      //   loadChildren: () =>
+      //     import('../profile').then((m) => m.MosProfileModule),
+      //   canActivate: [AuthGuard],
+      // },
       {
         path: 'checkout',
         loadChildren: () =>
@@ -33,7 +38,7 @@ const routes: Routes = [
           ),
       },
       {
-        path: '',
+        path: 'coffee',
         loadChildren: () =>
           import('../../product/product.module').then((m) => m.ProductModule),
       },

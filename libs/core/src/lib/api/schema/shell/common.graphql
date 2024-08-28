@@ -3,11 +3,6 @@ enum LogicalOperator {
   OR
 }
 
-enum SortOrder {
-  ASC
-  DESC
-}
-
 input StringOperators {
   eq: String
   notEq: String

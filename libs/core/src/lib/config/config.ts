@@ -21,6 +21,7 @@ import { MoneyStrategy } from './entity';
 import { CustomFields } from './custom-field';
 import { ShippingCalculator } from './shipping-method';
 import { GuestCheckoutStrategy } from './order/guest-checkout.strategy';
+import { CategoryFilter } from './catalog';
 
 export interface ApiOptions {
   port: number;
@@ -64,6 +65,10 @@ export interface EntityOptions {
   moneyStrategy?: MoneyStrategy;
 }
 
+export interface CatalogOptions {
+  categoryFilters?: CategoryFilter[];
+}
+
 export interface MosaicConfig {
   apiOptions: ApiOptions;
   assetOptions?: AssetOptions;
@@ -73,6 +78,7 @@ export interface MosaicConfig {
   plugins?: DynamicModule[] | Type<unknown>[];
   paymentOptions: PaymentOptions;
   entityOptions?: EntityOptions;
+  catalogOptions?: CatalogOptions;
 }
 
 /**
@@ -95,6 +101,7 @@ export interface RuntimeConfig extends Required<MosaicConfig> {
   entityOptions: Required<EntityOptions>;
   customFields: Required<CustomFields>;
   shippingOptions: Required<ShippingOptions>;
+  catalogOptions: Required<CatalogOptions>;
 }
 
 export type PartialMosaicConfig = DeepPartialSimple<MosaicConfig>;

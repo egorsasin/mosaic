@@ -17,6 +17,7 @@ const ENTITY_RESOLVERS = [
   EntityResolvers.OrderEntityResolver,
   EntityResolvers.PaymentEntityResolver,
   EntityResolvers.PaymentMethodEntityResolver,
+  EntityResolvers.CategoryEntityResolver,
 ];
 
 const SHOP_RESOLVERS = [
@@ -26,7 +27,7 @@ const SHOP_RESOLVERS = [
   StorefrontResolvers.ProductResolver,
   StorefrontResolvers.OrderResolver,
   StorefrontResolvers.PaymentMethodResolver,
-  StorefrontResolvers.ShippingMethodResolver,
+  StorefrontResolvers.CategoryResolver,
 ];
 
 const ADMIN_RESOLVERS = [
@@ -34,6 +35,8 @@ const ADMIN_RESOLVERS = [
   AdminResolvers.AssetResolver,
   AdminResolvers.PaymentMethodResolver,
   AdminResolvers.OrderResolver,
+  AdminResolvers.CategoryResolver,
+  AdminResolvers.SearchResolver,
 ];
 
 @Module({

@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { Asset } from '@mosaic/common';
+import { Asset, PaginatedList } from '@mosaic/common';
 
 import { AssetDataService } from '../asset.service';
-import { BaseListComponent, Paginated } from '../../../common/base-list';
+import { BaseListComponent } from '../../../common/base-list';
 
 @Component({
   selector: 'mos-asset-list',
   templateUrl: './asset-list.component.html',
 })
 export class AssetListComponent
-  extends BaseListComponent<Asset>
+  extends BaseListComponent<any, Asset>
   implements OnInit
 {
   constructor(
@@ -21,7 +21,8 @@ export class AssetListComponent
     super(activateRoute);
     super.setQueryFn(
       (args: any) => this.dataService.getAssets(args),
-      (data: { assets: Paginated<Asset> }): Paginated<Asset> => data.assets
+      (data: { assets: PaginatedList<Asset> }): PaginatedList<Asset> =>
+        data.assets
     );
   }
 

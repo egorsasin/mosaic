@@ -47,6 +47,7 @@
     "fs-extra": "^11.2.0",
     "google-auth-library": "^9.0.0",
     "graphql": "^16.6.0",
+    "graphql-fields": "^2.0.3",
     "graphql-scalars": "^1.23.0",
     "graphql-upload-ts": "^2.1.2",
     "handlebars": "^4.7.8",

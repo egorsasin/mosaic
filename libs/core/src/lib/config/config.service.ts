@@ -6,6 +6,7 @@ import {
   ApiOptions,
   AssetOptions,
   AuthOptions,
+  CatalogOptions,
   MosaicConfig,
   OrderOptions,
   PaymentOptions,
@@ -40,6 +41,10 @@ export class ConfigService implements MosaicConfig {
 
   public get apiOptions(): Required<ApiOptions> {
     return this.activeConfig.apiOptions;
+  }
+
+  public get catalogOptions(): Required<CatalogOptions> {
+    return this.activeConfig.catalogOptions;
   }
 
   public get authOptions(): Required<AuthOptions> {

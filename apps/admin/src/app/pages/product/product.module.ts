@@ -5,8 +5,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MosInputModule } from '@mosaic/ui/input';
 import { MosSwitchComponent } from '@mosaic/ui/switch';
 import { MosMaskModule } from '@mosaic/mask';
+import { MosLetDirective } from '@mosaic/cdk';
 
-import { ProductDataService } from './product.service';
 import {
   ProductRoutingModule,
   ROUTED_COMPONENTS,
@@ -23,7 +23,8 @@ import { SharedModule } from '../../shared/shared.module';
     SharedModule,
     MosSwitchComponent,
     MosMaskModule,
+    MosLetDirective,
   ],
-  providers: [ProductDataService],
+  providers: [],
 })
 export class ProductModule {}

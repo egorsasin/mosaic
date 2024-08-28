@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { gql } from 'apollo-angular';
-import { take } from 'rxjs';
-import { DataService } from '../data/data.service';
 
+import { DataService } from '../data';
 import { Exact } from '../types';
 
 export const AUTHENTICATE = gql`

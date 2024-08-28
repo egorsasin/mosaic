@@ -105,7 +105,6 @@ export async function preBootstrapConfig(
 
 async function bootstrap() {
   const config = await preBootstrapConfig(appConfig);
-
   const appModule = await import('./app/app.module');
   const { port, cors } = config.apiOptions;
 

@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { gql } from 'apollo-angular';
 import { Observable, map } from 'rxjs';
 
-import { DataService } from '../data/data.service';
 import { Customer } from '../types';
+import { DataService } from '../data';
 
 export type GetActiveCustomerQuery = {
   activeCustomer: Customer;

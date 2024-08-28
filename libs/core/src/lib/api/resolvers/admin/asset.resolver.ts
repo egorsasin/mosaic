@@ -1,9 +1,10 @@
 import { Args, Resolver, Mutation, Query } from '@nestjs/graphql';
 
+import { PaginatedList } from '@mosaic/common';
+
 import {
   CreateAssetInput,
   CreateAssetResult,
-  PaginatedList,
   PayloadArgs,
   QueryListArgs,
 } from '../../../types';

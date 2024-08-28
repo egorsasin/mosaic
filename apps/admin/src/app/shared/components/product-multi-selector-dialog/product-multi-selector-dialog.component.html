@@ -1,0 +1,74 @@
+<div class="flex">
+  <div class="grid grid-flow-col auto-cols-max gap-3">
+    <div
+      class="relative"
+      *ngFor="let item of (items$ | async) || []; trackBy: trackByFn"
+      (click)="toggleSelection(item, $event)"
+      [class.mos-selected]="isSelected(item)"
+    >
+      <img
+        [src]="item.featuredAsset | assetPreview"
+        alt="Image 1"
+        class="w-38 h-38 object-cover rounded-lg transition-transform transform scale-100 group-hover:scale-105"
+      />
+      <div class="flex flex-col text-sm">
+        <span>{{ item.name }}</span>
+
+        <div class="text-xs text-gray-600">
+          <span class="mr-1">Slug:</span>
+          <span>{{ item.slug }}</span>
+        </div>
+      </div>
+
+      <div
+        *ngIf="isSelected(item)"
+        class="absolute h-7 w-7 top-0 left-0 rounded-full bg-white p-0.5 drop-shadow-md"
+      >
+        <div
+          class="bg-green-700 p-1 rounded-full h-full flex justify-center items-center text-white z-10"
+        >
+          <mos-icon class="w-4 h-4" icon="more-vertical"></mos-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="m-2 flex gap-2">
+      <div>{{ selectionManager.selection.length }} items selected</div>
+      <button
+        class="flex items-center justify-center"
+        (click)="clearSelection()"
+      >
+        <mos-icon class="w-4 h-4" icon="cancel"></mos-icon>
+        Clear selection
+      </button>
+    </div>
+
+    <div>
+      <div
+        *ngFor="let item of selectionManager.selection"
+        class="flex items-center"
+      >
+        <div class="flex items-center justify-center">{{ item.name }}</div>
+        <div>
+          <button class="" (click)="toggleSelection(item, $event)">
+            <mos-icon class="w-4 h-4" icon="cancel"></mos-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="flex justify-end gap-2">
+  <button type="button" class="btn" (click)="cancel()">Cancel</button>
+  <button
+    type="submit"
+    (click)="select()"
+    class="btn btn-primary"
+    [disabled]="selectionManager.selection.length === 0"
+  >
+    Select {{ selectionManager.selection.length }} items
+  </button>
+</div>

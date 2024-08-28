@@ -17,3 +17,9 @@ type ProductList implements PaginatedList {
 }
 
 input ProductListOptions
+
+type SearchResponse {
+  items: [Product!]!
+  totalItems: Int!
+  categories: [Category!]!
+}

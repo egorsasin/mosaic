@@ -17,9 +17,9 @@ import { AppRoutingModule, ROUTED_COMPONENTS } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DataModule } from './data/data.module';
 import { DefaultInterceptor } from './default.interceptor';
-import { CustomerService } from './services';
 import { SidebarModule } from './shared/sidebar';
 import { MosStoreModule } from './store/store.module';
+import { CustomerService } from './services';
 @NgModule({
   declarations: [AppComponent, ...ROUTED_COMPONENTS],
   imports: [

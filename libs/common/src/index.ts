@@ -5,5 +5,6 @@ export * from './lib/pick';
 export * from './lib/omit';
 export * from './lib/normalize-string';
 export * from './lib/utils';
+export * from './lib/utilites';
 export * from './lib/unique';
 export * from './lib/types';

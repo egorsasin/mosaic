@@ -1,0 +1,36 @@
+type Query {
+  categories(options: CategoryListOptions): CategoryList!
+  "Get a Category either by id or slug. If neither id nor slug is specified, an error will result."
+  category(id: Int, slug: String): Category
+  categoryFilters: [ConfigurableOperationDefinition!]!
+}
+
+type Mutation {
+  "Create a new Category"
+  createCategory(input: CreateCategoryInput!): Category!
+
+  "Update an existing Category"
+  updateCategory(input: UpdateCategoryInput!): Category!
+}
+
+input UpdateCategoryInput {
+  id: Int!
+  isPrivate: Boolean
+  filters: [ConfigurableOperationInput!]!
+  name: String!
+  slug: String!
+  description: String!
+}
+
+input CreateCategoryInput {
+  isPrivate: Boolean
+  filters: [ConfigurableOperationInput!]!
+  name: String!
+  slug: String!
+  description: String!
+}
+
+type Category implements Node {
+  isPrivate: Boolean!
+  inheritFilters: Boolean!
+}

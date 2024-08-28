@@ -1,0 +1,102 @@
+<div *mosLet="entity$ | async as entity" class="py-10 bg-white">
+  <div class="px-8">
+    <div class="flex items-center">
+      <div class="flex-auto">
+        <h1 class="text-base leading-6 font-semibold text-gray-900">
+          Categries
+        </h1>
+      </div>
+
+      <button class="flex-none sm:ml-16">
+        <button
+          (click)="save()"
+          class="rounded-md font-semibold text-sm text-white bg-gray-600 px-4 py-2 drop-shadow hover:bg-gray-500 inline-flex items-center gap-x-1"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 4.5v15m7.5-7.5h-15"
+            />
+          </svg>
+
+          Create
+        </button>
+      </button>
+    </div>
+
+    <form [formGroup]="detailForm">
+      <label
+        for="name"
+        class="block text-sm font-medium leading-6 text-gray-900 mb-1"
+        >Name</label
+      >
+      <mos-input
+        [labelOutside]="true"
+        formControlName="name"
+        name="name"
+        placeholder="Category name"
+      ></mos-input>
+
+      <label
+        for="slug"
+        class="block text-sm font-medium leading-6 text-gray-900 mb-1"
+        >Slug</label
+      >
+      <mos-input
+        [labelOutside]="true"
+        formControlName="slug"
+        name="name"
+        placeholder="Category slug"
+      ></mos-input>
+
+      <input
+        type="checkbox"
+        mosSwitch
+        formControlName="isPrivate"
+        name="name"
+      />
+
+      <div formArrayName="filters">
+        @for (filter of filters.controls; track filter; let index = $index) {
+        <mos-dynamic-input
+          *ngIf="getFilterDefinition(filter) as operation"
+          [operation]="operation"
+          [formControlName]="index"
+        ></mos-dynamic-input>
+        }
+      </div>
+
+      <mos-dropdown [content]="dropdownTemplate">
+        <button
+          type="button"
+          class="mos-button-md rounded-md font-medium text-sm text-white bg-gray-600 px-3 py-2 drop-shadow hover:bg-gray-500 inline-flex items-center gap-x-1"
+        >
+          <mos-icon class="w-5 h-5" icon="plus-sign"></mos-icon>
+          <div class="">Add condition</div>
+          <mos-icon class="w-5 h-5" icon="more-vertical"></mos-icon>
+        </button>
+      </mos-dropdown>
+    </form>
+  </div>
+
+  <ng-template #dropdownTemplate>
+    <div class="p-3 bg-white">
+      <button
+        *ngFor="let filter of allFilters$ | async"
+        mosDropdownOption
+        type="button"
+        (click)="addFilter(filter)"
+      >
+        {{ filter.description }}
+      </button>
+    </div>
+  </ng-template>
+</div>

@@ -1,4 +1,4 @@
-import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { Resolver } from '@nestjs/graphql';
 
 import { PaymentMethodService } from '../../../service/services/payment-method.service';
 

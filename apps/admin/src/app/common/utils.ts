@@ -10,7 +10,7 @@ import { Observable, filter, map, of, shareReplay, takeUntil } from 'rxjs';
 
 import { notNullOrUndefined } from '@mosaic/common';
 
-import { BaseDataService } from '../base-data.service';
+import { BaseDataService } from '../data';
 
 export const CREATE_ROUTE_PARAM = 'create';
 

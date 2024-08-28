@@ -1,26 +1,16 @@
 import { Args, Query, Resolver, Mutation } from '@nestjs/graphql';
 import { UserInputError } from '@nestjs/apollo';
 
-import { MutationArgs } from '@mosaic/common';
+import { PaginatedList, MutationArgs } from '@mosaic/common';
 
 import {
   CreateProductInput,
-  PaginatedList,
   QueryListArgs,
   QueryProductArgs,
+  UpdateProductInput,
 } from '../../../types';
 import { Product } from '../../../data';
 import { ProductService } from '../../../service/services';
-
-export type UpdateProductInput = {
-  assetIds?: number[];
-  enabled?: boolean;
-  featuredAssetId?: number;
-  id: number;
-  description?: string;
-  name?: string;
-  slug?: string;
-};
 
 @Resolver()
 export class ProductResolver {
