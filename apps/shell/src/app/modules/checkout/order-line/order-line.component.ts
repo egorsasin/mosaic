@@ -10,7 +10,17 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { GraphQLError } from 'graphql';
-import { exhaustMap, mergeMap, of, Subject, take, takeUntil, tap } from 'rxjs';
+import {
+  EMPTY,
+  exhaustMap,
+  map,
+  mergeMap,
+  of,
+  Subject,
+  take,
+  takeUntil,
+  tap,
+} from 'rxjs';
 import { FormControl } from '@angular/forms';
 
 import { Exact, Order, OrderLine } from '@mosaic/common';
@@ -25,6 +35,7 @@ import { CheckoutService } from '../checkout.service';
 import { ADJUST_ITEM_QUANTITY, REMOVE_ITEM_FROM_CART } from '../../../common';
 import { Store } from '@ngrx/store';
 import { refetchShippingMethods } from '../store';
+import { setActiveOrder } from '../../../store';
 
 export type RemoveItemFromCartMutationVariables = Exact<{
   id: number;
@@ -88,17 +99,16 @@ export class OrderLineComponent implements OnInit, OnChanges, OnDestroy {
 
           if (errorCode) {
             this.quantity.reset(this.item.quantity, { emitEvent: false });
-            return this.alert.open(message);
+            return this.alert.open(message).pipe(mergeMap(() => EMPTY));
           }
 
-          return of(true);
+          return of(adjustOrderLine as Order);
         }),
         takeUntil(this.destroy$)
       )
-      .subscribe((result: boolean | void) => {
-        if (result) {
-          this.store.dispatch(refetchShippingMethods());
-        }
+      .subscribe((order: Order) => {
+        this.store.dispatch(refetchShippingMethods());
+        this.store.dispatch(setActiveOrder({ order }));
       });
   }
 

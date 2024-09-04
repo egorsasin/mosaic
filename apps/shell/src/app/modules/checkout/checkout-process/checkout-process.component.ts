@@ -26,7 +26,7 @@ import {
   Order,
 } from '@mosaic/common';
 
-import { DataService } from '../../../data';
+import { DataService, SetShippingMethodVariables } from '../../../data';
 import {
   ADD_PAYMENT,
   GET_ELIGIBLE_PAYMENT_METHODS,
@@ -43,11 +43,6 @@ import { Store } from '@ngrx/store';
 
 export type GetEligiblePaymentMethodsQuery = {
   eligiblePaymentMethods: PaymentMethodQuote[];
-};
-
-export type SetShippingMethodMutationVariables = {
-  shippingMethodId: number;
-  metadata?: string;
 };
 
 export enum ErrorCode {
@@ -288,14 +283,18 @@ export class CheckoutProcessComponent implements OnDestroy {
       });
   }
 
-  public setShippingMethod(shippingMethodId: number): void {
+  public setShippingMethod({
+    shippingMethodId,
+    metadata,
+  }: SetShippingMethodVariables): void {
     this.dataService
       .mutate<
         SetOrderShippingMethodMutation,
-        MutationArgs<SetShippingMethodMutationVariables>
+        MutationArgs<SetShippingMethodVariables>
       >(SET_SHIPPING_METHOD, {
         input: {
           shippingMethodId,
+          ...(metadata ? { metadata } : {}),
         },
       })
       .pipe(take(1))

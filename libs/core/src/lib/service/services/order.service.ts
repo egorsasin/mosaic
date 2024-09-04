@@ -246,7 +246,8 @@ export class OrderService {
   public async setShippingMethod(
     ctx: RequestContext,
     orderId: number,
-    shippingMethodId: number
+    shippingMethodId: number,
+    metadata?: Record<string, unknown>
   ): Promise<OrderModificationError | Order> {
     const order = await this.getOrderOrThrow(orderId);
     const validationError = this.assertAddingItemsState(order);
@@ -258,7 +259,8 @@ export class OrderService {
     const result = await this.orderModifier.setShippingMethod(
       ctx,
       order,
-      shippingMethodId
+      shippingMethodId,
+      metadata
     );
 
     if (isGraphQlErrorResult(result)) {

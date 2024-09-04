@@ -34,7 +34,7 @@ export class ShippingMethod extends MosaicEntity implements SoftDeletable {
   @Column({ default: '' })
   public description: string;
 
-  @Column() code: string;
+  @Column({ nullable: false, unique: true }) code: string;
 
   @Column() public enabled: boolean;
 

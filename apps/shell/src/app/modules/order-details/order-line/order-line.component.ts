@@ -6,22 +6,16 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  OnInit,
   SimpleChanges,
 } from '@angular/core';
 import { GraphQLError } from 'graphql';
-import { exhaustMap, mergeMap, of, Subject, take, takeUntil, tap } from 'rxjs';
+import { Subject } from 'rxjs';
 import { FormControl } from '@angular/forms';
 
 import { Exact, Order, OrderLine } from '@mosaic/common';
 import { MosAlertService } from '@mosaic/ui/alert';
 
-import {
-  AdjustItemQuantityMutation,
-  AdjustItemQuantityMutationVariables,
-  DataService,
-} from '../../../data';
-import { ADJUST_ITEM_QUANTITY, REMOVE_ITEM_FROM_CART } from '../../../common';
+import { DataService } from '../../../data';
 import { Store } from '@ngrx/store';
 
 export type RemoveItemFromCartMutationVariables = Exact<{

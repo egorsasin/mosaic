@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
-import { map } from 'rxjs';
+import { Inject, Injectable } from '@angular/core';
+import { distinctUntilChanged, map, Subject } from 'rxjs';
 
 import { ShippingMethodQuote } from '@mosaic/common';
 
 import { DataService } from '../../data';
 import { GET_ELIGIBLE_SHIPPING_METHODS } from '../../common';
+import { SHIPPING_METHOD_HANDLER, ShippingHandler } from '../../shipping';
 
 export type GetEligibleShippingMethodsQuery = {
   eligibleShippingMethods: ShippingMethodQuote[];
@@ -16,14 +17,30 @@ export class CheckoutService {
     this.dataService.query<GetEligibleShippingMethodsQuery>(
       GET_ELIGIBLE_SHIPPING_METHODS
     );
+  private shippingMethod = new Subject<string>();
 
   public shippingMethods$ = this.shippingMethodsQuery.stream$.pipe(
     map((data) => data.eligibleShippingMethods)
   );
 
+  public shippingMethod$ = this.shippingMethod.pipe(distinctUntilChanged());
+
+  constructor(
+    private dataService: DataService,
+    @Inject(SHIPPING_METHOD_HANDLER) private shippingHandler: ShippingHandler[]
+  ) {}
+
   public refetchShippingMethods(): void {
     this.shippingMethodsQuery.ref.refetch();
   }
 
-  constructor(private dataService: DataService) {}
+  public selectShippingMethod(code: string) {
+    const shippingMethodHandler = this.shippingHandler.find(
+      (shippingMethod) => shippingMethod.code === code
+    );
+
+    if (!shippingMethodHandler) {
+      this.shippingMethod.next(code);
+    }
+  }
 }
