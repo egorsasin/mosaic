@@ -16,6 +16,7 @@ type ShippingLine {
   shippingMethod: ShippingMethod!
   price: Money!
   discountedPrice: Money!
+  metadata: JSON
 }
 
 type Order implements Node {

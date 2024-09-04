@@ -74,7 +74,7 @@ export class OrderModifier {
     ctx: RequestContext,
     order: Order,
     shippingMethodId: number,
-    metadata = JSON.stringify({})
+    rawMetadata = {}
   ) {
     const shippingMethod = await this.shippingCalculator.getMethodIfEligible(
       ctx,
@@ -87,6 +87,8 @@ export class OrderModifier {
     }
 
     let shippingLine: ShippingLine | undefined = order.shippingLine;
+    const metadata = JSON.stringify(rawMetadata);
+
     if (shippingLine) {
       shippingLine.shippingMethod = shippingMethod;
       shippingLine.metadata = metadata;

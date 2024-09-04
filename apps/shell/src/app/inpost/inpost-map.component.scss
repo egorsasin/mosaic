@@ -1,0 +1,67 @@
+mos-inpost-map {
+  @apply flex min-w-[80vw] min-h-[80vh];
+
+  #mos-easypack-map {
+    height: auto;
+  }
+}
+
+.easypack-widget {
+  @apply font-[Dosis];
+
+  .btn-search {
+    min-height: 1rem;
+  }
+
+  .search-group:not(.with-filters) {
+    width: auto;
+    @apply bg-gray-300;
+  }
+
+  .search-group-btn {
+    @apply h-8;
+  }
+
+  .easypack-search-widget {
+    width: 100%;
+    @apply bg-white;
+
+    #searchLoader {
+      height: 2rem;
+    }
+
+    .search-input {
+      @apply font-normal h-8 px-3 border border-slate-300;
+    }
+
+    .search-group {
+      @apply px-3 py-3;
+    }
+  }
+
+  .map-widget {
+    .leaflet-popup {
+      .leaflet-popup-content-wrapper .point-wrapper {
+        padding: 0 10px 0.25rem;
+      }
+    }
+  }
+
+  .map-list-row .map-list-in-row .map-widget {
+    .info-window {
+      @apply font-[Dosis];
+    }
+  }
+
+  .map-list-row .map-list-flex .list-widget {
+    @apply bg-white;
+  }
+
+  input {
+    @apply font-[Dosis] font-normal;
+  }
+
+  b {
+    @apply font-semibold;
+  }
+}

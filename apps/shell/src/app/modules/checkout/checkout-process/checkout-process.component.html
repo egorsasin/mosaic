@@ -17,36 +17,13 @@
         </div>
         }
 
-        <div class="grid gap-3 pt-3">
-          <!-- SHIPPING METHODS -->
-          @for (shippingMethod of (shippingMethods$ | async); track
-          shippingMethod.id ) {
-          <div
-            class="py-3 px-6 flex gap-3 bg-white border border-slate-200 rounded-sm text-sm cursor-pointer hover:bg-slate-50"
-            (click)="setShippingMethod(+shippingMethod.id)"
-            [class.payment-metods--active]="
-              shippingMethod.id === $any(order).shippingLine?.shippingMethod?.id
-            "
-          >
-            <div class="w-full">
-              <div class="font-semibold flex justify-between">
-                <span class="flex-1">{{ shippingMethod.name }}</span>
-                @if (shippingMethod.price) {
-                <p>{{ shippingMethod.price / 100 | number : '1.2-2' }} zł</p>
-                } @else {
-                <p>Za darmo!</p>
-                }
-              </div>
-              @if (shippingMethod.description) {
-              <div
-                class="mt-1 text-slate-700"
-                [innerHtml]="shippingMethod.description"
-              ></div>
-              }
-            </div>
-          </div>
-          }
-        </div>
+        <mos-shipping-method-selector
+          class="block pt-3"
+          [shippingMethods]="shippingMethods$ | async"
+          [selected]="order.shippingLine"
+          (selelectMethod)="setShippingMethod($event)"
+        >
+        </mos-shipping-method-selector>
       </div>
 
       <div
@@ -239,7 +216,12 @@
             *ngIf="$any(order).shippingLine?.shippingMethod"
             class="flex justify-between text-sm font-medium text-gray-600 py-2"
           >
-            <p>Dostawa</p>
+            <p>
+              Dostawa
+              <span class="text-slate-500 font-normal">
+                {{ order.shippingLine?.shippingMethod?.name }}
+              </span>
+            </p>
             @if (order.shipping) {
             <p>{{ $any(order).shipping / 100 | number : '1.2-2' }} zł</p>
             } @else {

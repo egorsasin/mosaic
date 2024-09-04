@@ -20,6 +20,7 @@ import { DefaultInterceptor } from './default.interceptor';
 import { SidebarModule } from './shared/sidebar';
 import { MosStoreModule } from './store/store.module';
 import { CustomerService } from './services';
+import { InpostModule } from './inpost/inpost.module';
 @NgModule({
   declarations: [AppComponent, ...ROUTED_COMPONENTS],
   imports: [
@@ -34,6 +35,7 @@ import { CustomerService } from './services';
     MosDialogHostModule,
     MosDialogModule,
     SidebarModule,
+    InpostModule.forRoot(),
   ],
   providers: [
     CustomerService,

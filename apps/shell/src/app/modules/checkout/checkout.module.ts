@@ -18,6 +18,8 @@ import { MosQuantitySelectorComponent } from '../../shared';
 import { OrderLineComponent } from './order-line';
 import { CheckoutService } from './checkout.service';
 import * as checkoutEffects from './store/checkout.effects';
+import { InpostModule } from '../../inpost/inpost.module';
+import { ShippingMethodModule } from '../../shipping';
 
 @NgModule({
   declarations: [...routedComponents, OrderLineComponent],
@@ -34,6 +36,8 @@ import * as checkoutEffects from './store/checkout.effects';
     MosQuantitySelectorComponent,
     ControlErrorModule,
     EffectsModule.forFeature([checkoutEffects]),
+    InpostModule,
+    ShippingMethodModule,
   ],
   providers: [CheckoutService],
 })

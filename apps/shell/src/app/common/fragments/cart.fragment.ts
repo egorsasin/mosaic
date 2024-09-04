@@ -21,6 +21,7 @@ export const CART_FRAGMENT = gql`
     }
     shippingLine {
       price
+      metadata
       shippingMethod {
         id
         code

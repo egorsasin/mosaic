@@ -40,6 +40,12 @@ mos-dialog[data-appearance='mos-success-top'] {
   @apply my-12 mx-auto bg-amber-100;
 }
 
+mos-dialog[data-appearance='mos-dialog-map'] {
+  .mos-dialog-wrapper {
+    @apply p-0;
+  }
+}
+
 mos-hint[data-appearance='mini-cart'] {
   @apply bg-amber-100 border-0;
 

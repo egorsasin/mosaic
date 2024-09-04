@@ -193,10 +193,12 @@ export class OrderResolver {
     if (ctx.authorizedAsOwnerOnly) {
       const sessionOrder = await this.activeOrderService.getActiveOrder(ctx);
       if (sessionOrder) {
+        const { shippingMethodId, metadata } = input;
         return this.orderService.setShippingMethod(
           ctx,
           sessionOrder.id,
-          input.shippingMethodId
+          shippingMethodId,
+          metadata
         );
       }
     }

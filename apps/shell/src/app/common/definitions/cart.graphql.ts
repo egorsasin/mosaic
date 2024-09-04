@@ -29,6 +29,7 @@ export const GET_ELIGIBLE_SHIPPING_METHODS = gql`
     eligibleShippingMethods {
       id
       name
+      code
       description
       price
       metadata
