@@ -17,9 +17,6 @@ const config = {
   },
   mapType: 'osm',
   searchType: 'osm',
-  map: {
-    googleKey: 'AIzaSyDZc6Ajf0PqhUAzbktozQyHFpi5V7TZW_o',
-  },
   closestLimit: 500,
   paymentFilter: {
     visible: false,
