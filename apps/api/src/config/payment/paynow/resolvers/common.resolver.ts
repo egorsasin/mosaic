@@ -32,7 +32,7 @@ export class PaynowCommonResolver {
       const sessionOrder = await this.activeOrderService.getActiveOrder(ctx);
 
       if (sessionOrder && sessionOrder.id == orderId) {
-        return this.paynowService.createPaymentIntent(sessionOrder);
+        return this.paynowService.createPaymentIntent(ctx, sessionOrder);
       }
     }
 

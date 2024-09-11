@@ -1,6 +1,6 @@
 import { gql } from 'apollo-angular';
 
-import { ERROR_RESULT_FRAGMENT } from '../../common/definitions';
+import { ERROR_RESULT_FRAGMENT } from '../../../common/fragments';
 
 export const PAYNOW_PAYMENT_INTENT_FRAGMENT = gql`
   fragment PaynowPaymentIntent on PaynowPaymentIntent {

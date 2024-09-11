@@ -2,7 +2,7 @@ import { DataSourceOptions } from 'typeorm';
 import { DynamicModule, Type } from '@nestjs/common';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
-import { PaymentProcess } from '../service/helpers';
+import { PaymentProcess } from '../service';
 
 import {
   AuthenticationStrategy,

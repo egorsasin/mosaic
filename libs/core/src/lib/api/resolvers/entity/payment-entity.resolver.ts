@@ -2,9 +2,9 @@ import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { pick } from '@mosaic/common';
 
-import { Payment, PaymentMethod } from '../../../data';
+import { Payment } from '../../../data';
 import { PaymentMetadata } from '../../../types';
-import { PaymentMethodService } from '../../../service/services';
+import { PaymentMethodService } from '../../../service';
 
 @Resolver('Payment')
 export class PaymentEntityResolver {

@@ -5,13 +5,15 @@ import { gql } from 'graphql-tag';
 import { AuthenticationStrategy } from '@mosaic/core/config';
 import { User } from '@mosaic/core/data';
 import { Injector } from '@mosaic/core/api/common';
-import { ExternalAuthenticationService } from '@mosaic/core/service/services/';
+import { ExternalAuthenticationService } from '@mosaic/core';
 
 export type GoogleAuthData = {
   token: string;
 };
 
-export class GoogleAuthenticationStrategy implements AuthenticationStrategy<GoogleAuthData> {
+export class GoogleAuthenticationStrategy
+  implements AuthenticationStrategy<GoogleAuthData>
+{
   public readonly name = 'google';
   private authClient: OAuth2Client;
   private externalAuthenticationService: ExternalAuthenticationService;
@@ -21,7 +23,9 @@ export class GoogleAuthenticationStrategy implements AuthenticationStrategy<Goog
   }
 
   public init(injector: Injector) {
-    this.externalAuthenticationService = injector.get(ExternalAuthenticationService);
+    this.externalAuthenticationService = injector.get(
+      ExternalAuthenticationService
+    );
   }
 
   public defineInputType(): DocumentNode {
@@ -43,7 +47,10 @@ export class GoogleAuthenticationStrategy implements AuthenticationStrategy<Goog
       return false;
     }
 
-    const user = await this.externalAuthenticationService.findUser(this.name, payload.sub);
+    const user = await this.externalAuthenticationService.findUser(
+      this.name,
+      payload.sub
+    );
 
     if (user) {
       return user;

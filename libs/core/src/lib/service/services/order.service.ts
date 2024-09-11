@@ -125,6 +125,7 @@ export class OrderService {
         id,
         active: true,
       },
+      relations: ['customer', 'lines', 'lines.product'],
     });
   }
 
@@ -139,6 +140,7 @@ export class OrderService {
       order: {
         createdAt: 'DESC',
       },
+      relations: ['customer', 'lines', 'lines.product'],
     });
   }
 

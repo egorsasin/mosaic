@@ -10,7 +10,7 @@ import {
   UpdateProductInput,
 } from '../../../types';
 import { Product } from '../../../data';
-import { ProductService } from '../../../service/services';
+import { ProductService } from '../../../service/services/product.service';
 
 @Resolver()
 export class ProductResolver {
