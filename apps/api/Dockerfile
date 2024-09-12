@@ -1,4 +1,4 @@
-FROM node:lts-alpine AS builder
+FROM node:20.16.0 AS builder
 
 WORKDIR /usr/src/app
 
@@ -11,9 +11,9 @@ RUN npm ci --only=development --silent
 # Copy the rest of the application code to the working directory
 COPY . .
 
-RUN npx nx build api --prod --vervose
+RUN npx nx build api --prod --verbose
 
-FROM node:lts-alpine
+FROM node:20.16.0
 
 WORKDIR /usr/src/app
 

@@ -5,10 +5,8 @@ networks:
 
 services:
   api:
-    container_name: backend-app
+    container_name: mosaic-app
     restart: always
-    env_file:
-      - ./prod.env
     ports:
       - '8080:3000'
     build:
