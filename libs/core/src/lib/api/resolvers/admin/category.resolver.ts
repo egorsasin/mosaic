@@ -10,7 +10,7 @@ import {
 import { QueryListArgs } from '../../../types';
 import { Category } from '../../../data';
 import { Ctx, RelationPaths, Relations } from '../../decorators';
-import { CategoryService } from '../../../service/services';
+import { CategoryService } from '../../../service/services/category.service';
 import { RequestContext } from '../../common';
 
 export type MutationUpdateCollectionArgs = {

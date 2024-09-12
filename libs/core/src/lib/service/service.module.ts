@@ -13,7 +13,8 @@ import { ConfigArgService } from './helpers/config-args';
 import { OrderCalculator } from './helpers/order-calculator';
 import { ShippingCalculator } from './helpers/shipping-calculator';
 import { EntityHydrator } from './helpers/entity-hydrator';
-import { ListQueryBuilder } from './helpers';
+import { ListQueryBuilder } from './helpers/list-query-builder/list-query-builder';
+import { RequestContextService } from './helpers/request-context/request-context.service';
 
 import { UserService } from './services/user.service';
 import { CustomerService } from './services/customer.service';
@@ -25,8 +26,9 @@ import { PaymentMethodService } from './services/payment-method.service';
 import { ShippingMethodService } from './services/shipping-method.service';
 import { OrderService } from './services/order.service';
 import { PaymentService } from './services/payment.service';
-import { AssetService, CategoryService } from './services';
-import { HistoryService } from './services';
+import { AssetService } from './services/asset.service';
+import { CategoryService } from './services/category.service';
+import { HistoryService } from './services/history.service';
 
 const helpers = [
   ConfigOptionsService,
@@ -55,6 +57,7 @@ const services = [
   ProductService,
   SessionService,
   HistoryService,
+  RequestContextService,
 ];
 
 @Module({

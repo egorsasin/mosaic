@@ -5,7 +5,7 @@ import { Reflector } from '@nestjs/core';
 
 import { ForbiddenError } from '@mosaic/common';
 
-import { SessionService } from '../../service/services';
+import { SessionService } from '../../service/services/session.service';
 import { CachedSession, ConfigService } from '../../config';
 
 import {

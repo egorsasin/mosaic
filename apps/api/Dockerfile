@@ -1,4 +1,4 @@
-FROM node:lts AS builder
+FROM node:lts-alpine AS builder
 
 WORKDIR /usr/src/app
 
@@ -6,28 +6,22 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install the dependencies
-RUN npm install --only=development --silent
+RUN npm ci --only=development --silent
 
 # Copy the rest of the application code to the working directory
 COPY . .
 
 RUN npx nx build api --prod --vervose
 
-COPY ./libs/core/src/lib/api/schema ./dist/apps/api/schema
-
-
-FROM node:lts
+FROM node:lts-alpine
 
 WORKDIR /usr/src/app
 
 COPY package*.json ./
 
 RUN npm install -g pm2@latest
-RUN npm install --only=production --silent
-RUN npm install express
+RUN npm ci --only=production --silent
 
 COPY --from=builder /usr/src/app/dist/apps/api ./build
-COPY --from=builder /usr/src/app/email-templates ./email-templates
-
 
 ENTRYPOINT ["pm2-runtime","build/main.js"]

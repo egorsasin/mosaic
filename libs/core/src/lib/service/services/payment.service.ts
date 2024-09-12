@@ -4,7 +4,7 @@ import { DataSource } from 'typeorm';
 import { RequestContext } from '../../api/common';
 import { Order, Payment } from '../../data';
 import { DATA_SOURCE_PROVIDER } from '../../data/constants';
-import { PaymentStateMachine } from '../helpers';
+import { PaymentStateMachine } from '../helpers/payment-state-machine';
 import { PaymentState } from '../../types';
 
 import { PaymentMethodService } from './payment-method.service';

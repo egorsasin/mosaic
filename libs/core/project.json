@@ -13,7 +13,7 @@
         "tsConfig": "libs/core/tsconfig.lib.json",
         "packageJson": "libs/core/package.json",
         "main": "libs/core/src/index.ts",
-        "assets": ["libs/core/*.md"]
+        "assets": ["libs/core/*.md", "libs/core/**/*.graphql"]
       }
     },
     "lint": {

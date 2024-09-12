@@ -105,7 +105,8 @@ function configuregGraphQLModule(options: GraphQLApiOptions) {
             schema = extendSchema(schema, documentNode);
           });
 
-        schema = generateAuthenticationTypes(schema, authStrategies);
+        // TODO
+        //schema = generateAuthenticationTypes(schema, authStrategies);
         schema = generateListOptions(schema);
 
         return schema;

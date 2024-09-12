@@ -68,6 +68,7 @@ export class Order extends MosaicEntity {
   @Money({ default: 0 })
   public shipping: number;
 
+  @Calculated({ relations: ['lines'] })
   public get subTotal() {
     const items = this.lines;
 
@@ -85,7 +86,7 @@ export class Order extends MosaicEntity {
   @OneToMany(() => Payment, (payment) => payment.order)
   public payments: Payment[];
 
-  @Calculated()
+  @Calculated({ relations: ['lines'] })
   get totalQuantity() {
     const items = this.lines;
     return (items || []).reduce((sum, item) => sum + item.quantity, 0);

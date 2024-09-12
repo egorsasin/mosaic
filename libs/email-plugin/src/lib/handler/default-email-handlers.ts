@@ -8,8 +8,7 @@ import {
   ShippingLine,
 } from '@mosaic/core';
 import { ConfigService } from '@mosaic/core/config';
-import { EntityHydrator } from '@mosaic/core/service/helpers';
-import { PaymentMethodService } from '@mosaic/core/service/services';
+import { EntityHydrator, PaymentMethodService } from '@mosaic/core';
 
 import { EmailEventListener } from '../event-listener';
 import { EmailEventHandler } from './event-handler';

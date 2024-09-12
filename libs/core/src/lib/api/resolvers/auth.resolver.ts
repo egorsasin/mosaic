@@ -3,7 +3,7 @@ import { Response } from 'express';
 
 import { ForbiddenError, NotVerifiedError } from '@mosaic/common';
 
-import { UserService } from '../../service/services';
+import { UserService } from '../../service/services/user.service';
 import { User } from '../../data';
 import { Permission, RequestContext } from '../common';
 import { Allow, Ctx } from '../decorators';

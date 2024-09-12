@@ -2,6 +2,7 @@ import { Request } from 'express';
 
 import { User } from '../../data';
 import { CachedSession } from '../../config/';
+import { ApiType } from '../types';
 
 export class RequestContext {
   private readonly _req?: Request;
@@ -15,6 +16,7 @@ export class RequestContext {
     isAuthorized?: boolean;
     authorizedAsOwnerOnly?: boolean;
     session?: CachedSession;
+    apiType?: ApiType;
   }) {
     const { req, isAuthorized, authorizedAsOwnerOnly, session } = options;
 

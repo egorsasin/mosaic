@@ -8,7 +8,7 @@ import {
   PayloadArgs,
   QueryListArgs,
 } from '../../../types';
-import { AssetService } from '../../../service/services';
+import { AssetService } from '../../../service/services/asset.service';
 import { Asset } from '../../../data';
 
 @Resolver()

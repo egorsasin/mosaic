@@ -9,7 +9,7 @@ import {
 
 import { QueryListArgs, QueryProductArgs } from '../../../types';
 import { Product } from '../../../data';
-import { ProductService } from '../../../service/services';
+import { ProductService } from '../../../service';
 
 @Resolver({})
 export class ProductResolver {

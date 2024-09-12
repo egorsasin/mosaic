@@ -1,5 +1,5 @@
 import { PaymentState } from '../../types';
-import { PaymentProcess, PaymentTransitionData } from '../../service/helpers';
+import { PaymentProcess, PaymentTransitionData } from '../../service';
 
 declare module '../../types/payment-state' {
   interface PaymentStates {

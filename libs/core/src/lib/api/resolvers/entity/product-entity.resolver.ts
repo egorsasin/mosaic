@@ -1,7 +1,7 @@
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { Asset, Product } from '../../../data';
-import { AssetService } from '../../../service/services';
+import { AssetService } from '../../../service';
 
 @Resolver(Product)
 export class ProductEntityResolver {

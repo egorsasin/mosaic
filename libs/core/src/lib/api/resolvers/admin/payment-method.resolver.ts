@@ -9,7 +9,7 @@ import {
 
 import { QueryListArgs } from '../../../types';
 import { PaymentMethod } from '../../../data';
-import { PaymentMethodService } from '../../../service/services';
+import { PaymentMethodService } from '../../../service/services/payment-method.service';
 
 @Resolver()
 export class PaymentMethodResolver {

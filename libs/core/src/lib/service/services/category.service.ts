@@ -11,7 +11,7 @@ import {
 
 import { Category, DATA_SOURCE_PROVIDER, Product } from '../../data';
 import { RelationPaths, RequestContext } from '../../api';
-import { ListQueryBuilder } from '../helpers';
+import { ListQueryBuilder } from '../helpers/list-query-builder';
 import { PaginatedList } from '../../common';
 import { ListQueryOptions } from '../../types';
 import { ConfigService } from '../../config';

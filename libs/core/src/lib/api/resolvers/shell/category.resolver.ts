@@ -5,7 +5,7 @@ import { PaginatedList } from '@mosaic/common';
 import { QueryListArgs } from '../../../types';
 import { Category } from '../../../data';
 import { RelationPaths, Relations } from '../../decorators';
-import { CategoryService } from '../../../service/services';
+import { CategoryService } from '../../../service';
 
 @Resolver()
 export class CategoryResolver {
