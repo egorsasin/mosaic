@@ -32,7 +32,7 @@ jobs:
           context: .
           file: ./apps/api/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/mosaic-api:${{ github.sha }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/api:${{ github.sha }}
 
       - name: Deploy to EC2 instance
         uses: appleboy/ssh-action@master
@@ -41,8 +41,8 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
-            docker stop mosaic-api || true
-            docker rm mosaic-api || true
-            docker pull ${{ secrets.DOCKER_USERNAME }}/mosaic-api:${{ github.sha }}
-            docker run -d --name mosaic-api --network=db-network \
-              -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/mosaic-api:${{ github.sha }}
+            docker stop api || true
+            docker rm api || true
+            docker pull ${{ secrets.DOCKER_USERNAME }}/api:${{ github.sha }}
+            docker run -d --name api --network=db-network \
+              -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/api:${{ github.sha }}
