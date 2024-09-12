@@ -11,10 +11,11 @@ jobs:
 
     steps:
       - name: Decode and create .config file from secret
-        uses: akhileshns/decode-base64-to-file-action@v1.0.2
+        uses: timheuer/base64-to-file@v1.2
         with:
-          base64_string: ${{ secrets.CONFIG_FILE_BASE64 }}
-          file_path: './apps/api/src/.config.ts'    
+          fileName: '.config.ts'
+          fileDir: './apps/api/src/'
+          encodedString: ${{ secrets.CONFIG_FILE_BASE64 }}
 
       - name: Checkout code
         uses: actions/checkout@v2
