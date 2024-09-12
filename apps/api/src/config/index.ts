@@ -1,2 +1,2 @@
 export * from './payment';
-export * from './config';
+export * from './s3-asset-storage-strategy';
