@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-test-deploy:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       - name: Decode and create .config file from secret
