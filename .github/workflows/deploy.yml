@@ -17,6 +17,9 @@ jobs:
           fileDir: './apps/api/src/'
           encodedString: ${{ secrets.CONFIG_FILE_BASE64 }}
 
+      - name: List specific directory
+        run: ls ./apps/api/src/    
+
       - name: Checkout code
         uses: actions/checkout@v2
 
