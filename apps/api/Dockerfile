@@ -1,4 +1,7 @@
-FROM node:20.16.0 AS builder
+FROM node:20-alpine AS builder
+
+# Install build tools for Alpine (musl libc)
+RUN apk add --no-cache python3 make g++ build-base
 
 WORKDIR /usr/src/app
 
@@ -6,21 +9,26 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install the dependencies
-RUN npm ci --only=development --silent
+RUN npm ci --only=development --verbose
 
 # Copy the rest of the application code to the working directory
 COPY . .
 
 RUN npx nx build api --prod --verbose
 
-FROM node:20.16.0
+FROM node:20-alpine AS production
+
+# Install build tools for Alpine (musl libc)
+RUN apk add --no-cache python3 make g++ build-base
 
 WORKDIR /usr/src/app
+
+ENV NODE_ENV production
 
 COPY package*.json ./
 
 RUN npm install -g pm2@latest
-RUN npm ci --only=production --silent
+RUN npm ci --only=production --verbose
 
 COPY --from=builder /usr/src/app/dist/apps/api ./build
 
