@@ -9,7 +9,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install the dependencies
-RUN npm ci --only=development --verbose
+RUN npm ci --only=development --silent
 
 # Copy the rest of the application code to the working directory
 COPY . .
@@ -28,7 +28,7 @@ ENV NODE_ENV production
 COPY package*.json ./
 
 RUN npm install -g pm2@latest
-RUN npm ci --only=production --verbose
+RUN npm ci --only=production --silent
 
 COPY --from=builder /usr/src/app/dist/apps/api ./build
 
