@@ -28,7 +28,7 @@ export class NativeAuthenticationStrategy
   private userService: import('../../service/services/user.service').UserService;
   private passwordCipher: import('../../service/helpers/password-cipher/password-cipher').PasswordCipher;
 
-  async init(injector: Injector) {
+  public async init(injector: Injector) {
     this.connection = injector.get(DATA_SOURCE_PROVIDER);
     // These are lazily-loaded to avoid a circular dependency
     const { PasswordCipher } = await import(
@@ -39,7 +39,7 @@ export class NativeAuthenticationStrategy
     this.userService = injector.get(UserService);
   }
 
-  defineInputType(): DocumentNode {
+  public defineInputType(): DocumentNode {
     return gql`
       input NativeAuthInput {
         username: String!

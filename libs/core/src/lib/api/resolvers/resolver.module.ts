@@ -38,6 +38,7 @@ const ADMIN_RESOLVERS = [
   AdminResolvers.OrderResolver,
   AdminResolvers.CategoryResolver,
   AdminResolvers.SearchResolver,
+  AdminResolvers.AuthResolver,
 ];
 
 @Module({

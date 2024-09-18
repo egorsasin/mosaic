@@ -16,9 +16,7 @@ import { AuthService } from '../../../service/services/auth.service';
 import { UserService } from '../../../service/services/user.service';
 import { User } from '../../../data';
 import { isGraphQlErrorResult } from '../../../common';
-import { ConfigService } from '../../../config';
-
-export const NATIVE_AUTH_STRATEGY_NAME = 'native';
+import { ConfigService, NATIVE_AUTH_STRATEGY_NAME } from '../../../config';
 
 export class BaseAuthResolver {
   constructor(

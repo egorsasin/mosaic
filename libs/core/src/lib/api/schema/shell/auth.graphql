@@ -5,7 +5,7 @@ type Query {
 type Mutation {
   "Authenticates the user using a named authentication strategy"
   authenticate(
-    #input: AuthenticationInput!
+    input: AuthenticationInput!
     rememberMe: Boolean
   ): AuthenticationResult!
   "Authenticates the user using the native authentication strategy. This mutation is an alias for `authenticate({ native: { ... }})`"
@@ -16,4 +16,4 @@ type Mutation {
 }
 
 # Populated at run-time
-# input AuthenticationInput
+input AuthenticationInput
