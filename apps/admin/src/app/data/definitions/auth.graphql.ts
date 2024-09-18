@@ -23,3 +23,12 @@ export const ATTEMPT_LOGIN = gql`
   ${CURRENT_USER_FRAGMENT}
   ${ERROR_RESULT_FRAGMENT}
 `;
+
+export const GET_CURRENT_USER = gql`
+  query GetCurrentUser {
+    me {
+      ...CurrentUser
+    }
+  }
+  ${CURRENT_USER_FRAGMENT}
+`;

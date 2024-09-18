@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { AuthDataService, AdministratorDataService } from '../data';
-import { map, Observable, of, switchMap } from 'rxjs';
+import { catchError, map, mergeMap, Observable, of, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -37,6 +37,52 @@ export class AuthService {
 
         return of(false);
       })
+    );
+  }
+
+  /**
+   * Checks the app state to see if the user is already logged in,
+   * and if not, attempts to validate any auth token found.
+   */
+  public checkAuthenticatedStatus(): Observable<boolean> {
+    return this.authDataService.userStatus().single$.pipe(
+      mergeMap((data) => {
+        if (!data.userStatus?.isLoggedIn) {
+          return this.validateAuthToken();
+        } else {
+          return of(true);
+        }
+      })
+    );
+  }
+
+  /**
+   * Checks for an auth token and if found, attempts to validate
+   * that token against the API.
+   */
+  private validateAuthToken(): Observable<boolean> {
+    return this.authDataService.currentUser().single$.pipe(
+      mergeMap(({ me }) => {
+        if (!me) {
+          return of(false) as any;
+        }
+
+        return this.administratorDataService
+          .getActiveAdministrator()
+          .single$.pipe(
+            switchMap(({ activeAdministrator }) => {
+              if (activeAdministrator) {
+                return this.authDataService
+                  .loginSuccess(activeAdministrator.id)
+                  .pipe(map(() => true));
+              } else {
+                return of(false);
+              }
+            })
+          );
+      }),
+      map(() => true),
+      catchError((err) => of(false))
     );
   }
 }

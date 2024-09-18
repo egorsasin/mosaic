@@ -9,12 +9,12 @@ import { MosAlertModule } from '@mosaic/ui/alert';
 import { MOS_ICON_PATH, MosIconComponent } from '@mosaic/ui/svg-icon';
 
 import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app-routing.module';
+import { AppRoutingModule, ROUTED_COMPONENTS } from './app-routing.module';
 import { MosDynamicControlModule } from './dynamic-control/dynamic-control.module';
 import { DataModule } from './data';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, ...ROUTED_COMPONENTS],
   bootstrap: [AppComponent],
   imports: [
     BrowserModule,

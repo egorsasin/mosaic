@@ -1,7 +1,7 @@
-import { Args, Context, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Response } from 'express';
 
-import { NotVerifiedError } from '@mosaic/common';
+import { ForbiddenError, NotVerifiedError } from '@mosaic/common';
 
 import { Allow, Ctx } from '../../decorators';
 import { Permission, RequestContext } from '../../common';
@@ -14,22 +14,25 @@ import {
 } from '../../../types';
 import { AuthService } from '../../../service/services/auth.service';
 import { UserService } from '../../../service/services/user.service';
+import { AdministratorService } from '../../../service/services/administrator.service';
 import { User } from '../../../data';
 import { isGraphQlErrorResult } from '../../../common';
 import { ConfigService, NATIVE_AUTH_STRATEGY_NAME } from '../../../config';
+import { ApiType } from '../../types';
 
 export class BaseAuthResolver {
   constructor(
     protected authService: AuthService,
     protected userService: UserService,
-    protected configService: ConfigService
+    protected configService: ConfigService,
+    protected administratorService?: AdministratorService
   ) {}
 
   /**
    * Attempts a login given the username and password of a user. If successful, returns
    * the user data and returns the token either in a cookie or in the response body.
    */
-  async baseLogin(
+  public async baseLogin(
     args: MutationLoginArgs,
     ctx: RequestContext,
     req: Request,
@@ -42,6 +45,27 @@ export class BaseAuthResolver {
       },
       res
     );
+  }
+
+  public async me(ctx: RequestContext, apiType: ApiType) {
+    const userId = ctx.activeUserId;
+
+    if (!userId) {
+      throw new ForbiddenError();
+    }
+
+    if (apiType === 'admin') {
+      const administrator = await this.administratorService?.findOneByUserId(
+        ctx,
+        userId
+      );
+      if (!administrator) {
+        throw new ForbiddenError();
+      }
+    }
+    const user = userId && (await this.userService.getUserById(userId));
+
+    return user ? this.publiclyAccessibleUser(user) : null;
   }
 
   private async authenticateAndCreateSession(
@@ -79,9 +103,16 @@ export class AuthResolver extends BaseAuthResolver {
   constructor(
     authService: AuthService,
     userService: UserService,
-    configService: ConfigService
+    configService: ConfigService,
+    administratorService: AdministratorService
   ) {
-    super(authService, userService, configService);
+    super(authService, userService, configService, administratorService);
+  }
+
+  @Query()
+  @Allow(Permission.Authenticated, Permission.Owner)
+  me(@Ctx() ctx: RequestContext) {
+    return super.me(ctx, 'admin');
   }
 
   @Mutation()

@@ -1,3 +1,7 @@
+type Query {
+  me: CurrentUser
+}
+
 type Mutation {
   """
   Authenticates the user using the native authentication strategy. This mutation is an alias for authenticate({ native: { ... }})

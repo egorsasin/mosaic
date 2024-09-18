@@ -11,3 +11,10 @@ export type AttemptLoginMutationVariables = Exact<{
   username: string;
   password: string;
 }>;
+
+export type CurrentUserQuery = {
+  me?: {
+    __typename?: 'CurrentUser';
+    id: string;
+  } | null;
+};
