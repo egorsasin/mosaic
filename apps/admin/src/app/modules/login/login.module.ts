@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { LoginComponent } from './login.component';
 
@@ -13,7 +14,7 @@ export const loginRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(loginRoutes)],
+  imports: [RouterModule.forChild(loginRoutes), ReactiveFormsModule],
   exports: [],
   declarations: [LoginComponent],
 })
