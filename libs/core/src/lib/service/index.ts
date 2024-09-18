@@ -14,3 +14,4 @@ export { SessionService } from './services/session.service';
 export { UserService } from './services/user.service';
 export { PaymentMethodService } from './services/payment-method.service';
 export { OrderService } from './services/order.service';
+export { AdministratorService } from './services/administrator.service';

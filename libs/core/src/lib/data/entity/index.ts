@@ -12,6 +12,7 @@ export { ShippingMethod } from '../entity/shipping-method';
 export { Payment } from './payment';
 export { Asset } from './asset';
 export { OrderableAsset } from './asset/orderable-asset.entity';
+export { Administrator } from './administrator/administrator.entity';
 
 export * from './authentication';
 export * from './session';

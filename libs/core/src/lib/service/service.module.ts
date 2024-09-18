@@ -30,6 +30,7 @@ import { PaymentService } from './services/payment.service';
 import { AssetService } from './services/asset.service';
 import { CategoryService } from './services/category.service';
 import { HistoryService } from './services/history.service';
+import { AdministratorService } from './services/administrator.service';
 
 const helpers = [
   ConfigOptionsService,
@@ -60,6 +61,7 @@ const services = [
   SessionService,
   HistoryService,
   RequestContextService,
+  AdministratorService,
 ];
 
 @Module({
