@@ -1,0 +1,13 @@
+type Query {
+  activeAdministrator: Administrator
+}
+
+type Administrator implements Node {
+  id: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  firstName: String!
+  lastName: String!
+  emailAddress: String!
+  user: User!
+}
