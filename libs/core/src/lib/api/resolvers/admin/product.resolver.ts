@@ -11,6 +11,8 @@ import {
 } from '../../../types';
 import { Product } from '../../../data';
 import { ProductService } from '../../../service/services/product.service';
+import { Allow } from '../../decorators';
+import { Permission } from '../..';
 
 @Resolver()
 export class ProductResolver {
@@ -20,6 +22,7 @@ export class ProductResolver {
    * Список товаров с пагинацией
    */
   @Query()
+  @Allow(Permission.Authenticated)
   public async products(
     @Args() { options }: QueryListArgs
   ): Promise<PaginatedList<Product>> {
@@ -27,6 +30,7 @@ export class ProductResolver {
   }
 
   @Query()
+  @Allow(Permission.Authenticated)
   async product(
     @Args() { id, slug }: QueryProductArgs
   ): Promise<Product | undefined> | never {
@@ -44,6 +48,7 @@ export class ProductResolver {
   }
 
   @Mutation()
+  @Allow(Permission.Authenticated)
   async createProduct(
     @Args() args: MutationArgs<CreateProductInput>
   ): Promise<Product> {
@@ -52,6 +57,7 @@ export class ProductResolver {
   }
 
   @Mutation()
+  @Allow(Permission.Authenticated)
   async updateProduct(
     @Args() { input, id }: MutationArgs<UpdateProductInput> & { id: number }
   ): Promise<Product> {
@@ -59,6 +65,7 @@ export class ProductResolver {
   }
 
   @Query()
+  @Allow(Permission.Authenticated)
   public async checkProductSlug(
     @Args() { input }: { input: { slug: string; id?: number } }
   ): Promise<{ success: boolean }> {

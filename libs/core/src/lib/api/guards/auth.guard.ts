@@ -99,6 +99,7 @@ export class AuthGuard implements CanActivate {
       serializedSession = await this.sessionService.createAnonymousSession();
       res.set(authOtions.authTokenHeaderKey, serializedSession.token);
     }
+
     return serializedSession;
   }
 

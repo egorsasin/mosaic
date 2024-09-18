@@ -10,13 +10,12 @@ import {
   OrderService,
   PaymentMethod,
   RequestContext,
-  RequestContextService,
 } from '@mosaic/core';
 import { ConfigArg } from '@mosaic/common';
 
 import { paynowPaymentMethodHandler } from './paynow.handler';
 import { AxiosResponse } from 'axios';
-import { PaynowPaymentIntent, RequestWithRawBody } from './types';
+import { PaynowPaymentIntent } from './types';
 import { PaynowPaymentIntentResponse } from './paynow.types';
 
 const MAX_VALUE_LENGTH = 50;

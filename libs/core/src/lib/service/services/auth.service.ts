@@ -1,23 +1,31 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
+import { DataSource } from 'typeorm';
 
 import { InvalidCredentialsError, NotVerifiedError } from '@mosaic/common';
 
 import { ConfigService, AuthenticationStrategy } from '../../config';
-import { AuthenticatedSession, User } from '../../data';
+import { AuthenticatedSession, DATA_SOURCE_PROVIDER, User } from '../../data';
 import { ErrorResultUnion } from '../../common';
 import { RequestContext } from '../../api/common';
 import {
   NATIVE_AUTH_STRATEGY_NAME,
   NativeAuthenticationStrategy,
 } from '../../config/auth/native-authentication-strategy';
+import { EventBus, LogoutEvent } from '../../event-bus';
 
 import { SessionService } from './session.service';
 
 @Injectable()
 export class AuthService {
   constructor(
+    @Inject(DATA_SOURCE_PROVIDER) private readonly dataSource: DataSource,
     private readonly configService: ConfigService,
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly eventBus: EventBus
   ) {}
 
   public async authenticate(
@@ -73,6 +81,32 @@ export class AuthService {
     );
 
     return session;
+  }
+
+  public async destroyAuthenticatedSession(
+    ctx: RequestContext,
+    sessionToken: string
+  ): Promise<void> {
+    const session = await this.dataSource
+      .getRepository(AuthenticatedSession)
+      .findOne({
+        where: { token: sessionToken },
+        relations: ['user', 'user.authenticationMethods'],
+      });
+
+    if (session) {
+      const authenticationStrategy = this.getAuthenticationStrategy(
+        session.authenticationStrategy
+      );
+
+      if (typeof authenticationStrategy.onLogOut === 'function') {
+        await authenticationStrategy.onLogOut(ctx, session.user);
+      }
+
+      await this.eventBus.publish(new LogoutEvent(ctx));
+
+      return this.sessionService.deleteSessionsByUser(ctx, session.user);
+    }
   }
 
   private getAuthenticationStrategy(

@@ -9,9 +9,9 @@ import {
 
 import { QueryListArgs } from '../../../types';
 import { Category } from '../../../data';
-import { Ctx, RelationPaths, Relations } from '../../decorators';
+import { Allow, Ctx, RelationPaths, Relations } from '../../decorators';
 import { CategoryService } from '../../../service/services/category.service';
-import { RequestContext } from '../../common';
+import { Permission, RequestContext } from '../../common';
 
 export type MutationUpdateCollectionArgs = {
   id: number;
@@ -26,6 +26,7 @@ export class CategoryResolver {
    * Список категорий с пагинацией
    */
   @Query()
+  @Allow(Permission.Authenticated)
   public async categories(
     @Args() args: QueryListArgs<Category>,
     @Relations({
@@ -37,6 +38,7 @@ export class CategoryResolver {
   }
 
   @Query()
+  @Allow(Permission.Authenticated)
   async category(
     @Args() args: QueryCategoryArgs,
     @Relations({

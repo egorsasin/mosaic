@@ -5,15 +5,15 @@ import { AuthOptions } from '../../config';
 /**
  * Sets the authToken as a response header
  */
-// export function setSessionToken(options: {
-//   sessionToken: string;
-//   authOptions: Required<AuthOptions>;
-//   res: Response;
-// }) {
-//   const { authOptions, sessionToken, res } = options;
+export function setSessionToken(options: {
+  sessionToken: string;
+  authOptions: Required<AuthOptions>;
+  res: Response;
+}) {
+  const { authOptions, sessionToken, res } = options;
 
-//   res.set(authOptions.authTokenHeaderKey, sessionToken);
-// }
+  res.set(authOptions.authTokenHeaderKey, sessionToken);
+}
 
 /**
  * Get the session token from the Authorization header

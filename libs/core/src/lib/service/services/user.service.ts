@@ -23,8 +23,10 @@ export class UserService {
     emailAddress: string,
     userType?: 'administrator' | 'customer'
   ): Promise<User | undefined> {
-    const table =
-      userType ?? (ctx.apiType === 'admin' ? 'administrator' : 'customer');
+    // TODO: Авторизация в магазине
+    const table = 'administrator';
+    // const table =
+    //   userType ?? (ctx.apiType === 'admin' ? 'administrator' : 'customer');
 
     const qb = this.dataSource
       .getRepository(User)

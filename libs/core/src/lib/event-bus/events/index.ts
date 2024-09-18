@@ -8,3 +8,4 @@ export * from './order-state-transition.event';
 export * from './product.event';
 export * from './category-modification.event';
 export * from './category.event';
+export * from './logout.event';

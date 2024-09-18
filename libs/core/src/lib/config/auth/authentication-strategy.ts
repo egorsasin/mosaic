@@ -9,5 +9,5 @@ export interface AuthenticationStrategy<Data = unknown>
   readonly name: string;
   defineInputType(): DocumentNode;
   authenticate(ctx: RequestContext, data: Data): Promise<User | false | string>;
-  onLogOut?(user: User): Promise<void>;
+  onLogOut?(ctx: RequestContext, user: User): Promise<void>;
 }

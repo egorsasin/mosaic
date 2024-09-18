@@ -1,16 +1,22 @@
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 
 import { ForbiddenError, NotVerifiedError } from '@mosaic/common';
 
 import { Allow, Ctx } from '../../decorators';
-import { Permission, RequestContext } from '../../common';
+import {
+  extractSessionToken,
+  Permission,
+  RequestContext,
+  setSessionToken,
+} from '../../common';
 import {
   AuthenticationResult,
   CurrentUser,
   MutationAuthenticateArgs,
   MutationLoginArgs,
   NativeAuthenticationResult,
+  Success,
 } from '../../../types';
 import { AuthService } from '../../../service/services/auth.service';
 import { UserService } from '../../../service/services/user.service';
@@ -45,6 +51,25 @@ export class BaseAuthResolver {
       },
       res
     );
+  }
+
+  public async logout(
+    ctx: RequestContext,
+    req: Request,
+    res: Response
+  ): Promise<Success> {
+    const token = extractSessionToken(req);
+    if (!token) {
+      return { success: false };
+    }
+    await this.authService.destroyAuthenticatedSession(ctx, token);
+    setSessionToken({
+      res,
+      authOptions: this.configService.authOptions,
+      sessionToken: '',
+    });
+
+    return { success: true };
   }
 
   public async me(ctx: RequestContext, apiType: ApiType) {
@@ -110,14 +135,14 @@ export class AuthResolver extends BaseAuthResolver {
   }
 
   @Query()
-  @Allow(Permission.Authenticated, Permission.Owner)
-  me(@Ctx() ctx: RequestContext) {
+  @Allow(Permission.Authenticated)
+  public me(@Ctx() ctx: RequestContext) {
     return super.me(ctx, 'admin');
   }
 
   @Mutation()
   @Allow(Permission.Public)
-  async login(
+  public async login(
     @Args() args: MutationLoginArgs,
     @Ctx() ctx: RequestContext,
     @Context('req') req: Request,
