@@ -19,11 +19,11 @@ export class AuthService {
   public logIn(username: string, password: string): Observable<any> {
     return this.authDataService.attemptLogin(username, password).pipe(
       switchMap(({ login }) => {
-        if (login.__typename === 'CurrentUser') {
-          return this.administratorDataService
-            .getActiveAdministrator()
-            .single$.pipe();
-        }
+        // if (login.__typename === 'CurrentUser') {
+        //   return this.administratorDataService
+        //     .getActiveAdministrator()
+        //     .single$.pipe();
+        // }
         //             switchMap(({ activeAdministrator }) => {
         //                 if (activeAdministrator) {
         //                     return this.dataService.client

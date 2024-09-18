@@ -6,10 +6,7 @@ import { lastValueFrom } from 'rxjs';
 export class FetchAdapter {
   constructor(private httpClient: HttpClient) {}
 
-  fetch = async (
-    input: Request | string,
-    init: RequestInit
-  ): Promise<Response> => {
+  fetch = async (input: RequestInfo, init: RequestInit): Promise<Response> => {
     const url = typeof input === 'string' ? input : input.url;
     const method =
       typeof input === 'string'
