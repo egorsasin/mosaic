@@ -2,6 +2,7 @@ export * from './helpers/order-modifier';
 export * from './helpers/payment-state-machine';
 export * from './helpers/entity-hydrator';
 export * from './helpers/list-query-builder';
+export * from './helpers/password-cipher';
 export * from './helpers/request-context/request-context.service';
 
 export { CategoryService } from './services/category.service';

@@ -10,6 +10,7 @@ export class RequestContext {
   private readonly _isAuthorized?: boolean;
   private readonly _authorizedAsOwnerOnly?: boolean;
   private readonly _session?: CachedSession;
+  private readonly _apiType?: ApiType;
 
   constructor(options: {
     req?: Request;
@@ -18,12 +19,14 @@ export class RequestContext {
     session?: CachedSession;
     apiType?: ApiType;
   }) {
-    const { req, isAuthorized, authorizedAsOwnerOnly, session } = options;
+    const { req, isAuthorized, authorizedAsOwnerOnly, session, apiType } =
+      options;
 
     this._req = req;
     this._isAuthorized = isAuthorized;
     this._session = session;
     this._authorizedAsOwnerOnly = authorizedAsOwnerOnly;
+    this._apiType = apiType;
   }
 
   /**
@@ -48,5 +51,9 @@ export class RequestContext {
 
   public get session(): CachedSession | undefined {
     return this._session;
+  }
+
+  get apiType(): ApiType {
+    return this._apiType;
   }
 }

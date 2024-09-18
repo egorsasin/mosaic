@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'mosaic-root',
+  selector: 'mos-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })

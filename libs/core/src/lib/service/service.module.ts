@@ -15,6 +15,7 @@ import { ShippingCalculator } from './helpers/shipping-calculator';
 import { EntityHydrator } from './helpers/entity-hydrator';
 import { ListQueryBuilder } from './helpers/list-query-builder/list-query-builder';
 import { RequestContextService } from './helpers/request-context/request-context.service';
+import { PasswordCipher } from './helpers/password-cipher';
 
 import { UserService } from './services/user.service';
 import { CustomerService } from './services/customer.service';
@@ -42,6 +43,7 @@ const helpers = [
   ShippingCalculator,
   EntityHydrator,
   ListQueryBuilder,
+  PasswordCipher,
 ];
 
 const services = [

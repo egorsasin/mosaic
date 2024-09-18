@@ -15,6 +15,7 @@ import {
   RequestContext,
   REQUEST_CONTEXT_KEY,
 } from '../common';
+import { getApiType } from '../types';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -47,7 +48,7 @@ export class AuthGuard implements CanActivate {
       requestContext = (req as any)[REQUEST_CONTEXT_KEY];
     } else {
       const session = await this.getSession(req, res, hasOwnerPermission);
-      requestContext = await this.fromRequest(req, permissions, session);
+      requestContext = await this.fromRequest(req, info, permissions, session);
 
       (req as any)[REQUEST_CONTEXT_KEY] = requestContext;
     }
@@ -103,6 +104,7 @@ export class AuthGuard implements CanActivate {
 
   private async fromRequest(
     req: Request,
+    info?: GraphQLResolveInfo,
     requiredPermissions?: Permission[],
     session?: CachedSession
   ): Promise<RequestContext> {
@@ -110,12 +112,14 @@ export class AuthGuard implements CanActivate {
       !!requiredPermissions && requiredPermissions.includes(Permission.Owner);
     const user = session && session.user;
     const isAuthorized = !!user && user.verified;
+    const apiType = getApiType(info);
 
     return new RequestContext({
       req,
       session,
       isAuthorized,
       authorizedAsOwnerOnly,
+      apiType,
     });
   }
 }

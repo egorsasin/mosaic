@@ -6,6 +6,10 @@ import { ConfigService, AuthenticationStrategy } from '../../config';
 import { AuthenticatedSession, User } from '../../data';
 import { ErrorResultUnion } from '../../common';
 import { RequestContext } from '../../api/common';
+import {
+  NATIVE_AUTH_STRATEGY_NAME,
+  NativeAuthenticationStrategy,
+} from '../../config/auth/native-authentication-strategy';
 
 import { SessionService } from './session.service';
 
@@ -29,6 +33,7 @@ export class AuthService {
     const authenticationStrategy =
       this.getAuthenticationStrategy(authenticationMethod);
     const authenticateResult = await authenticationStrategy.authenticate(
+      ctx,
       authenticationData
     );
 
@@ -70,7 +75,9 @@ export class AuthService {
     return session;
   }
 
-  // TODO private getAuthenticationStrategy(method: typeof NATIVE_AUTH_STRATEGY_NAME): NativeAuthenticationStrategy;
+  private getAuthenticationStrategy(
+    method: typeof NATIVE_AUTH_STRATEGY_NAME
+  ): NativeAuthenticationStrategy;
   private getAuthenticationStrategy(method: string): AuthenticationStrategy;
   private getAuthenticationStrategy(method: string): AuthenticationStrategy {
     const { authOptions } = this.configService;
