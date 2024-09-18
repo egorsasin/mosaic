@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { AuthService } from '../../providers';
 
@@ -19,18 +20,19 @@ export class LoginComponent {
     }),
   });
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   public login(): void {
-    console.log(this.loginForm.valid, this.loginForm.value);
     if (this.loginForm.invalid) {
       return;
     }
 
     const { username, password } = this.loginForm.value;
 
-    this.authService.logIn(username, password).subscribe((result) => {
-      console.log('__RESULT__', result);
+    this.authService.logIn(username, password).subscribe((result: boolean) => {
+      if (result) {
+        this.router.navigateByUrl('/');
+      }
     });
   }
 }

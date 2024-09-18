@@ -21,6 +21,7 @@ import { APIS } from './api';
 import { FetchAdapter } from './fetch-adapter';
 import { defaultInterceptor } from './default.interceptor';
 import { LocalStorageService } from '../providers';
+import { clientResolvers } from './client';
 
 export class OmitTypenameLink extends ApolloLink {
   constructor() {
@@ -72,6 +73,7 @@ export class DataModule {
                   fetch: fetchAdapter.fetch as any,
                 }),
               ]),
+              resolvers: [clientResolvers],
             };
           },
           deps: [FetchAdapter, LocalStorageService],

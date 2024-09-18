@@ -15,7 +15,9 @@ export class AdministratorResolver {
     @Ctx() ctx: RequestContext
   ): Promise<Administrator | undefined> {
     if (ctx.activeUserId) {
-      return this.administratorService.findOneByUserId(ctx, ctx.activeUserId);
+      return this.administratorService.findOneByUserId(ctx, ctx.activeUserId, [
+        'user',
+      ]);
     }
   }
 }
