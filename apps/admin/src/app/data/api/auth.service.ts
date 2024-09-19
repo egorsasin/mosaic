@@ -12,6 +12,7 @@ import {
 import {
   GET_USER_STATUS,
   SET_AS_LOGGED_IN,
+  SET_AS_LOGGED_OUT,
   SetAsLoggedInVariable,
   UserStatusQuery,
 } from '../client';
@@ -56,5 +57,9 @@ export class AuthDataService {
 
   public logOut() {
     return this.baseDataService.mutate<Success>(LOG_OUT);
+  }
+
+  public clientLogOut() {
+    return this.baseDataService.mutate(SET_AS_LOGGED_OUT);
   }
 }

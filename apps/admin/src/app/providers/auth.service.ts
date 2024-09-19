@@ -63,7 +63,9 @@ export class AuthService {
     return this.authDataService.userStatus().single$.pipe(
       switchMap((status) => {
         if (status.userStatus.isLoggedIn) {
-          return this.authDataService.logOut();
+          return this.authDataService
+            .clientLogOut()
+            .pipe(mergeMap(() => this.authDataService.logOut()));
         } else {
           return [];
         }
