@@ -57,6 +57,22 @@ export class AuthService {
   }
 
   /**
+   * Update the user status to being logged out.
+   */
+  public logOut(): Observable<boolean> {
+    return this.authDataService.userStatus().single$.pipe(
+      switchMap((status) => {
+        if (status.userStatus.isLoggedIn) {
+          return this.authDataService.logOut();
+        } else {
+          return [];
+        }
+      }),
+      map(() => true)
+    );
+  }
+
+  /**
    * Checks for an auth token and if found, attempts to validate
    * that token against the API.
    */

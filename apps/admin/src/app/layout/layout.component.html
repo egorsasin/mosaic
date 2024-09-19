@@ -123,5 +123,28 @@
 </div>
 
 <div class="pl-72">
+  <div class="px-4 sm:px-6 lg:px-8">
+    <div
+      class="flex items-center justify-end h-16 lg:border-b border-gray-200 dark:border-gray-700/60"
+    >
+      <div class="flex items-center space-x-3">
+        <mos-dropdown class="msc-dropdown block" [content]="actions">
+          <div
+            class="truncate ml-2 text-sm text-slate-700 group-hover:text-gray-800 cursor-pointer h-full py-3"
+          >
+            Acme Inc.
+          </div>
+        </mos-dropdown>
+
+        <ng-template #actions>
+          <div class="bg-white text-sm text-slate-700">
+            <button class="list-item px-3 py-1.5" (click)="logout()">
+              Log out
+            </button>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
   <router-outlet></router-outlet>
 </div>

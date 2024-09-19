@@ -2,13 +2,10 @@ import {
   EmailAddressConflictError,
   InvalidCredentialsError,
   Maybe,
+  Success,
 } from '@mosaic/common';
 
 import { NativeAuthStrategyError, PasswordValidationError } from '../common';
-
-export declare type Success = {
-  success: boolean;
-};
 
 export type CurrentUser = {
   id: number;

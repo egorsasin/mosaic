@@ -32,3 +32,11 @@ export const GET_CURRENT_USER = gql`
   }
   ${CURRENT_USER_FRAGMENT}
 `;
+
+export const LOG_OUT = gql`
+  mutation LogOut {
+    logout {
+      success
+    }
+  }
+`;

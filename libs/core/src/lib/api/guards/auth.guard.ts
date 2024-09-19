@@ -7,7 +7,6 @@ import { ForbiddenError } from '@mosaic/common';
 
 import { SessionService } from '../../service/services/session.service';
 import { CachedSession, ConfigService } from '../../config';
-
 import {
   parseContext,
   Permission,

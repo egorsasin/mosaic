@@ -7,6 +7,7 @@ import { MosDialogHostModule } from '@mosaic/cdk';
 import { MosDialogModule } from '@mosaic/ui/dialog';
 import { MosAlertModule } from '@mosaic/ui/alert';
 import { MOS_ICON_PATH, MosIconComponent } from '@mosaic/ui/svg-icon';
+import { MosDropdownModule } from '@mosaic/ui/dropdown';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule, ROUTED_COMPONENTS } from './app-routing.module';
@@ -26,6 +27,7 @@ import { DataModule } from './data';
     MosDialogModule,
     MosAlertModule,
     MosIconComponent,
+    MosDropdownModule,
     AppRoutingModule,
   ],
   providers: [{ provide: MOS_ICON_PATH, useValue: '/assets/icons/main.svg' }],

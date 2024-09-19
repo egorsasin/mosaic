@@ -7,4 +7,5 @@ type Mutation {
   Authenticates the user using the native authentication strategy. This mutation is an alias for authenticate({ native: { ... }})
   """
   login(username: String!, password: String!): NativeAuthenticationResult!
+  logout: Success!
 }

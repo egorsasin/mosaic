@@ -1,7 +1,7 @@
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Response, Request } from 'express';
 
-import { ForbiddenError, NotVerifiedError } from '@mosaic/common';
+import { ForbiddenError, NotVerifiedError, Success } from '@mosaic/common';
 
 import { Allow, Ctx } from '../../decorators';
 import {
@@ -16,7 +16,6 @@ import {
   MutationAuthenticateArgs,
   MutationLoginArgs,
   NativeAuthenticationResult,
-  Success,
 } from '../../../types';
 import { AuthService } from '../../../service/services/auth.service';
 import { UserService } from '../../../service/services/user.service';
@@ -149,5 +148,15 @@ export class AuthResolver extends BaseAuthResolver {
     @Context('res') res: Response
   ): Promise<NativeAuthenticationResult> {
     return (await super.baseLogin(args, ctx, req, res)) as AuthenticationResult;
+  }
+
+  @Mutation()
+  @Allow(Permission.Public)
+  async logout(
+    @Ctx() ctx: RequestContext,
+    @Context('req') req: Request,
+    @Context('res') res: Response
+  ): Promise<Success> {
+    return super.logout(ctx, req, res);
   }
 }

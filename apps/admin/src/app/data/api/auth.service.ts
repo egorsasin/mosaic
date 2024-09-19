@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 
+import { Success } from '@mosaic/common';
+
 import { BaseDataService } from './base-data.service';
-import { ATTEMPT_LOGIN, GET_CURRENT_USER } from '../definitions';
+import { ATTEMPT_LOGIN, GET_CURRENT_USER, LOG_OUT } from '../definitions';
 import {
   AttemptLoginMutation,
   AttemptLoginMutationVariables,
@@ -50,5 +52,9 @@ export class AuthDataService {
       {},
       'cache-first'
     );
+  }
+
+  public logOut() {
+    return this.baseDataService.mutate<Success>(LOG_OUT);
   }
 }
