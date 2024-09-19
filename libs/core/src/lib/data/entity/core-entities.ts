@@ -1,4 +1,5 @@
 import { Address } from './address';
+import { Administrator } from './administrator';
 import { Asset } from './asset';
 import {
   AuthenticationMethod,
@@ -18,6 +19,7 @@ import { ShippingMethod } from './shipping-method';
 import { User } from './user';
 
 export const coreEntitiesMap = {
+  Administrator,
   Asset,
   Address,
   AuthenticationMethod,

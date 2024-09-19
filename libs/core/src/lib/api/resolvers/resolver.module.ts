@@ -18,6 +18,7 @@ const ENTITY_RESOLVERS = [
   EntityResolvers.PaymentEntityResolver,
   EntityResolvers.PaymentMethodEntityResolver,
   EntityResolvers.CategoryEntityResolver,
+  EntityResolvers.AdministratorEntityResolver,
 ];
 
 const SHOP_RESOLVERS = [
@@ -38,6 +39,8 @@ const ADMIN_RESOLVERS = [
   AdminResolvers.OrderResolver,
   AdminResolvers.CategoryResolver,
   AdminResolvers.SearchResolver,
+  AdminResolvers.AuthResolver,
+  AdminResolvers.AdministratorResolver,
 ];
 
 @Module({

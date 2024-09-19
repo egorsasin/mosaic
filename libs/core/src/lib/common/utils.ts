@@ -12,3 +12,11 @@ export function getAssetType(mimeType: string): AssetType {
       return AssetType.BINARY;
   }
 }
+
+export function isEmailAddressLike(input: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.trim());
+}
+
+export function normalizeEmailAddress(input: string): string {
+  return isEmailAddressLike(input) ? input.trim().toLowerCase() : input.trim();
+}

@@ -17,6 +17,7 @@ import { DefaultMoneyStrategy } from './entity';
 import { defaultShippingCalculator } from './shipping-method';
 import { DefaultGuestCheckoutStrategy } from './order/default-guest-checkout.strategy';
 import { defaultCategoryFilters } from './catalog';
+import { NativeAuthenticationStrategy } from './auth/native-authentication-strategy';
 
 export const defaultConfig: RuntimeConfig = {
   apiOptions: {
@@ -36,7 +37,7 @@ export const defaultConfig: RuntimeConfig = {
   authOptions: {
     disableAuth: false,
     authTokenHeaderKey: DEFAULT_AUTH_TOKEN_HEADER_KEY,
-    authenticationStrategy: [],
+    authenticationStrategy: [new NativeAuthenticationStrategy()],
     passwordHashingStrategy: new BcryptPasswordHashingStrategy(),
     passwordValidationStrategy: new DefaultPasswordValidationStrategy({
       minLength: 8,

@@ -1,0 +1,11 @@
+.msc-dropdown {
+  @apply relative pr-5 items-center cursor-pointer;
+
+  &::after {
+    content: '';
+    @apply w-2 h-2 absolute border-l border-b border-slate-700;
+    right: 0;
+    top: 50%;
+    transform: rotate(-45deg) translateY(-75%);
+  }
+}

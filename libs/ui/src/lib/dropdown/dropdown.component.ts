@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   forwardRef,
+  HostBinding,
   HostListener,
   Inject,
   Injector,
@@ -30,6 +31,7 @@ import { DataListHost } from '../types';
 export class MosDropdownComponent<T> implements DataListHost<T> {
   @Input() content!: TemplateRef<T>;
 
+  @HostBinding('class.mos-open')
   public isVisible = false;
 
   constructor(

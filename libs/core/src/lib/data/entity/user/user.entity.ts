@@ -28,7 +28,13 @@ export class User extends MosaicEntity implements SoftDeletable {
   )
   public authenticationMethods: AuthenticationMethod[];
 
-  public getNativeAuthenticationMethod(): NativeAuthenticationMethod {
+  public getNativeAuthenticationMethod(): NativeAuthenticationMethod;
+  public getNativeAuthenticationMethod(
+    strict?: boolean
+  ): NativeAuthenticationMethod | undefined;
+  public getNativeAuthenticationMethod(
+    strict?: boolean
+  ): NativeAuthenticationMethod | undefined {
     if (!this.authenticationMethods) {
       throw new InternalServerErrorException(
         'User authentication methods not loaded'
@@ -38,7 +44,7 @@ export class User extends MosaicEntity implements SoftDeletable {
       (m): m is NativeAuthenticationMethod =>
         m instanceof NativeAuthenticationMethod
     );
-    if (!match) {
+    if (!match && (strict === undefined || strict)) {
       throw new InternalServerErrorException(
         'User authentication methods not found'
       );

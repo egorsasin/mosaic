@@ -1,0 +1,39 @@
+<div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+  <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+    <form class="space-y-3" [formGroup]="loginForm">
+      <div class="mt-2">
+        <input
+          id="email"
+          name="email"
+          type="email"
+          formControlName="username"
+          placeholder="Username"
+          required
+          class="block w-full rounded-sm py-1.5 px-2 text-slate-700 shadow-sm ring-0 border border-slate-500 sm:text-sm sm:leading-6"
+        />
+      </div>
+
+      <div class="mt-2">
+        <input
+          id="password"
+          name="password"
+          type="password"
+          formControlName="password"
+          placeholder="Password"
+          required
+          class="block w-full rounded-sm py-1.5 px-2 text-slate-700 shadow-sm ring-0 border border-slate-500 sm:text-sm sm:leading-6"
+        />
+      </div>
+
+      <div class="pt-4">
+        <button
+          type="button"
+          class="w-full justify-center rounded-sm border border-slate-700 ring-slate-700 text-slate-700 px-3 py-1.5 hover:bg-slate-700 hover:text-white inline-flex items-center gap-x-1 duration-300 transition-all text-sm"
+          (click)="login()"
+        >
+          Login
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

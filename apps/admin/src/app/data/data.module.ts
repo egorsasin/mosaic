@@ -7,24 +7,37 @@ import {
 import {
   HttpClient,
   provideHttpClient,
-  withInterceptorsFromDi,
+  withFetch,
+  withInterceptors,
 } from '@angular/common/http';
 import { APOLLO_OPTIONS, ApolloModule } from 'apollo-angular';
 import { ApolloLink, InMemoryCache } from '@apollo/client/core';
 import { setContext } from '@apollo/client/link/context';
-import { HttpLink } from 'apollo-angular/http';
 import { createUploadLink } from 'apollo-upload-client';
+
+import { omit } from '@mosaic/common';
 
 import { APIS } from './api';
 import { FetchAdapter } from './fetch-adapter';
+import { defaultInterceptor } from './default.interceptor';
+import { LocalStorageService } from '../providers';
+import { clientResolvers } from './client';
+
+export class OmitTypenameLink extends ApolloLink {
+  constructor() {
+    super((operation, forward) => {
+      if (operation.variables) {
+        operation.variables = omit(operation.variables, ['__typename'], true);
+      }
+
+      return forward ? forward(operation) : null;
+    });
+  }
+}
 
 @NgModule({
   imports: [ApolloModule],
-  providers: [
-    ...APIS,
-    FetchAdapter,
-    provideHttpClient(withInterceptorsFromDi()),
-  ],
+  providers: [...APIS, FetchAdapter],
   exports: [],
 })
 export class DataModule {
@@ -32,26 +45,38 @@ export class DataModule {
     return {
       ngModule: DataModule,
       providers: [
+        provideHttpClient(withFetch(), withInterceptors([defaultInterceptor])),
         {
           provide: APOLLO_OPTIONS,
-          useFactory() {
+          useFactory(
+            fetchAdapter: FetchAdapter,
+            localStorage: LocalStorageService
+          ) {
             return {
               cache: new InMemoryCache(),
               link: ApolloLink.from([
+                new OmitTypenameLink(),
                 setContext(() => {
-                  {
-                    const headers: Record<string, string> = {};
-                    headers['Apollo-Require-Preflight'] = 'true';
-                    return { headers };
+                  const headers: Record<string, string> = {};
+                  const authToken = localStorage.get('authToken');
+
+                  if (authToken) {
+                    headers['authorization'] = `Bearer ${authToken}`;
                   }
+
+                  headers['Apollo-Require-Preflight'] = 'true';
+
+                  return { headers };
                 }),
                 createUploadLink({
                   uri: `http://localhost:3000/admin`,
+                  fetch: fetchAdapter.fetch as any,
                 }),
               ]),
+              resolvers: [clientResolvers],
             };
           },
-          deps: [HttpLink, FetchAdapter],
+          deps: [FetchAdapter, LocalStorageService],
         },
       ],
     };

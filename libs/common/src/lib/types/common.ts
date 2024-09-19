@@ -143,3 +143,7 @@ export interface DateOperators {
   between?: DateRange;
   isNull?: boolean;
 }
+
+export type Success = {
+  success: boolean;
+};

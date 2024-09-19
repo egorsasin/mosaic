@@ -1,3 +1,4 @@
+export { AdministratorEntityResolver } from './administrator-entity.resolver';
 export { CategoryEntityResolver } from './category-entity.resolver';
 export { PaymentMethodEntityResolver } from './payment-method-entity.resolver';
 export { ProductEntityResolver } from './product-entity.resolver';
