@@ -14,8 +14,12 @@ export type PaynowPaymentIntentInput = {
   orderId: number;
 };
 
+export type PaynowStatusInput = {
+  paymentId: string;
+};
+
 @Resolver()
-export class PaynowCommonResolver {
+export class PaynowIntentResolver {
   constructor(
     private paynowService: PaynowService,
     private activeOrderService: ActiveOrderService

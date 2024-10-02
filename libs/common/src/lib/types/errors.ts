@@ -1,5 +1,16 @@
 import { GraphQLError } from 'graphql';
 
+export enum ErrorCode {
+  UNKNOWN_ERROR = 'UNKNOWN_ERROR',
+  MIME_TYPE_ERROR = 'MIME_TYPE_ERROR',
+  NO_ACTIVE_ORDER_ERROR = 'NO_ACTIVE_ORDER_ERROR',
+}
+
+export type ErrorResult = {
+  errorCode: ErrorCode;
+  message: string;
+};
+
 export class UnauthorizedError extends GraphQLError {
   constructor() {
     super('error.unauthorized', { extensions: { code: 'UNAUTHORIZED' } });

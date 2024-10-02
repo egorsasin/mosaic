@@ -28,6 +28,7 @@ import {
   OrderLimitError,
   OrderStateTransitionError,
   PaginatedList,
+  PaymentStateTransitionError,
   isGraphQlErrorResult,
 } from '../../common';
 import {
@@ -35,6 +36,7 @@ import {
   UpdateOrderItemsResult,
   ListQueryOptions,
   OrderState,
+  PaymentState,
 } from '../../types';
 import { OrderModifier } from '../helpers/order-modifier/order-modifier';
 import { OrderStateMachine } from '../helpers/order-state-machine/order-state-machine';
@@ -465,6 +467,20 @@ export class OrderService {
     );
 
     return order;
+  }
+
+  /**
+   * @description
+   * Переводит указанный платеж {@link Payment} в новое состояние.
+   * Если общая стоимость заказа с налогами покрывается платежами, статус заказа будет автоматически переведен в `PaymentSettled`
+   * или `PaymentAuthorized`.
+   */
+  public async transitionPaymentToState(
+    ctx: RequestContext,
+    paymentId: number,
+    state: PaymentState
+  ): Promise<PaymentStateTransitionError | Payment> {
+    return await this.paymentService.transitionToState(ctx, paymentId, state);
   }
 
   /**

@@ -1,5 +1,9 @@
+import { Order } from '@mosaic/core';
 import { PaymentMethodHandler } from '@mosaic/core/config';
-import { CreatePaymentResult } from '@mosaic/core/config/payment/payment-method-handler';
+import {
+  CreatePaymentResult,
+  SettlePaymentResult,
+} from '@mosaic/core/config/payment/payment-method-handler';
 
 /**
  * The handler for Paynow payments.
@@ -22,10 +26,24 @@ export const paynowPaymentMethodHandler = new PaymentMethodHandler({
     },
   },
 
-  createPayment(ctx, order, amount): CreatePaymentResult {
+  createPayment(
+    ctx,
+    order: Order,
+    amount,
+    args,
+    metadata
+  ): CreatePaymentResult {
     return {
       amount,
-      state: 'Settled' as const,
+      state: 'Created' as const,
+      metadata,
+      transactionId: metadata.paymentId as string,
+    };
+  },
+
+  settlePayment(): SettlePaymentResult {
+    return {
+      success: true,
     };
   },
 });

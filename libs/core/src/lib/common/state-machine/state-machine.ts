@@ -38,17 +38,17 @@ export class StateMachine<T extends string, Data = any> {
     };
 
     if (this.canTransitionTo(state)) {
-      // if (typeof this.config.onTransitionStart === 'function') {
-      //   const canTransition = await awaitPromiseOrObservable(
-      //     this.config.onTransitionStart(this._currentState, state, data)
-      //   );
-      //   if (canTransition === false) {
-      //     return { finalize: finalizeNoop };
-      //   } else if (typeof canTransition === 'string') {
-      //     await this.onError(this._currentState, state, canTransition);
-      //     return { finalize: finalizeNoop };
-      //   }
-      // }
+      if (typeof this.config.onTransitionStart === 'function') {
+        const canTransition = await awaitPromiseOrObservable(
+          this.config.onTransitionStart(this._currentState, state, data)
+        );
+        if (canTransition === false) {
+          return { finalize: finalizeNoop };
+        } else if (typeof canTransition === 'string') {
+          await this.onError(this._currentState, state, canTransition);
+          return { finalize: finalizeNoop };
+        }
+      }
 
       const fromState = this._currentState;
       this._currentState = state;
@@ -69,11 +69,11 @@ export class StateMachine<T extends string, Data = any> {
     }
   }
 
-  jumpTo(state: T) {
+  public jumpTo(state: T): void {
     this._currentState = state;
   }
 
-  getNextStates(): readonly T[] {
+  public getNextStates(): readonly T[] {
     return this.config.transitions[this._currentState]?.to ?? [];
   }
 

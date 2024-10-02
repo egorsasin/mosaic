@@ -2,6 +2,8 @@ import {
   ConfigArg,
   ConfigurableOperationInput,
 } from './configurable-operation';
+import { ErrorCode, ErrorResult } from './errors';
+import { Payment } from './order';
 
 export type CreatePaymentMethodInput = {
   code: string;
@@ -34,3 +36,16 @@ export type PaymentMethodQuote = {
   isEligible: boolean;
   name: string;
 };
+
+export type PaymentStateTransitionError = ErrorResult & {
+  __typename?: 'PaymentStateTransitionError';
+  errorCode: ErrorCode;
+  fromState: string;
+  message: string;
+  toState: string;
+  transitionError: string;
+};
+
+export type TransitionPaymentToStateResult =
+  | Payment
+  | PaymentStateTransitionError;

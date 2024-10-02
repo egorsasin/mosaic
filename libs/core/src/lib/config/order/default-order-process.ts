@@ -17,7 +17,12 @@ export function configureDefaultOrderProcess() {
   const orderProcess: OrderProcess<OrderState> = {
     transitions: {
       Created: {
-        to: ['Cancelled', 'PaymentSettled', 'PaymentAuthorized'],
+        to: [
+          'Cancelled',
+          'ArrangingPayment',
+          'PaymentSettled',
+          'PaymentAuthorized',
+        ],
       },
       ArrangingPayment: {
         to: ['PaymentAuthorized', 'PaymentSettled', 'Cancelled'],

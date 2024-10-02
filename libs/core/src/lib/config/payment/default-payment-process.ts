@@ -1,5 +1,8 @@
+import { HistoryEntryType } from '@mosaic/common';
+
 import { PaymentState } from '../../types';
 import { PaymentProcess, PaymentTransitionData } from '../../service';
+import { orderTotalIsCovered } from '../../utils';
 
 declare module '../../types/payment-state' {
   interface PaymentStates {
@@ -10,6 +13,7 @@ declare module '../../types/payment-state' {
 }
 
 let orderService: import('../../service/services/order.service').OrderService;
+let historyService: import('../../service/services/history.service').HistoryService;
 
 /**
  * @description
@@ -32,7 +36,7 @@ export const defaultPaymentProcess: PaymentProcess<PaymentState> = {
       to: ['Cancelled'],
     },
     Error: {
-      to: ['Cancelled'],
+      to: ['Cancelled', 'Settled'],
     },
     Cancelled: {
       to: [],
@@ -45,8 +49,12 @@ export const defaultPaymentProcess: PaymentProcess<PaymentState> = {
     const OrderService = await import(
       '../../service/services/order.service'
     ).then((m) => m.OrderService);
+    const HistoryService = await import(
+      '../../service/services/history.service'
+    ).then((m) => m.HistoryService);
 
     orderService = injector.get(OrderService);
+    historyService = injector.get(HistoryService);
   },
 
   async onTransitionEnd(fromState, toState, data: PaymentTransitionData) {
@@ -54,7 +62,30 @@ export const defaultPaymentProcess: PaymentProcess<PaymentState> = {
     // Получим все платежи по текущему заказу
     order.payments = await orderService.getOrderPayments(order.id);
 
-    // Изменим статус ордера после размещения платежа
-    await orderService.transitionToState(ctx, order.id, 'PaymentAuthorized');
+    await historyService.createHistoryEntryForOrder({
+      ctx: data.ctx,
+      orderId: data.order.id,
+      type: HistoryEntryType.ORDER_PAYMENT_TRANSITION,
+      data: {
+        paymentId: data.payment.id,
+        from: fromState,
+        to: toState,
+      },
+    });
+
+    if (
+      orderTotalIsCovered(order, 'Settled') &&
+      order.state !== 'PaymentSettled'
+    ) {
+      await orderService.transitionToState(ctx, order.id, 'PaymentSettled');
+    } else if (
+      orderTotalIsCovered(order, ['Settled', 'Authorized']) &&
+      order.state !== 'PaymentAuthorized'
+    ) {
+      await orderService.transitionToState(ctx, order.id, 'PaymentAuthorized');
+    } else {
+      // Изменим статус ордера после размещения платежа
+      await orderService.transitionToState(ctx, order.id, 'ArrangingPayment');
+    }
   },
 };

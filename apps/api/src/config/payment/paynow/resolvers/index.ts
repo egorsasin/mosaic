@@ -1,1 +1,2 @@
-export { PaynowCommonResolver } from './common.resolver';
+export { PaynowIntentResolver } from './intent.resolver';
+export { PaynowStateResolver } from './state.resolver';

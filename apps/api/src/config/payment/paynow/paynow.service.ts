@@ -8,17 +8,35 @@ import {
   DATA_SOURCE_PROVIDER,
   Order,
   OrderService,
+  OrderStateTransitionError,
+  Payment,
   PaymentMethod,
   RequestContext,
 } from '@mosaic/core';
-import { ConfigArg } from '@mosaic/common';
+import {
+  ConfigArg,
+  ErrorCode,
+  InternalServerError,
+  NoActiveOrderError,
+} from '@mosaic/common';
 
 import { paynowPaymentMethodHandler } from './paynow.handler';
 import { AxiosResponse } from 'axios';
 import { PaynowPaymentIntent } from './types';
-import { PaynowPaymentIntentResponse } from './paynow.types';
+import {
+  PaynowPaymentError,
+  PaynowPaymentIntentResponse,
+  paynowPaymentStateMap,
+} from './paynow.types';
+
+class PaymentError implements PaynowPaymentError {
+  errorCode = ErrorCode.NO_ACTIVE_ORDER_ERROR;
+
+  constructor(public message: string) {}
+}
 
 const MAX_VALUE_LENGTH = 50;
+const API_PATH = 'https://api.sandbox.paynow.pl/v3';
 
 const computeHMACSignature = (
   payload: string,
@@ -75,7 +93,7 @@ export class PaynowService {
         where: { enabled: true, code: paynowPaymentMethodHandler.code },
       });
 
-    const { code, id, customer, total } = order;
+    const { code, id, customer, total, state } = order;
     const { emailAddress = '', firstName = '', lastName = '' } = customer || {};
 
     const data = {
@@ -85,61 +103,128 @@ export class PaynowService {
       buyer: sanitizeMetadata({ email: emailAddress, firstName, lastName }),
     };
 
-    const apiKey = this.findOrThrowArgValue(
-      paynowPaymentMethod.handler.args,
-      'apiKey'
-    );
-    const signatureKey = this.findOrThrowArgValue(
-      paynowPaymentMethod.handler.args,
-      'signatureKey'
-    );
-    const idempotencyKey = `${order.code}_${total}`;
-
+    const idempotencyKey = `${code}`;
     const payload = JSON.stringify(data);
-    const signature = computeHMACSignature(
-      payload,
-      signatureKey,
-      apiKey,
-      idempotencyKey
-    );
-    const headers = {
-      'api-Key': apiKey,
-      signature,
-      'idempotency-key': idempotencyKey,
-      'content-type': 'application/json',
-    };
+    const headers = await this.generateHeaders(payload, idempotencyKey);
 
     let resp: AxiosResponse<PaynowPaymentIntentResponse, any>;
     try {
       resp = await firstValueFrom(
-        this.httpService.post(
-          'https://api.sandbox.paynow.pl/v3/payments',
-          payload,
-          { headers }
-        )
+        this.httpService.post(`${API_PATH}/payments`, payload, { headers })
       );
     } catch (error) {
-      //
+      throw Error('Failed to create payment intent');
     }
 
-    if (order.state !== 'ArrangingPayment') {
+    if (state !== 'ArrangingPayment') {
       const transitionToStateResult = await this.orderService.transitionToState(
         ctx,
         id,
         'ArrangingPayment'
       );
 
+      if (transitionToStateResult instanceof OrderStateTransitionError) {
+        throw Error('Failed to create payment intent');
+      }
+
       const addPaymentToOrderResult = await this.orderService.addPaymentToOrder(
         ctx,
         order.id,
-        { method: paynowPaymentMethod.code, metadata: resp.data }
+        {
+          method: paynowPaymentMethod.code,
+          metadata: { ...resp.data, idempotencyKey },
+        }
       );
     }
 
-    return { url: `${resp?.data?.redirectUrl}` };
+    return { url: resp?.data?.redirectUrl, paymentId: resp?.data?.paymentId };
   }
 
-  private findOrThrowArgValue(args: ConfigArg[], name: string): string {
+  public async syncPaymentState(
+    ctx: RequestContext,
+    transactionId: string
+  ): Promise<any | PaymentError> {
+    const payment: Payment = await this.dataSource
+      .getRepository(Payment)
+      .findOne({
+        where: {
+          transactionId,
+          method: paynowPaymentMethodHandler.code,
+        },
+        relations: ['order'],
+      });
+
+    if (!payment?.order) {
+      return new NoActiveOrderError();
+    }
+
+    const headers = await this.generateHeaders('', payment.order.code);
+
+    let resp: AxiosResponse<PaynowPaymentIntentResponse, any>;
+    try {
+      resp = await firstValueFrom(
+        this.httpService.get(`${API_PATH}/payments/${transactionId}/status`, {
+          headers,
+        })
+      );
+    } catch (error) {
+      // DO Nothing
+    }
+
+    if (resp) {
+      const { status } = resp.data;
+      await this.orderService.transitionPaymentToState(
+        ctx,
+        payment.id,
+        paynowPaymentStateMap[status]
+      );
+    }
+
+    return { orderCode: payment.order.code };
+  }
+
+  private async generateHeaders(payload: string, idempotencyKey: string) {
+    const paymentMethod: PaymentMethod = await this.getPaymentMethod();
+
+    const apiKey = this.findOrThrowArgValue(
+      paymentMethod?.handler?.args,
+      'apiKey'
+    );
+    const signatureKey = this.findOrThrowArgValue(
+      paymentMethod?.handler?.args,
+      'signatureKey'
+    );
+
+    const signature = computeHMACSignature(
+      payload,
+      signatureKey,
+      apiKey,
+      idempotencyKey
+    );
+
+    return {
+      'api-Key': apiKey,
+      signature,
+      'idempotency-key': idempotencyKey,
+      'content-type': 'application/json',
+    };
+  }
+
+  private async getPaymentMethod(): Promise<PaymentMethod> {
+    const method: PaymentMethod = await this.dataSource
+      .getRepository(PaymentMethod)
+      .findOne({
+        where: { enabled: true, code: paynowPaymentMethodHandler.code },
+      });
+
+    if (!method) {
+      throw new InternalServerError('Could not find Stripe PaymentMethod');
+    }
+
+    return method;
+  }
+
+  private findOrThrowArgValue(args: ConfigArg[] = [], name: string): string {
     const value = args.find((arg) => arg.name === name)?.value;
     if (!value) {
       throw Error(`No argument named '${name}' found!`);

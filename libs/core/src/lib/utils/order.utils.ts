@@ -9,6 +9,7 @@ export function orderTotalIsCovered(
   state: PaymentState | PaymentState[]
 ): boolean {
   const paymentsTotal = totalCoveredByPayments(order, state);
+
   return paymentsTotal >= order.total;
 }
 

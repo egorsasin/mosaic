@@ -7,6 +7,7 @@ import {
   NumberOperators,
   BooleanOperators,
   DateOperators,
+  ErrorCode,
 } from '@mosaic/common';
 
 import { MosaicEntity } from '../data';
@@ -14,11 +15,6 @@ import { MosaicEntity } from '../data';
 export type PayloadArgs<T> = {
   input: T;
 };
-
-export enum ErrorCode {
-  UNKNOWN_ERROR = 'UNKNOWN_ERROR',
-  MIME_TYPE_ERROR = 'MIME_TYPE_ERROR',
-}
 
 export type ErrorResult = {
   errorCode: ErrorCode;

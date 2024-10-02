@@ -53,4 +53,14 @@ export const examplePaymentHandler = new PaymentMethodHandler({
       };
     }
   },
+
+  settlePayment: async (ctx, order, payment, args, method) => {
+    const result = await gripeSDK.charges.capture(payment.transactionId);
+    return {
+      success: result,
+      metadata: {
+        captureId: '1234567',
+      },
+    };
+  },
 });

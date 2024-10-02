@@ -15,4 +15,5 @@ export interface PaynowPluginOptions {
 
 export interface PaynowPaymentIntent {
   url: string;
+  paymentId: string;
 }

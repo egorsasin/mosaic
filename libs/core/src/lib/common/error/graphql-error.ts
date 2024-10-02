@@ -41,6 +41,30 @@ export class OrderLimitError extends ErrorResult {
   }
 }
 
+export class PaymentStateTransitionError extends ErrorResult {
+  readonly __typename = 'PaymentStateTransitionError';
+  readonly errorCode = 'PAYMENT_STATE_TRANSITION_ERROR';
+  readonly message = 'PAYMENT_STATE_TRANSITION_ERROR';
+  readonly fromState: string;
+  readonly toState: string;
+  readonly transitionError: string;
+
+  constructor({
+    fromState,
+    toState,
+    transitionError,
+  }: {
+    fromState: string;
+    toState: string;
+    transitionError: string;
+  }) {
+    super();
+    this.fromState = fromState;
+    this.toState = toState;
+    this.transitionError = transitionError;
+  }
+}
+
 /** Returned if there is an error in transitioning the Order state */
 export class OrderStateTransitionError extends GraphQLError {
   public readonly errorCode = 'ORDER_STATE_TRANSITION_ERROR';
@@ -67,6 +91,7 @@ const errorTypeNames = new Set([
   'NegativeQuantityError',
   'NoActiveOrderError',
   'OrderModificationError',
+  'PaymentStateTransitionError',
 ]);
 
 export type GraphQLValue = { __typename: string };

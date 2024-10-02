@@ -1,23 +1,21 @@
 import { OrderService } from '@mosaic/core';
-import { Controller, Headers, Post, Req, Res } from '@nestjs/common';
-import type { Response } from 'express';
+import {
+  Controller,
+  Get,
+  Headers,
+  HttpStatus,
+  Post,
+  Req,
+  Res,
+} from '@nestjs/common';
+import type { Request, Response } from 'express';
 
-import { PaynowPaymentIntentStatus } from './paynow.types';
-import { RequestWithRawBody } from './types';
+import { PaynowService } from './paynow.service';
+import { PaynowPaymentIntent } from './types';
 
 const missingHeaderErrorMessage = 'Missing Paynow signature header';
 const noPaymentIntentErrorMessage =
   'No payment data is provided in the payload';
-
-interface PaynowPaymentIntent {
-  /**
-   * Unique identifier for the object.
-   */
-  paymentId: string;
-  externalId: string;
-  status: PaynowPaymentIntentStatus;
-  modifiedAt: Date;
-}
 
 // const generate = (payload: string, secret: string): string => {
 //   return crypto
@@ -41,24 +39,28 @@ interface PaynowPaymentIntent {
 
 @Controller('payments')
 export class PaynowController {
-  constructor(private orderService: OrderService) {}
+  constructor(
+    private orderService: OrderService,
+    private paynowService: PaynowService
+  ) {}
 
   @Post('paynow')
   public async webhook(
     @Headers('Signature') signature: string | undefined,
-    @Req() request: RequestWithRawBody,
+    @Req() request: Request,
     @Res() response: Response
   ): Promise<void> {
-    // if (!signature) {
-    //   response.status(HttpStatus.BAD_REQUEST).send(missingHeaderErrorMessage);
-    //   return;
-    // }
-    // const event = JSON.parse(request.body.toString());
-    // const paymentIntent = event.data.object as PaynowPaymentIntent;
-    // if (!paymentIntent) {
-    //   response.status(HttpStatus.BAD_REQUEST).send(noPaymentIntentErrorMessage);
-    //   return;
-    // }
+    if (!signature) {
+      response.status(HttpStatus.BAD_REQUEST).send(missingHeaderErrorMessage);
+      return;
+    }
+
+    const paymentIntent = request.body as PaynowPaymentIntent;
+
+    if (!paymentIntent) {
+      response.status(HttpStatus.BAD_REQUEST).send(noPaymentIntentErrorMessage);
+      return;
+    }
     // Wrap with transaction
     //const order = await this.orderService.findOneByCode(request.externalId);
   }

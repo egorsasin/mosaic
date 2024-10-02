@@ -13,6 +13,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { Observable, Subject, map, mergeMap, take } from 'rxjs';
 
 import { WINDOW } from '@mosaic/cdk';
@@ -172,7 +173,8 @@ export class CheckoutProcessComponent implements OnDestroy {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private checkoutService: CheckoutService,
-    private paymentService: PaymentService
+    private paymentService: PaymentService,
+    private location: Location
   ) {
     this.order$.pipe(take(1)).subscribe((order) => {
       if (order) {
@@ -240,7 +242,6 @@ export class CheckoutProcessComponent implements OnDestroy {
     setCustomer$
       .pipe(mergeMap((order) => setShippingAddress$))
       .subscribe(({ setOrderShippingAddress: order }) => {
-        console.log(order);
         if ((order as Order)?.__typename === 'Order') {
           this.addPaymentMethod(order as Order);
         }
@@ -249,47 +250,55 @@ export class CheckoutProcessComponent implements OnDestroy {
 
   private addPaymentMethod(order: Order) {
     this.paymentService.handle();
-    // if (this.paymentMethod.value === 'paynow') {
-    return this.dataService
-      .mutate<any, MutationArgs<any>>(CREATE_PAYNOW_PAYMENT_INTENT, {
-        input: {
-          orderId: order.id,
-        },
-      })
-      .subscribe(({ createPaynowIntent }) => {
-        if (createPaynowIntent.url) {
-          this.window.open(createPaynowIntent.url, '_self');
-        }
-      });
-    // } else {
-    // return this.dataService
-    //   .mutate<any, any>(ADD_PAYMENT, {
-    //     input: {
-    //       method: this.checkoutForm.value.paymentMethod,
-    //       metadata: {},
-    //     },
-    //   })
-    //   .subscribe(async ({ addPaymentToOrder: result }) => {
-    //     switch (result?.__typename) {
-    //       case 'Order':
-    //         if (
-    //           ['PaymentSettled', 'PaymentAuthorized'].includes(result?.state)
-    //         ) {
-    //           this.store.dispatch(setActiveOrder({ order: null }));
-    //           this.router.navigate(['/order', result.code], {
-    //             relativeTo: this.activatedRoute,
-    //             state: { isCheckout: true },
-    //           });
-    //         }
-    //         break;
-    //       case 'OrderPaymentStateError':
-    //       case 'PaymentDeclinedError':
-    //       case 'PaymentFailedError':
-    //       case 'OrderStateTransitionError':
-    //         this.paymentErrorMessage = addPaymentToOrder.message;
-    //         break;
-    //   }
-    // });
+
+    if (this.paymentMethod.value === 'paynow') {
+      this.dataService
+        .mutate<any, MutationArgs<any>>(CREATE_PAYNOW_PAYMENT_INTENT, {
+          input: {
+            orderId: order.id,
+          },
+        })
+        .subscribe(({ createPaynowIntent }) => {
+          if (createPaynowIntent.url && createPaynowIntent.paymentId) {
+            const queryParams = new URLSearchParams({
+              paymentId: createPaynowIntent.paymentId,
+            }).toString();
+
+            this.location.go(`/checkout/payment-status/paynow`, queryParams, {
+              isCheckout: true,
+            });
+            this.window.open(createPaynowIntent.url, '_self');
+          }
+        });
+    } else {
+      this.dataService
+        .mutate<any, any>(ADD_PAYMENT, {
+          input: {
+            method: this.checkoutForm.value.paymentMethod,
+            metadata: {},
+          },
+        })
+        .subscribe(async ({ addPaymentToOrder: result }) => {
+          switch (result?.__typename) {
+            case 'Order':
+              if (
+                ['PaymentSettled', 'PaymentAuthorized'].includes(result?.state)
+              ) {
+                this.store.dispatch(setActiveOrder({ order: null }));
+                this.router.navigate(['/order', result.code], {
+                  relativeTo: this.activatedRoute,
+                  state: { isCheckout: true },
+                });
+              }
+              break;
+            case 'OrderPaymentStateError':
+            case 'PaymentDeclinedError':
+            case 'PaymentFailedError':
+            case 'OrderStateTransitionError':
+              break;
+          }
+        });
+    }
   }
 
   public setShippingMethod({

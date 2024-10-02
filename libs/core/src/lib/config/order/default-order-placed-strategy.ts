@@ -15,6 +15,8 @@ export class DefaultOrderPlacedStrategy implements OrderPlacedStrategy {
     fromState: OrderState,
     toState: OrderState
   ): boolean {
-    return ['PaymentAuthorized', 'PaymentSettled'].includes(toState);
+    return ['ArrangingPayment', 'PaymentAuthorized', 'PaymentSettled'].includes(
+      toState
+    );
   }
 }

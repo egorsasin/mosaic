@@ -101,8 +101,6 @@ export class ProductService {
 
     await this.dataSource.getRepository(Product).save(updatedProduct);
 
-    console.log('__featuredAsset', await this.findOne(updatedProduct.id));
-
     return this.findOne(updatedProduct.id);
   }
 }

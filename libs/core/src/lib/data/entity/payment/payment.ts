@@ -3,6 +3,7 @@ import { Column, Entity, Index, ManyToOne } from 'typeorm';
 import { MosaicEntity } from '../entity';
 import { PaymentMetadata, PaymentState } from '../../../types';
 import { Order } from '../order';
+import { Money } from '../../../config/entity/money.decorator';
 
 @Entity()
 export class Payment extends MosaicEntity {
@@ -12,7 +13,7 @@ export class Payment extends MosaicEntity {
 
   @Column() method: string;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  @Money()
   amount: number;
 
   @Column('varchar') state: PaymentState;

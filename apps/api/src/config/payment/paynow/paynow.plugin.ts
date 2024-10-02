@@ -1,4 +1,3 @@
-import { gql } from 'graphql-tag';
 import { HttpModule } from '@nestjs/axios';
 
 import { MosaicPlugin, PluginCommonModule, Type } from '@mosaic/core/plugin';
@@ -6,9 +5,10 @@ import { RuntimeConfig } from '@mosaic/core/config';
 
 import { PaynowPluginOptions } from './types';
 import { paynowPaymentMethodHandler } from './paynow.handler';
-import { PaynowCommonResolver } from './resolvers';
 import { PaynowService } from './paynow.service';
 import { PaynowController } from './paynow.controller';
+import { shopExtensions } from './paynow.schema';
+import { PaynowIntentResolver, PaynowStateResolver } from './resolvers';
 
 @MosaicPlugin({
   imports: [PluginCommonModule, HttpModule],
@@ -21,21 +21,8 @@ import { PaynowController } from './paynow.controller';
     return config;
   },
   shopApiExtensions: {
-    schema: gql`
-      input PaynowPaymentIntentInput {
-        orderId: Int!
-      }
-      type PaynowPaymentIntent {
-        url: String!
-      }
-      extend type Mutation {
-        createPaynowIntent(
-          input: PaynowPaymentIntentInput!
-        ): PaynowPaymentIntentResult!
-      }
-      union PaynowPaymentIntentResult = PaynowPaymentIntent | NoActiveOrderError
-    `,
-    resolvers: [PaynowCommonResolver],
+    schema: shopExtensions,
+    resolvers: [PaynowIntentResolver, PaynowStateResolver],
   },
 })
 export class PaynowPlugin {

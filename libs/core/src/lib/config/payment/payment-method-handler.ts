@@ -1,4 +1,4 @@
-import { Order, PaymentMethod } from '../../data';
+import { Order, Payment, PaymentMethod } from '../../data';
 import { RequestContext } from '../../api/common';
 import {
   ConfigArgs,
@@ -11,10 +11,6 @@ import {
   PaymentMetadata,
   PaymentState,
 } from '../../types';
-import {
-  ConfigArgDefinition,
-  ConfigurableOperationDefinition,
-} from '@mosaic/common';
 
 export interface CreatePaymentResult {
   amount: number;
@@ -24,11 +20,35 @@ export interface CreatePaymentResult {
   metadata?: PaymentMetadata;
 }
 
+export interface CancelPaymentResult {
+  success: true;
+  metadata?: PaymentMetadata;
+}
+
 export interface CreatePaymentErrorResult {
   amount: number;
   state: 'Error';
   transactionId?: string;
   errorMessage: string;
+  metadata?: PaymentMetadata;
+}
+
+export interface SettlePaymentResult {
+  success: true;
+  metadata?: PaymentMetadata;
+}
+
+export interface SettlePaymentErrorResult {
+  success: false;
+  state?: Exclude<PaymentState, 'Settled'>;
+  errorMessage?: string;
+  metadata?: PaymentMetadata;
+}
+
+export interface CancelPaymentErrorResult {
+  success: false;
+  state?: Exclude<PaymentState, 'Cancelled'>;
+  errorMessage?: string;
   metadata?: PaymentMetadata;
 }
 
@@ -44,6 +64,28 @@ export type CreatePaymentFn<T extends ConfigArgs> = (
   | CreatePaymentErrorResult
   | Promise<CreatePaymentResult | CreatePaymentErrorResult>;
 
+export type SettlePaymentFn<T extends ConfigArgs> = (
+  ctx: RequestContext,
+  order: Order,
+  payment: Payment,
+  args: ConfigArgValues<T>,
+  method: PaymentMethod
+) =>
+  | SettlePaymentResult
+  | SettlePaymentErrorResult
+  | Promise<SettlePaymentResult | SettlePaymentErrorResult>;
+
+export type CancelPaymentFn<T extends ConfigArgs> = (
+  ctx: RequestContext,
+  order: Order,
+  payment: Payment,
+  args: ConfigArgValues<T>,
+  method: PaymentMethod
+) =>
+  | CancelPaymentResult
+  | CancelPaymentErrorResult
+  | Promise<CancelPaymentResult | CancelPaymentErrorResult>;
+
 export interface PaymentMethodConfigOptions<T extends ConfigArgs>
   extends ConfigurableOperationDefOptions<T> {
   createPayment: CreatePaymentFn<T>;
@@ -54,7 +96,7 @@ export interface PaymentMethodConfigOptions<T extends ConfigArgs>
    * `createPayment()` method returns with a state of `'Settled'`) this method
    * need only return `{ success: true }`.
    */
-  //settlePayment: SettlePaymentFn<T>;
+  settlePayment: SettlePaymentFn<T>;
   /**
    * @description
    * This function provides the logic for cancelling a payment, which would be invoked when a call is
@@ -89,10 +131,13 @@ export class PaymentMethodHandler<
   T extends ConfigArgs = ConfigArgs
 > extends ConfigurableOperationDef<T> {
   private readonly createPaymentFn: CreatePaymentFn<T>;
+  private readonly settlePaymentFn: SettlePaymentFn<T>;
+  private readonly cancelPaymentFn?: CancelPaymentFn<T>;
 
   constructor(config: PaymentMethodConfigOptions<T>) {
     super(config);
     this.createPaymentFn = config.createPayment;
+    this.settlePaymentFn = config.settlePayment;
   }
 
   public async createPayment(
@@ -116,5 +161,37 @@ export class PaymentMethodHandler<
       metadata: {},
       ...paymentConfig,
     };
+  }
+
+  public async settlePayment(
+    ctx: RequestContext,
+    order: Order,
+    payment: Payment,
+    args: ConfigArg[],
+    method: PaymentMethod
+  ) {
+    return this.settlePaymentFn(
+      ctx,
+      order,
+      payment,
+      this.argsArrayToHash(args),
+      method
+    );
+  }
+
+  async cancelPayment(
+    ctx: RequestContext,
+    order: Order,
+    payment: Payment,
+    args: ConfigArg[],
+    method: PaymentMethod
+  ) {
+    return this.cancelPaymentFn?.(
+      ctx,
+      order,
+      payment,
+      this.argsArrayToHash(args),
+      method
+    );
   }
 }

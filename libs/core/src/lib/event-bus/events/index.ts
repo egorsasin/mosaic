@@ -1,3 +1,4 @@
+export { PaymentStateTransitionEvent } from './payment-state-transition-event';
 export { OrderLineEvent } from './order-line.event';
 export * from './account-registration.event';
 export * from './password-reset.event';
