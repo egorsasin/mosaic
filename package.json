@@ -7,7 +7,8 @@
     "start:dev": "nx run-many --parallel --target=serve --projects=shell,api,admin",
     "start:api": "nx serve api",
     "build:api": "nx build api",
-    "build:admin": "nx build admin"
+    "build:admin": "nx build admin",
+    "test": "jest"
   },
   "private": false,
   "dependencies": {
