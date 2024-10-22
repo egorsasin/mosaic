@@ -3,20 +3,19 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MOSAIC_CONTEXT } from '@mosaic/cdk';
 import { Asset } from '@mosaic/common';
 
-import { AssetDataService } from '../../../pages/asset/asset.service';
 import { Observable, map, tap } from 'rxjs';
-import { SelectionManager } from './selection-manager';
+import { SelectionManager } from '../../selection-manager';
+import { AssetDataService } from '../../../data';
 
 @Component({
   selector: 'mos-asset-picker-dialog',
   templateUrl: './asset-picker-dialog.component.html',
   styleUrls: ['./asset-picker-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [AssetDataService],
 })
 export class MosAssetPickerDialogComponent {
   public readonly selectionManager = new SelectionManager<Asset>({
-    multiSelect: true,
+    multiSelect: false,
     itemsAreEqual: (curr: Asset, next: Asset) => curr.id === next.id,
     additiveMode: true,
   });

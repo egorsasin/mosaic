@@ -8,12 +8,12 @@ export class BcryptPasswordHashingStrategy implements PasswordHashingStrategy {
     compare: (plaintext: string, hash: string) => Promise<boolean>;
   };
 
-  hash(plaintext: string): Promise<string> {
+  public hash(plaintext: string): Promise<string> {
     this.getBcrypt();
     return this.bcrypt.hash(plaintext, SALT_ROUNDS);
   }
 
-  check(plaintext: string, hash: string): Promise<boolean> {
+  public check(plaintext: string, hash: string): Promise<boolean> {
     this.getBcrypt();
 
     return this.bcrypt.compare(plaintext, hash);

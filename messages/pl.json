@@ -1,5 +1,8 @@
 {
   "errorResult": {
     "ORDER_LIMIT_ERROR": "Ten produkt nie jest dostępny w takiej ilości. Dostępna ilość do zamówienia: { maxItems }"
+  },
+  "message": {
+    "ASSET-IS-FEATURED": "Выбрано {assetCount, plural, one {Актив} other {Активов}} представленного {products, plural, =0 {} one {1 Товаром} other {# Товарами}}"
   }
 }

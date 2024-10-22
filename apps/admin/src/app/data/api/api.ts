@@ -4,6 +4,7 @@ import { PaymentMethodDataService } from './payment-method.service';
 import { ProductDataService } from './product.service';
 import { AuthDataService } from './auth.service';
 import { AdministratorDataService } from './administrator.service';
+import { AssetDataService } from './asset.service';
 
 export const APIS = [
   BaseDataService,
@@ -12,4 +13,5 @@ export const APIS = [
   PaymentMethodDataService,
   AuthDataService,
   AdministratorDataService,
+  AssetDataService,
 ];
