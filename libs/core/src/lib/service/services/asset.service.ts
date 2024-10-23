@@ -31,6 +31,7 @@ import { ConfigService } from '../../config';
 import { AssetType, PaginatedList, getAssetType } from '../../common';
 import { OrderableAsset } from '../../data/';
 import { RequestContext } from '../../api';
+import { AssetEvent, EventBus } from '../../event-bus';
 
 export interface EntityWithAssets extends MosaicEntity {
   featuredAsset: Asset | null;
@@ -53,6 +54,7 @@ export class AssetService {
 
   constructor(
     @Inject(DATA_SOURCE_PROVIDER) private readonly dataSource: DataSource,
+    private eventBus: EventBus,
     private configService: ConfigService
   ) {
     this.permittedMimeTypes = this.configService.assetOptions.permittedFileTypes
@@ -432,9 +434,9 @@ export class AssetService {
       } catch (e: any) {
         //
       }
-      // await this.eventBus.publish(
-      //   new AssetEvent(ctx, deletedAsset, 'deleted', deletedAsset.id)
-      // );
+      await this.eventBus.publish(
+        new AssetEvent(ctx, deletedAsset, 'deleted', deletedAsset.id)
+      );
     }
     return {
       result: DeletionResult.DELETED,

@@ -11,6 +11,11 @@ export interface Asset {
   focalPoint: FocalPoint;
 }
 
+export type DeleteAssetInput = {
+  id: number;
+  force?: boolean;
+};
+
 export type DeleteAssetsInput = {
   ids: number[];
   force?: boolean;
