@@ -32,6 +32,7 @@ import { AssetType, PaginatedList, getAssetType } from '../../common';
 import { OrderableAsset } from '../../data/';
 import { RequestContext } from '../../api';
 import { AssetEvent, EventBus } from '../../event-bus';
+import { Logger } from '../../config';
 
 export interface EntityWithAssets extends MosaicEntity {
   featuredAsset: Asset | null;
@@ -432,7 +433,7 @@ export class AssetService {
           asset.preview
         );
       } catch (e: any) {
-        //
+        Logger.error('error.could-not-delete-asset-file', undefined, e.stack);
       }
       await this.eventBus.publish(
         new AssetEvent(ctx, deletedAsset, 'deleted', deletedAsset.id)
