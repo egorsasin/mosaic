@@ -11,7 +11,6 @@ import { PaginationComponent } from '../pagination/pagination.component';
 
 import { ProductCardComponent } from './product-card/product-card.component';
 import { ProductListComponent } from './product-list/product-list.component';
-import { ProductService } from './product.service';
 import { MosQuantitySelectorComponent } from '../shared';
 import { ProductDetailComponent } from './product-detail';
 
@@ -43,6 +42,5 @@ const routes: Routes = [
     MosIconComponent,
     RouterModule.forChild(routes),
   ],
-  providers: [ProductService],
 })
 export class ProductModule {}

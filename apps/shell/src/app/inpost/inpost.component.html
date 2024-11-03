@@ -1,6 +1,6 @@
 <div
   *mosLet="metadata$ | async as deliveryPoint"
-  class="text-gray-800 text-sm flex items-center p-2 pr-4"
+  class="text-gray-800 flex items-center p-2 pr-4"
 >
   <img
     class="h-9"
@@ -10,7 +10,7 @@
   <div class="flex-1">
     <span
       *ngIf="deliveryPoint"
-      class="hover:underline cursor-pointer"
+      class="hover:underline cursor-pointer leading-tight"
       (click)="selectPoint()"
     >
       <span class="font-medium"> {{ deliveryPoint?.name }}</span> -

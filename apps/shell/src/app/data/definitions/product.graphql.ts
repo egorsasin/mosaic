@@ -28,3 +28,18 @@ export const GET_PRODUCT_LIST = gql`
   }
   ${ASSET_FRAGMENT}
 `;
+
+export const GET_PRODUCT_DETAIL = gql`
+  query GetProductDetail($slug: String!) {
+    product(slug: $slug) {
+      id
+      name
+      price
+      description
+      featuredAsset {
+        ...Asset
+      }
+    }
+  }
+  ${ASSET_FRAGMENT}
+`;

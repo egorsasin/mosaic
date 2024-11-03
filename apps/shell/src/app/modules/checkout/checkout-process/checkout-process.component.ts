@@ -58,14 +58,6 @@ type GraphQLError = {
   message: string;
 };
 
-export type RemoveItemFromCartMutationVariables = Exact<{
-  id: number;
-}>;
-
-export type RemoveItemFromCartMutation = {
-  removeOrderLine: Order | GraphQLError;
-};
-
 export type SetOrderShippingMethodMutation = {
   setOrderShippingMethod: Order | GraphQLError;
 };

@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 
 import { MosAssetPreviewPipe } from '@mosaic/common-ui';
 import { MosLetDirective } from '@mosaic/cdk';
+import { MosIconComponent } from '@mosaic/ui/svg-icon';
 
 import { MiniCartComponent } from './mini-cart.component';
 import { MosQuantitySelectorComponent } from '../quantity-selector';
@@ -20,6 +21,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     RouterModule,
     MosLetDirective,
     MosQuantitySelectorComponent,
+    MosIconComponent,
   ],
 })
 export class MiniCartModule {}

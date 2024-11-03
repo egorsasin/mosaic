@@ -1,3 +1,10 @@
 :host {
   isolation: isolate;
+  display: block;
+  height: 100vh;
+  overflow: hidden;
+
+  .mos-header-fixed {
+    @apply shadow-md;
+  }
 }

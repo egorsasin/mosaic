@@ -144,7 +144,7 @@
         @if(submitted() && checkoutForm.controls.paymentMethod.invalid) {
         <div
           @fadeInOutAnimation
-          class="text-rose-500 text-sm mt-2 mos-form-error"
+          class="text-rose-500 mos-text-sm mt-2 mos-form-error"
         >
           Prosimy wybrać metodę płatności
         </div>
@@ -153,7 +153,7 @@
         <div class="grid gap-3 py-3">
           @for (item of (paymentMethods$ | async); track item.id ) {
           <div
-            class="py-3 px-6 flex gap-3 bg-white border border-slate-200 rounded-sm text-sm cursor-pointer hover:bg-slate-50"
+            class="py-3 px-6 flex gap-3 bg-white border border-slate-200 rounded-sm mos-text-sm cursor-pointer hover:bg-slate-50"
             [class.payment-metods--active]="item.code === paymentMethod.value"
             (click)="paymentMethod.setValue(item.code)"
           >

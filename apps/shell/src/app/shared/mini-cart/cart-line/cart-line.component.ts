@@ -9,24 +9,19 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { exhaustMap, mergeMap, of, Subject } from 'rxjs';
+import { exhaustMap, mergeMap, of, Subject, take } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import { OrderLine } from '@mosaic/common';
 import { MosAlertService } from '@mosaic/ui/alert';
 
-import {
-  AdjustItemQuantityMutation,
-  AdjustItemQuantityMutationVariables,
-  DataService,
-} from '../../../data';
-import { ADJUST_ITEM_QUANTITY } from '../../../common';
+import { CartDataService } from '../../../data';
 import { refetchShippingMethods } from '../../../modules/checkout';
 
 @Component({
   selector: 'mos-cart-line',
   templateUrl: './cart-line.component.html',
-  styles: [],
+  styles: [':host { --mos-icon-size: 1rem}'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CartLineComponent implements OnInit, OnChanges, OnDestroy {
@@ -38,7 +33,7 @@ export class CartLineComponent implements OnInit, OnChanges, OnDestroy {
   });
 
   private alert = inject(MosAlertService);
-  private dataService = inject(DataService);
+  private dataService = inject(CartDataService);
   private readonly store = inject(Store);
   private destroy$: Subject<void> = new Subject<void>();
 
@@ -52,13 +47,7 @@ export class CartLineComponent implements OnInit, OnChanges, OnDestroy {
     this.quantity.valueChanges
       .pipe(
         exhaustMap((quantity: number) =>
-          this.dataService.mutate<
-            AdjustItemQuantityMutation,
-            AdjustItemQuantityMutationVariables
-          >(ADJUST_ITEM_QUANTITY, {
-            id: this.item.id,
-            quantity,
-          })
+          this.dataService.ajustItemQuantity(this.item.id, quantity)
         ),
         mergeMap(({ adjustOrderLine }) => {
           const { errorCode, message } = adjustOrderLine as any;
@@ -84,6 +73,9 @@ export class CartLineComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public removeProduct(): void {
-    //
+    this.dataService
+      .removeItem(this.item.id)
+      .pipe(take(1))
+      .subscribe(() => this.store.dispatch(refetchShippingMethods()));
   }
 }

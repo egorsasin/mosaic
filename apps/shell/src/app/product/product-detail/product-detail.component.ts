@@ -4,9 +4,8 @@ import { filter, map, Observable, switchMap } from 'rxjs';
 
 import { Exact, notNullOrUndefined, Product } from '@mosaic/common';
 
-import { DataService } from '../../data';
+import { DataService, GET_PRODUCT_DETAIL } from '../../data';
 
-import { GET_PRODUCT_DETAIL } from './product-detail.graphql';
 import { FormControl } from '@angular/forms';
 
 export type GetProductDetailQuery = {
