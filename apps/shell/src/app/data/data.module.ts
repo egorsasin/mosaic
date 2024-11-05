@@ -9,6 +9,8 @@ import {
 } from '@apollo/client/core';
 import { setContext } from '@apollo/client/link/context';
 
+import { OrderLine } from '@mosaic/common';
+
 import { LocalStorageService } from '../services/local-storage.service';
 import { environment } from './../../environments/environment';
 
@@ -21,7 +23,19 @@ export function createApollo(
   httpLink: HttpLink,
   localStorageService: LocalStorageService
 ): ApolloClientOptions<unknown> {
-  const cache = new InMemoryCache();
+  const cache = new InMemoryCache({
+    typePolicies: {
+      Order: {
+        fields: {
+          lines: {
+            merge(existing, incoming: OrderLine[]) {
+              return incoming;
+            },
+          },
+        },
+      },
+    },
+  });
 
   cache.writeQuery({
     query: GET_USER_STATUS,

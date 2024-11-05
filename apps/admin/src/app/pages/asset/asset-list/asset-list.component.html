@@ -1,14 +1,67 @@
 <div class="py-10 bg-white">
-  <div class="flex shrink-0 flex-wrap gap-4 p-4">
-    <div
-      *ngFor="let item of items$ | async; let first = first; let last = last"
-      class="group cursor-pointer relative"
-    >
-      <img
-        [src]="$any(item) | assetPreview : 'small'"
-        alt="Image 1"
-        class="w-36 h-36 object-cover rounded-lg transition-transform transform scale-100 group-hover:scale-105"
-      />
+  <div class="flex">
+    <div class="flex flex-1 shrink-0 flex-wrap gap-4 p-4">
+      <div
+        *ngFor="let item of items$ | async; let first = first; let last = last"
+        class="group cursor-pointer relative"
+        (click)="toggleSelection(item, $event)"
+      >
+        <img
+          [src]="$any(item) | assetPreview : 'small'"
+          alt="Image 1"
+          class="w-36 h-36 object-cover rounded-lg transition-transform transform scale-100 group-hover:scale-105"
+        />
+        <div
+          *ngIf="isSelected(item)"
+          class="absolute h-7 w-7 top-0 left-0 rounded-full bg-white p-0.5 drop-shadow-md"
+        >
+          <div
+            class="bg-gray-600 p-1 rounded-full h-full flex justify-center items-center"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="3"
+              stroke="currentColor"
+              class="w-4 h-4 text-white bg-gray-600"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m4.5 12.75 6 6 9-13.5"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="selectionManager.selection.length > 0" class="text-center">
+      <img class="w-72 h-72" [src]="lastSelected.preview + '?preset=medium'" />
+
+      <button
+        type="button"
+        class="rounded-md font-semibold text-sm text-gray-700 bg-gray-100 px-4 py-2 drop-shadow shadow-sm hover:bg-gray-200 inline-flex items-center gap-x-1"
+        (click)="deleteAssets(selectionManager.selection)"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+          />
+        </svg>
+
+        Delete
+      </button>
     </div>
   </div>
 
@@ -34,7 +87,7 @@
         <div class="mt-4 inline-flex text-sm leading-6 text-gray-600">
           <label
             for="file-upload"
-            class="relative cursor-pointer rounded-md bg-white font-semibold text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-offset-2 hover:text-blue-500"
+            class="relative cursor-pointer bg-white text-blue-600 focus-within:ring-offset-2 hover:text-blue-500"
           >
             <span>Upload a file</span>
             <input
@@ -42,6 +95,7 @@
               name="file-upload"
               type="file"
               class="sr-only"
+              (change)="uploadFile($event)"
             />
           </label>
           <p class="pl-1">or drag and drop</p>

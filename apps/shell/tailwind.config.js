@@ -11,7 +11,24 @@ module.exports = {
     fontFamily: {
       sans: ['Dosis', 'sans-serif'],
     },
-    extend: {},
+    extend: {
+      gridTemplateColumns: {
+        products: 'repeat(auto-fit, minmax(355px, 355px));',
+      },
+    },
+    screens: {
+      sm: '640px',
+      // => @media (min-width: 640px) { ... }
+
+      md: '768px',
+      // => @media (min-width: 768px) { ... }
+
+      lg: '1024px',
+      // => @media (min-width: 1024px) { ... }
+
+      xl: '1150px',
+      // => @media (min-width: 1280px) { ... }
+    },
   },
   plugins: [require('@tailwindcss/forms')],
 };

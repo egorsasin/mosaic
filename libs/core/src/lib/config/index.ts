@@ -7,6 +7,7 @@ export * from './entity';
 export * from './order';
 export * from './asset';
 export * from './auth';
+export * from './logger';
 export * from './shipping-method';
 
 export { ConfigService } from './config.service';

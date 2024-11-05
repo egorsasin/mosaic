@@ -26,13 +26,7 @@ import { FormControl } from '@angular/forms';
 import { Exact, Order, OrderLine } from '@mosaic/common';
 import { MosAlertService } from '@mosaic/ui/alert';
 
-import {
-  AdjustItemQuantityMutation,
-  AdjustItemQuantityMutationVariables,
-  DataService,
-} from '../../../data';
-import { CheckoutService } from '../checkout.service';
-import { ADJUST_ITEM_QUANTITY, REMOVE_ITEM_FROM_CART } from '../../../common';
+import { CartDataService } from '../../../data';
 import { Store } from '@ngrx/store';
 import { refetchShippingMethods } from '../store';
 import { setActiveOrder } from '../../../store';
@@ -48,7 +42,7 @@ export type RemoveItemFromCartMutation = {
 @Component({
   selector: 'mos-order-line',
   templateUrl: './order-line.component.html',
-  styles: [':host { display: flex; width: 100% }'],
+  styles: [':host { display: flex; width: 100%; --mos-icon-size: 1.25rem}'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrderLineComponent implements OnInit, OnChanges, OnDestroy {
@@ -64,8 +58,7 @@ export class OrderLineComponent implements OnInit, OnChanges, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
 
   constructor(
-    private dataService: DataService,
-    private checkoutService: CheckoutService,
+    private dataService: CartDataService,
     private changeDetectorRef: ChangeDetectorRef,
     private store: Store
   ) {}
@@ -83,13 +76,7 @@ export class OrderLineComponent implements OnInit, OnChanges, OnDestroy {
           this.loading = true;
         }),
         exhaustMap((quantity: number) =>
-          this.dataService.mutate<
-            AdjustItemQuantityMutation,
-            AdjustItemQuantityMutationVariables
-          >(ADJUST_ITEM_QUANTITY, {
-            id: this.item.id,
-            quantity,
-          })
+          this.dataService.ajustItemQuantity(this.item.id, quantity)
         ),
         mergeMap(({ adjustOrderLine }) => {
           this.loading = false;
@@ -119,12 +106,7 @@ export class OrderLineComponent implements OnInit, OnChanges, OnDestroy {
 
   public removeItem(id: number) {
     this.dataService
-      .mutate<RemoveItemFromCartMutation, RemoveItemFromCartMutationVariables>(
-        REMOVE_ITEM_FROM_CART,
-        {
-          id,
-        }
-      )
+      .removeItem(id)
       .pipe(take(1))
       .subscribe(() => this.store.dispatch(refetchShippingMethods()));
   }

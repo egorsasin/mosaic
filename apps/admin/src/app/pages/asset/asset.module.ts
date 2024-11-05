@@ -5,7 +5,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { MosInputModule } from '@mosaic/ui/input';
 
 import { AssetListComponent, FileDropDirective } from './asset-list';
-import { AssetDataService } from './asset.service';
 import { SharedModule } from '../../shared/shared.module';
 
 const ROUTED_COMPONENTS = [AssetListComponent];
@@ -25,6 +24,5 @@ const routes: Routes = [
     MosInputModule,
     SharedModule,
   ],
-  providers: [AssetDataService],
 })
 export class AssetModule {}

@@ -1,6 +1,5 @@
 import { gql } from 'apollo-angular';
-
-import { CART_FRAGMENT, ERROR_RESULT_FRAGMENT } from '../fragments';
+import { CART_FRAGMENT, ERROR_RESULT_FRAGMENT } from './fragments';
 
 export const ADJUST_ITEM_QUANTITY = gql`
   mutation AdjustItemQuantity($id: Int!, $quantity: Int!) {

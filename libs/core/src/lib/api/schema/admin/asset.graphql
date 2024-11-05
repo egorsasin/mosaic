@@ -6,6 +6,8 @@ type Query {
 type Mutation {
   "Create a new Asset"
   createAssets(input: [CreateAssetInput!]!): Asset!
+  "Delete multiple Assets"
+  deleteAssets(input: DeleteAssetsInput!): DeletionResponse!
 }
 
 input CreateAssetInput {
@@ -13,3 +15,8 @@ input CreateAssetInput {
 }
 
 input AssetListOptions
+
+input DeleteAssetsInput {
+  ids: [Int!]!
+  force: Boolean
+}

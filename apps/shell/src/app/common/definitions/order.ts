@@ -1,6 +1,5 @@
 import { gql } from 'apollo-angular';
-
-import { CART_FRAGMENT, ORDER_ADDRESS_FRAGMENT } from '../fragments';
+import { CART_FRAGMENT, ORDER_ADDRESS_FRAGMENT } from '../../data';
 
 export const GET_ACTIVE_ORDER = gql`
   query GetActiveOrder {

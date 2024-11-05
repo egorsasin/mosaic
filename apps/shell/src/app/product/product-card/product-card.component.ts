@@ -8,18 +8,20 @@ import { filter, map } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import { OrderLine } from '@mosaic/common';
+import { FormControl } from '@angular/forms';
+
+import { Order } from '@mosaic/common';
+import { MosDialogService } from '@mosaic/ui/dialog';
 
 import { Product } from '../../types';
-import { ProductService } from '../product.service';
 import {
   selectActiveOrder,
   setActiveOrder,
   showNotification,
   CartActions,
 } from '../../store';
-import { FormControl } from '@angular/forms';
-import { Order } from '@mosaic/common';
-import { MosDialogService } from '@mosaic/ui/dialog';
+
+import { CartDataService } from '../../data';
 
 @Component({
   selector: 'mos-product-card',
@@ -49,7 +51,7 @@ export class ProductCardComponent {
 
   constructor(
     private store: Store,
-    private productService: ProductService,
+    private dataService: CartDataService,
     private changeDetectorRef: ChangeDetectorRef,
     private dialogService: MosDialogService
   ) {}
@@ -60,8 +62,8 @@ export class ProductCardComponent {
     }
 
     this.loading = true;
-    this.productService
-      .addToCart(this.product?.id, this.quantity.value)
+    this.dataService
+      .addItemToCart(this.product?.id, this.quantity.value)
       .pipe(map(({ addItemToOrder }) => addItemToOrder))
       .subscribe({
         next: (order: Order) => {
