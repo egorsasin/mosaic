@@ -11,7 +11,7 @@ import { Category, DATA_SOURCE_PROVIDER, Product } from '../../../data';
  * SearchStrategy implementations for db-specific code.
  */
 @Injectable()
-export class FulltextSearchService {
+export class FullTextSearchService {
   constructor(
     @Inject(DATA_SOURCE_PROVIDER) private readonly dataSource: DataSource
   ) {}

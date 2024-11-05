@@ -5,11 +5,12 @@ import { MosaicPlugin } from '../mosaic-plugin';
 import { PluginCommonModule } from '../plugin-common.module';
 import { SearchIndex } from './entities';
 import { ShopFulltextSearchResolver } from './api';
-import { FulltextSearchService } from './providers';
+import { FullTextSearchService } from './providers';
+import { SearchIndexService } from './indexer';
 
 @MosaicPlugin({
   imports: [PluginCommonModule],
-  providers: [FulltextSearchService],
+  providers: [FullTextSearchService, SearchIndexService],
   entities: [SearchIndex],
   adminApiExtensions: {
     resolvers: [],
@@ -19,12 +20,15 @@ import { FulltextSearchService } from './providers';
   },
 })
 export class DefaultSearchPlugin implements OnApplicationBootstrap {
-  constructor(private eventBus: EventBus) {
+  constructor(
+    private eventBus: EventBus,
+    searchIndexService: SearchIndexService
+  ) {
     this.eventBus.ofType(ProductEvent).subscribe((event) => {
       if (event.type === 'deleted') {
-        //return this.searchIndexService.deleteProduct(event.ctx, event.entity);
+        return searchIndexService.deleteProduct(event.ctx, event.entity);
       } else {
-        //return this.searchIndexService.updateProduct(event.ctx, event.entity);
+        return searchIndexService.updateProduct(event.ctx, event.entity);
       }
     });
   }

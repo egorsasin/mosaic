@@ -1,1 +1,1 @@
-export { FulltextSearchService } from './search.service';
+export { FullTextSearchService } from './search.service';
