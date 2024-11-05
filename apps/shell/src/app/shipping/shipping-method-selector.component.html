@@ -3,13 +3,13 @@
   @for (shippingMethod of shippingMethods; track shippingMethod.id) {
   <mos-shipping-method
     *mosLet="shippingMethod.code === selected?.shippingMethod?.code as isActive"
-    class="block rounded-sm text-sm border border-slate-200 overflow-hidden"
+    class="block rounded-sm mos-text-sm border border-slate-200 overflow-hidden"
     [isActive]="isActive"
     [code]="shippingMethod.code"
     [class.payment-metods--active]="isActive"
     (selelectMethod)="setShippingMethod(shippingMethod.id, $event)"
   >
-    <div class="py-3 px-6 flex gap-3 bg-white hover:bg-slate-50">
+    <div class="py-2 px-6 flex gap-3 bg-white hover:bg-slate-50">
       <div class="w-full">
         <div class="font-semibold flex justify-between">
           <span class="flex-1">{{ shippingMethod.name }}</span>

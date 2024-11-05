@@ -38,6 +38,7 @@ export class RequestContextService {
       isAuthorized: true,
       authorizedAsOwnerOnly: false,
       apiType,
+      translationFn: req.t,
     });
   }
 }

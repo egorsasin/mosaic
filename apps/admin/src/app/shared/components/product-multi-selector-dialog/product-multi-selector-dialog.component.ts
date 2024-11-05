@@ -4,13 +4,13 @@ import {
   Inject,
   OnInit,
 } from '@angular/core';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 import { Product } from '@mosaic/common';
-
-import { SelectionManager } from '../asset-picker-dialog/selection-manager';
-import { ProductDataService } from '../../../data';
 import { MOSAIC_CONTEXT } from '@mosaic/cdk';
+
+import { SelectionManager } from '../../selection-manager';
+import { ProductDataService } from '../../../data';
 
 export type SearchItem = Product;
 

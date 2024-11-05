@@ -4,7 +4,6 @@ import {
   DynamicModule,
   InternalServerErrorException,
   Type,
-  Logger,
 } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
@@ -14,6 +13,7 @@ import {
   RuntimeConfig,
   setConfig,
   setMoneyStrategy,
+  Logger,
 } from '@mosaic/core/config';
 import { coreEntitiesMap, coreSubscribersMap } from '@mosaic/core/data';
 import {
@@ -110,14 +110,14 @@ async function bootstrap() {
 
   const app = await NestFactory.create<NestExpressApplication>(
     appModule.AppModule,
-    { cors }
+    { cors, logger: new Logger() }
   );
 
   app.enableShutdownHooks();
 
   await app.listen(port);
 
-  Logger.log(`🚀 Application is running on: http://localhost:${port}`);
+  Logger.info(`🚀 Application is running on: http://localhost:${port}`);
 }
 
 bootstrap();

@@ -3,8 +3,7 @@ import { distinctUntilChanged, map, Subject } from 'rxjs';
 
 import { ShippingMethodQuote } from '@mosaic/common';
 
-import { DataService } from '../../data';
-import { GET_ELIGIBLE_SHIPPING_METHODS } from '../../common';
+import { DataService, GET_ELIGIBLE_SHIPPING_METHODS } from '../../data';
 import { SHIPPING_METHOD_HANDLER, ShippingHandler } from '../../shipping';
 
 export type GetEligibleShippingMethodsQuery = {

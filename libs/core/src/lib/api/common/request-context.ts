@@ -1,4 +1,5 @@
 import { Request } from 'express';
+import { TFunction } from 'i18next';
 
 import { User } from '../../data';
 import { CachedSession } from '../../config/';
@@ -11,6 +12,7 @@ export class RequestContext {
   private readonly _authorizedAsOwnerOnly?: boolean;
   private readonly _session?: CachedSession;
   private readonly _apiType?: ApiType;
+  private readonly _translationFn: TFunction;
 
   constructor(options: {
     req?: Request;
@@ -18,15 +20,23 @@ export class RequestContext {
     authorizedAsOwnerOnly?: boolean;
     session?: CachedSession;
     apiType?: ApiType;
+    translationFn?: TFunction;
   }) {
-    const { req, isAuthorized, authorizedAsOwnerOnly, session, apiType } =
-      options;
+    const {
+      req,
+      isAuthorized,
+      authorizedAsOwnerOnly,
+      session,
+      apiType,
+      translationFn,
+    } = options;
 
     this._req = req;
     this._isAuthorized = isAuthorized;
     this._session = session;
     this._authorizedAsOwnerOnly = authorizedAsOwnerOnly;
     this._apiType = apiType;
+    this._translationFn = translationFn || (((key: string) => key) as any);
   }
 
   /**
@@ -53,7 +63,17 @@ export class RequestContext {
     return this._session;
   }
 
-  get apiType(): ApiType {
+  public get apiType(): ApiType {
     return this._apiType;
+  }
+
+  public translate(key: string, variables?: { [k: string]: any }): string {
+    try {
+      return this._translationFn(key, variables) as string;
+    } catch (e: any) {
+      return `Translation format error: ${JSON.stringify(
+        e.message
+      )}). Original key: ${key}`;
+    }
   }
 }

@@ -1,5 +1,11 @@
 import { Inject, Injectable, Type } from '@nestjs/common';
-import { DataSource, FindOneOptions, FindOptionsRelations, In } from 'typeorm';
+import {
+  DataSource,
+  FindOneOptions,
+  FindOptionsRelations,
+  In,
+  IsNull,
+} from 'typeorm';
 import mime from 'mime-types';
 import { ReadStream } from 'graphql-upload-ts';
 import sizeOf from 'image-size';
@@ -11,9 +17,11 @@ import {
   notNullOrUndefined,
   InternalServerError,
   MimeTypeError,
+  DeletionResult,
+  DeletionResponse,
 } from '@mosaic/common';
 
-import { Asset, MosaicEntity, DATA_SOURCE_PROVIDER } from '../../data';
+import { Asset, MosaicEntity, DATA_SOURCE_PROVIDER, Product } from '../../data';
 import {
   CreateAssetInput,
   ListQueryOptions,
@@ -22,6 +30,9 @@ import {
 import { ConfigService } from '../../config';
 import { AssetType, PaginatedList, getAssetType } from '../../common';
 import { OrderableAsset } from '../../data/';
+import { RequestContext } from '../../api';
+import { AssetEvent, EventBus } from '../../event-bus';
+import { Logger } from '../../config';
 
 export interface EntityWithAssets extends MosaicEntity {
   featuredAsset: Asset | null;
@@ -44,6 +55,7 @@ export class AssetService {
 
   constructor(
     @Inject(DATA_SOURCE_PROVIDER) private readonly dataSource: DataSource,
+    private eventBus: EventBus,
     private configService: ConfigService
   ) {
     this.permittedMimeTypes = this.configService.assetOptions.permittedFileTypes
@@ -98,7 +110,7 @@ export class AssetService {
     });
   }
 
-  async getFeaturedAsset<T extends Omit<EntityWithAssets, 'assets'>>(
+  public async getFeaturedAsset<T extends Omit<EntityWithAssets, 'assets'>>(
     entity: T
   ): Promise<Asset | undefined> {
     const entityType: Type<T> = Object.getPrototypeOf(entity).constructor;
@@ -245,6 +257,40 @@ export class AssetService {
     return this.dataSource.getRepository(Asset).save(asset);
   }
 
+  /**
+   * @description
+   * Deletes an Asset after performing checks to ensure that the Asset is not currently in use
+   * by a Product, ProductVariant or Collection.
+   */
+  public async delete(
+    ctx: RequestContext,
+    ids: number[],
+    force = false
+  ): Promise<DeletionResponse> {
+    const assets = await this.dataSource.getRepository(Asset).find({
+      where: { id: In(ids) },
+    });
+    const usageCount = {
+      products: 0,
+    };
+    for (const asset of assets) {
+      const usages = await this.findAssetUsages(ctx, asset);
+      usageCount.products += usages.products.length;
+    }
+    const hasUsages = !!usageCount.products;
+    if (hasUsages && !force) {
+      return {
+        result: DeletionResult.NOT_DELETED,
+        message: ctx.translate('message.ASSET-IS-FEATURED', {
+          assetCount: assets.length,
+          products: usageCount.products,
+        }),
+      };
+    }
+
+    return this.deleteUnconditional(ctx, assets);
+  }
+
   private createOrderableAssets(
     entity: EntityWithAssets,
     assets: Asset[]
@@ -348,5 +394,53 @@ export class AssetService {
     } catch (error) {
       return { width: 0, height: 0 };
     }
+  }
+
+  private async findAssetUsages(
+    ctx: RequestContext,
+    asset: Asset
+  ): Promise<{ products: Product[] }> {
+    const products = await this.dataSource.getRepository(Product).find({
+      where: {
+        featuredAsset: { id: asset.id },
+        deletedAt: IsNull(),
+      },
+    });
+
+    return { products };
+  }
+
+  /**
+   * @description
+   * Unconditionally delete given assets.
+   * Does not remove assets from channels
+   */
+  private async deleteUnconditional(
+    ctx: RequestContext,
+    assets: Asset[]
+  ): Promise<DeletionResponse> {
+    for (const asset of assets) {
+      // Create a new asset so that the id is still available
+      // after deletion (the .remove() method sets it to undefined)
+      const deletedAsset = new Asset(asset);
+      await this.dataSource.getRepository(Asset).remove(asset);
+
+      try {
+        await this.configService.assetOptions.assetStorageStrategy.deleteFile(
+          asset.source
+        );
+        await this.configService.assetOptions.assetStorageStrategy.deleteFile(
+          asset.preview
+        );
+      } catch (e: any) {
+        Logger.error('error.could-not-delete-asset-file', undefined, e.stack);
+      }
+      await this.eventBus.publish(
+        new AssetEvent(ctx, deletedAsset, 'deleted', deletedAsset.id)
+      );
+    }
+    return {
+      result: DeletionResult.DELETED,
+    };
   }
 }

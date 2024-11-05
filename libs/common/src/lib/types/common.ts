@@ -5,6 +5,13 @@ export enum LogicalOperator {
   OR = 'OR',
 }
 
+export enum DeletionResult {
+  /** The entity was successfully deleted */
+  DELETED = 'DELETED',
+  /** Deletion did not take place, reason given in message */
+  NOT_DELETED = 'NOT_DELETED',
+}
+
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K];
 };

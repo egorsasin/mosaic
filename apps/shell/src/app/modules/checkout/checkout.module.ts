@@ -9,6 +9,7 @@ import { MosInputModule } from '@mosaic/ui/input';
 import { MosInputPasswordModule } from '@mosaic/ui/input-password';
 import { MosAssetPreviewPipe, ControlErrorModule } from '@mosaic/common-ui';
 import { HintModule } from '@mosaic/ui/hint';
+import { MosIconComponent } from '@mosaic/ui/svg-icon';
 
 import {
   CheckoutRoutingModule,
@@ -38,6 +39,7 @@ import { ShippingMethodModule } from '../../shipping';
     EffectsModule.forFeature([checkoutEffects]),
     InpostModule,
     ShippingMethodModule,
+    MosIconComponent,
   ],
   providers: [CheckoutService],
 })

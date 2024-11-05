@@ -1,6 +1,6 @@
 import { Args, Resolver, Mutation, Query } from '@nestjs/graphql';
 
-import { PaginatedList } from '@mosaic/common';
+import { DeleteAssetsInput, MutationArgs, PaginatedList } from '@mosaic/common';
 
 import {
   CreateAssetInput,
@@ -10,8 +10,8 @@ import {
 } from '../../../types';
 import { AssetService } from '../../../service/services/asset.service';
 import { Asset } from '../../../data';
-import { Permission } from '../../common';
-import { Allow } from '../../decorators';
+import { Permission, RequestContext } from '../../common';
+import { Allow, Ctx } from '../../decorators';
 
 @Resolver()
 export class AssetResolver {
@@ -36,5 +36,15 @@ export class AssetResolver {
     }
 
     return assets;
+  }
+
+  @Mutation()
+  @Allow(Permission.Authenticated)
+  async deleteAssets(
+    @Ctx() ctx: RequestContext,
+    @Args()
+    { input: { ids, force } }: MutationArgs<DeleteAssetsInput>
+  ) {
+    return this.assetService.delete(ctx, ids, force || undefined);
   }
 }
