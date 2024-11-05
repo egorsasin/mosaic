@@ -1,17 +1,21 @@
 import {
+  AfterViewChecked,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   Inject,
   NgZone,
   OnDestroy,
   TemplateRef,
+  ViewEncapsulation,
 } from '@angular/core';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, takeUntil, throttleTime } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { PositionAccessor } from '../types';
 import { HOST_POSITION, PositionProvider } from './dropdown-host.directive';
 
-export const DEFAULT_MAX_HEIGHT = 300;
+export const DEFAULT_MAX_HEIGHT = 600;
 export const DEFAULT_OFFSET = 0;
 
 const animationFrame$ = new Observable<DOMHighResTimeStamp>((subscriber) => {
@@ -35,10 +39,17 @@ const animationFrame$ = new Observable<DOMHighResTimeStamp>((subscriber) => {
   // eslint-disable-next-line @angular-eslint/no-host-metadata-property
   host: { class: 'mos-dropdown-menu' },
   styleUrls: ['./dropdown-host.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
-export class DropdownHostComponent implements OnDestroy {
-  private prevDirectionIsTop = false;
+export class DropdownHostComponent implements OnDestroy, AfterViewChecked {
   private destroy$: Subject<void> = new Subject<void>();
+  private readonly refresh$ = new Subject<void>();
+
+  protected readonly sub = this.refresh$
+    .pipe(throttleTime(0), takeUntilDestroyed())
+    .subscribe(() => {
+      this.changeDetectorRef.markForCheck();
+    });
 
   public get nativeElement() {
     return this.elementRef.nativeElement;
@@ -50,6 +61,7 @@ export class DropdownHostComponent implements OnDestroy {
     @Inject(PositionAccessor) private positionAccessor: PositionAccessor,
     @Inject(HOST_POSITION) private host: PositionProvider,
     private elementRef: ElementRef,
+    private changeDetectorRef: ChangeDetectorRef,
     ngZone: NgZone
   ) {
     animationFrame$.pipe(takeUntil(this.destroy$)).subscribe(() =>
@@ -60,6 +72,10 @@ export class DropdownHostComponent implements OnDestroy {
         this.calculatePosition(top, left);
       })
     );
+  }
+
+  public ngAfterViewChecked(): void {
+    this.refresh$.next();
   }
 
   public ngOnDestroy(): void {
