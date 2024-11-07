@@ -22,6 +22,8 @@ import { CustomFields } from './custom-field';
 import { ShippingCalculator } from './shipping-method';
 import { GuestCheckoutStrategy } from './order/guest-checkout.strategy';
 import { CategoryFilter } from './catalog';
+import { JobQueueStrategy } from './job-queue';
+import { MosaicLogger } from './logger/mosaic-logger';
 
 export interface ApiOptions {
   port: number;
@@ -79,17 +81,22 @@ export interface MosaicConfig {
   paymentOptions: PaymentOptions;
   entityOptions?: EntityOptions;
   catalogOptions?: CatalogOptions;
+  jobQueueOptions?: JobQueueOptions;
+  logger?: MosaicLogger;
 }
 
 /**
  * Доставка
  */
 export interface ShippingOptions {
-  /**
-   * @description
-   * An array of available ShippingCalculators for use in configuring ShippingMethods
-   */
   shippingCalculators?: Array<ShippingCalculator>;
+}
+
+export interface JobQueueOptions {
+  jobQueueStrategy?: JobQueueStrategy;
+  //jobBufferStorageStrategy?: JobBufferStorageStrategy;
+  activeQueues?: string[];
+  prefix?: string;
 }
 
 export interface RuntimeConfig extends Required<MosaicConfig> {
@@ -102,6 +109,7 @@ export interface RuntimeConfig extends Required<MosaicConfig> {
   customFields: Required<CustomFields>;
   shippingOptions: Required<ShippingOptions>;
   catalogOptions: Required<CatalogOptions>;
+  jobQueueOptions: Required<JobQueueOptions>;
 }
 
 export type PartialMosaicConfig = DeepPartialSimple<MosaicConfig>;

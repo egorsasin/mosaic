@@ -7,9 +7,11 @@ import { ConfigModule } from './config/config.module';
 import { I18nService } from './i18n';
 import { I18nModule } from './i18n/i18n.module';
 import { PluginModule } from './plugin/plugin.module';
+import { ProcessContextModule } from './process-context/process-context.module';
 
 @Module({
   imports: [
+    ProcessContextModule,
     ConfigModule,
     DataModule,
     ApiModule,

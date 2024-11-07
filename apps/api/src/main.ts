@@ -14,6 +14,7 @@ import {
   setConfig,
   setMoneyStrategy,
   Logger,
+  DefaultLogger,
 } from '@mosaic/core/config';
 import { coreEntitiesMap, coreSubscribersMap } from '@mosaic/core/data';
 import {
@@ -22,6 +23,7 @@ import {
 } from '@mosaic/core/plugin';
 
 import { appConfig } from './.config';
+import { setProcessContext } from '@mosaic/core';
 
 async function runPluginConfigurations(
   config: RuntimeConfig
@@ -82,6 +84,7 @@ export async function preBootstrapConfig(
     await setConfig(userConfig);
   }
   const entities = await getAllEntities(userConfig);
+
   await setConfig({
     dbConnectionOptions: {
       entities,
@@ -105,13 +108,21 @@ export async function preBootstrapConfig(
 
 async function bootstrap() {
   const config = await preBootstrapConfig(appConfig);
+
+  Logger.useLogger(config.logger);
+  Logger.info(`Bootstrapping Vendure Server (pid: ${process.pid})...`);
+
   const appModule = await import('./app/app.module');
   const { port, cors } = config.apiOptions;
 
+  setProcessContext('server');
+
+  DefaultLogger.hideNestBoostrapLogs();
   const app = await NestFactory.create<NestExpressApplication>(
     appModule.AppModule,
     { cors, logger: new Logger() }
   );
+  DefaultLogger.restoreOriginalLogLevel();
 
   app.enableShutdownHooks();
 

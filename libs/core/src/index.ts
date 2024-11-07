@@ -7,3 +7,4 @@ export * from './lib/api';
 export * from './lib/common';
 export * from './lib/event-bus';
 export * from './lib/service/index';
+export * from './lib/process-context';

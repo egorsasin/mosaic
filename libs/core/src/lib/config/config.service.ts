@@ -7,6 +7,7 @@ import {
   AssetOptions,
   AuthOptions,
   CatalogOptions,
+  JobQueueOptions,
   MosaicConfig,
   OrderOptions,
   PaymentOptions,
@@ -55,7 +56,11 @@ export class ConfigService implements MosaicConfig {
     return this.activeConfig.paymentOptions;
   }
 
-  get customFields(): Required<CustomFields> {
+  public get jobQueueOptions(): Required<JobQueueOptions> {
+    return this.activeConfig.jobQueueOptions;
+  }
+
+  public get customFields(): Required<CustomFields> {
     if (!this.allCustomFieldsConfig) {
       this.allCustomFieldsConfig = this.getCustomFieldsForAllEntities();
     }

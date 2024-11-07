@@ -6,7 +6,7 @@ import { EMPTY } from 'rxjs';
 @Injectable()
 export class SearchIndexService implements OnApplicationBootstrap {
   public onApplicationBootstrap(): void {
-    throw new Error('Method not implemented.');
+    // TODO
   }
 
   public updateProduct(ctx: RequestContext, product: Product) {

@@ -6,3 +6,4 @@ export * from './calculated-decorator';
 export * from './state-machine';
 export * from './configurable-operation';
 export * from './utils';
+export * from './job-queue';

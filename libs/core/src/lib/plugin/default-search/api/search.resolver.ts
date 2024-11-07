@@ -9,20 +9,20 @@ import {
 
 import { SearchResolver as BaseSearchResolver } from '../../../api/resolvers/admin/search.resolver';
 import { Ctx, RequestContext } from '../../../api';
-import { FulltextSearchService } from '../providers';
+import { FullTextSearchService } from '../providers';
 
 @Resolver('SearchResponse')
 export class ShopFulltextSearchResolver
   implements Pick<BaseSearchResolver, 'search'>
 {
-  constructor(private fulltextSearchService: FulltextSearchService) {}
+  constructor(private fullTextSearchService: FullTextSearchService) {}
 
   @Query()
   public async search(
     @Ctx() ctx: RequestContext,
     @Args() args: MutationArgs<SearchInput>
   ): Promise<Omit<SearchResponse, 'categories'>> {
-    const result = await this.fulltextSearchService.search(
+    const result = await this.fullTextSearchService.search(
       ctx,
       args.input,
       true
@@ -37,7 +37,7 @@ export class ShopFulltextSearchResolver
     @Ctx() ctx: RequestContext,
     @Parent() parent: { input: SearchInput }
   ): Promise<Array<{ category: Category; count: number }>> {
-    const categories = await this.fulltextSearchService.categories(
+    const categories = await this.fullTextSearchService.categories(
       ctx,
       parent.input,
       true

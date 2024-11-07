@@ -9,5 +9,6 @@ export * from './asset';
 export * from './auth';
 export * from './logger';
 export * from './shipping-method';
+export * from './job-queue';
 
 export { ConfigService } from './config.service';

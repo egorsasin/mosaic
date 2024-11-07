@@ -1,1 +1,1 @@
-export { ProcessContext } from './process-context';
+export { ProcessContext, setProcessContext } from './process-context';

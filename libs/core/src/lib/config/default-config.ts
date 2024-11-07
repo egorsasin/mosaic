@@ -18,8 +18,11 @@ import { defaultShippingCalculator } from './shipping-method';
 import { DefaultGuestCheckoutStrategy } from './order/default-guest-checkout.strategy';
 import { defaultCategoryFilters } from './catalog';
 import { NativeAuthenticationStrategy } from './auth/native-authentication-strategy';
+import { InMemoryJobQueueStrategy } from '../job-queue';
+import { DefaultLogger } from './logger';
 
 export const defaultConfig: RuntimeConfig = {
+  logger: new DefaultLogger(),
   apiOptions: {
     port: 3000,
     cors: {
@@ -49,6 +52,12 @@ export const defaultConfig: RuntimeConfig = {
   },
   catalogOptions: {
     categoryFilters: defaultCategoryFilters,
+  },
+  jobQueueOptions: {
+    jobQueueStrategy: new InMemoryJobQueueStrategy(),
+    //jobBufferStorageStrategy: new InMemoryJobBufferStorageStrategy(),
+    activeQueues: [],
+    prefix: '',
   },
   orderOptions: {
     orderItemsLimit: 999,
